@@ -41,7 +41,7 @@ typedef struct cg_memory_pool_var {
 bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var);
 
 // 设置内存块信息节点的列表(数据呈逆序排列)本身的内存地址位置
-cg_memory_node_t *cg_set_memory_node_list_addr(cg_memory_pool_var_t *p_var, void *addr, size_t size);
+cg_memory_node_t *cg_set_memory_node_list_addr(void *addr, size_t size);
 
 // 获取内存块内存占用大小
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr);

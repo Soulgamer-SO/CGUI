@@ -27,8 +27,7 @@ bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 	return TRUE;
 }
 
-inline cg_memory_node_t *cg_set_memory_node_list_addr(cg_memory_pool_var_t *p_var, void *addr, size_t size) {
-	p_var->is_memory_node_list_in_pool = FALSE;
+inline cg_memory_node_t *cg_set_memory_node_list_addr(void *addr, size_t size) {
 	return (cg_memory_node_t *)(addr + size - sizeof(cg_memory_node_t));
 }
 
