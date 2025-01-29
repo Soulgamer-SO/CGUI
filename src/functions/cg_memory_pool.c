@@ -5,7 +5,7 @@ bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 		PRINT_ERROR("memory pool size should more bigger than %zu size!\n", sizeof(cg_memory_node_t));
 		return FALSE;
 	}
-	p_var->memory_pool = NULL;
+	p_var->memory_pool =  NULL;
 	p_var->last_memory_end_addr = NULL;
 	p_var->memory_node_count = 0;
 	p_var->free_size = 0;
