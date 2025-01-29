@@ -261,7 +261,8 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	}
 	return;
 }
-#if 0
+
+#ifdef DEBUG
 void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_address, size_t size) {
 	if (p_var->memory_pool == NULL) {
 		PRINT_ERROR("must create memory pool first!\n");
