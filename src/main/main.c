@@ -18,6 +18,14 @@ MAIN {
 		.is_memory_node_list_in_pool = TRUE,
 		.size = MEM_POOL_SIZE,
 		.free_size = 0};
+	cg_var_t var;
+	if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
+		goto exit;
+	} else {
+		PRINT_LOG("create memory pool success!\n");
+	}
+	var.p_memory_pool_var = &memory_pool_var;
+
 #ifdef DEBUG
 	cg_memory_node_t *memory_node_list_memory = cg_alloc_memory(&memory_pool_var, NODE_LIST_SIZE);
 	if (memory_node_list_memory == NULL) {
@@ -31,14 +39,14 @@ MAIN {
 		.is_memory_node_list_in_pool = FALSE,
 		.size = MEM_POOL_SIZE,
 		.free_size = 0};
-#endif
-	cg_var_t var;
 	if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
 		goto exit;
-	} else {
-		PRINT_LOG("create memory pool success!\n");
 	}
-	var.p_memory_pool_var = &memory_pool_var;
+	void *mem_a = cg_alloc_memory(&memory_pool_var, 1024);
+	if (mem_a == NULL) {
+		goto exit;
+	}
+#endif
 
 #ifdef _WIN32
 	var.wsi_var.WinAPI_var.hInstance = hInstance,
