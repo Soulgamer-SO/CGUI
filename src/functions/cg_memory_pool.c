@@ -263,22 +263,24 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 }
 
 #ifdef DEBUG
-void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_address, size_t size) {
+void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t size) {
 	if (p_var->memory_pool == NULL) {
 		PRINT_ERROR("must create memory pool first!\n");
-		return memory_address;
+		return memory_addr;
 	}
-	if (memory_address < p_var->memory_pool || memory_address >= p_var->memory_pool + p_var->size) {
+	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
 		PRINT_ERROR("memory is not in the memory pool!\n");
-		return memory_address;
+		return memory_addr;
 	}
-	if (memory_address == NULL) {
+	if (memory_addr == NULL) {
 		PRINT_ERROR("memory address must not be NULL!\n");
-		return memory_address;
+		return memory_addr;
 	}
 	if (size == 0) {
+		cg_free_memory(p_var, memory_addr);
 		return NULL;
 	}
-	return memory_address;
+
+	return memory_addr;
 }
 #endif
