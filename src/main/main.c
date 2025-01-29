@@ -57,6 +57,10 @@ destroy_and_exit:
 	cg_destroy_and_exit(&var);
 	free(memory_pool_var.memory_pool);
 	memory_pool_var.memory_pool = NULL;
+#ifdef DEBUG
+	free(other_memory_pool_var.memory_pool);
+	other_memory_pool_var.memory_pool = NULL;
+#endif
 exit:
 	PRINT_LOG("Exit success!\n");
 	return EXIT_SUCCESS;
