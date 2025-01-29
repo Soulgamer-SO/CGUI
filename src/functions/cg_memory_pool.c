@@ -14,7 +14,7 @@ bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 		PRINT_ERROR("create memory pool fail!\n");
 		return FALSE;
 	}
-	
+
 	p_var->last_memory_end_addr = p_var->memory_pool;
 	p_var->free_size = p_var->size;
 	PRINT_LOG("============================memory pool============================\n");
@@ -279,7 +279,7 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 	}
 	if (size == 0) {
 		cg_free_memory(p_var, memory_addr);
-		
+
 		return NULL;
 	}
 	return memory_addr;
