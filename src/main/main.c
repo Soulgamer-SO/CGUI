@@ -5,17 +5,20 @@
 #include "../functions/cg_wsi.h"
 #include "cg_platform.h"
 #include <string.h>
+#define MEM_SIZE 1024 * 1024
 
 // gdb反汇编调试命令 -exec disassemble /m main
 MAIN {
 	cg_memory_pool_var_t memory_pool_var = {
-		.memory_pool = NULL,
+		.memory_pool = malloc(MEM_SIZE),
 		.last_memory_end_addr = NULL,
 		.memory_node_count = 0,
-		.size = 1024 * 1024,
+		.memory_node_list = NULL,
+		.is_memory_node_list_in_pool = TRUE,
+		.size = MEM_SIZE,
 		.free_size = 0};
 	cg_var_t var;
-	if (cg_create_memory_pool(&memory_pool_var) == FALSE && memory_pool_var.memory_pool == NULL) {
+	if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
 		goto exit;
 	} else {
 		PRINT_LOG("create memory pool success!\n");

@@ -27,17 +27,21 @@ typedef struct cg_memory_pool_var {
 	void *last_memory_end_addr;
 	// 记录内存块信息的节点的数量,也可能包括已经被释放的内存块的信息
 	uint32_t memory_node_count;
+	// 记录内存块信息的节点的列表(数据呈逆序排列)
+	cg_memory_node_t *memory_node_list;
+	// 内存块信息节点的列表本身是否放在内存池里
+	bool_t is_memory_node_list_in_pool;
 	// 内存池总大小
 	size_t size;
 	// 内存池剩余可用大小
 	size_t free_size;
 } cg_memory_pool_var_t;
 
-// 在堆上创建并初始化内存池
+// 创建并初始化内存池
 bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var);
 
-// 使用内存池，分配内存块
-void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size);
+// 设置内存块信息节点的列表(数据呈逆序排列)本身的内存地址位置
+cg_memory_node_t *cg_set_memory_node_list_addr(cg_memory_pool_var_t *p_var, void *addr, size_t size);
 
 // 获取内存块内存占用大小
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr);
@@ -50,6 +54,9 @@ cg_memory_node_t *cg_get_memory_node(cg_memory_pool_var_t *p_var, void *memory_a
 
 // 删除一个内存块信息节点
 void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, uint32_t index);
+
+// 使用内存池，分配内存块
+void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size);
 
 // 释放指定内存块
 void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr);
