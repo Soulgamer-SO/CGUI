@@ -22,7 +22,7 @@ MAIN {
 	if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
 		goto exit;
 	} else {
-		PRINT_LOG("create memory pool success!\n");
+		PRINT_LOG("create memory_pool_var success!\n");
 	}
 	var.p_memory_pool_var = &memory_pool_var;
 
@@ -39,13 +39,18 @@ MAIN {
 		.is_memory_node_list_in_pool = FALSE,
 		.size = MEM_POOL_SIZE,
 		.free_size = 0};
-	if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
+	if (cg_create_memory_pool(&other_memory_pool_var) == FALSE) {
 		goto exit;
+	} else {
+		PRINT_LOG("create other_memory_pool_var success!\n");
 	}
-	void *mem_a = cg_alloc_memory(&memory_pool_var, 1024);
+	void *mem_a = cg_alloc_memory(&other_memory_pool_var, 1024);
 	if (mem_a == NULL) {
 		goto exit;
+	} else {
+		PRINT_LOG("create memory_node_list success!\n");
 	}
+
 #endif
 
 #ifdef _WIN32
