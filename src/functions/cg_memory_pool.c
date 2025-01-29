@@ -280,7 +280,6 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 		cg_free_memory(p_var, memory_addr);
 		return NULL;
 	}
-
 	return memory_addr;
 }
 #endif
