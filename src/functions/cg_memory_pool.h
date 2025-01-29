@@ -54,7 +54,7 @@ void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, uint32_t index);
 // 释放指定内存块
 void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr);
 
-#if 0
+#ifdef DEBUG
 // 使用内存池，给指定内存块重新分配内存
 void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t size);
 #endif

@@ -6,6 +6,7 @@
 #include <string.h>
 typedef unsigned char byte_t;
 
+#ifdef DEBUG
 char *cg_create_string(
 	cg_memory_pool_var_t *p_var,
 	char *string);
@@ -28,5 +29,5 @@ bool_t cg_remove_one_string(
 bool_t cg_ret_is_string_equ(
 	const char *string_1,
 	const char *string_2);
-
+#endif
 #endif // CG_LIST_H 1

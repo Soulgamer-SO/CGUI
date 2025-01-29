@@ -1,5 +1,6 @@
 #include "cg_list.h"
 
+#ifdef DEBUG
 char *cg_create_string(
 	cg_memory_pool_var_t *p_var,
 	char *string) {
@@ -102,3 +103,4 @@ bool_t cg_ret_is_string_equ(
 		return FALSE;
 	}
 }
+#endif
