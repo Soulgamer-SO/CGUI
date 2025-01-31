@@ -45,7 +45,7 @@ typedef struct cg_memory_pool_var {
 		.last_memory_end_addr = NULL,
 		.memory_node_count = 0,
 		.memory_node_list = NULL,
-		.is_memory_node_list_in_pool = TRUE,
+		.is_memory_node_list_in_pool = TRUE,// TRUE列表本身也放内存池里
 		.size = MEM_POOL_SIZE,
 		.free_size = 0};
 		if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
