@@ -50,7 +50,6 @@ MAIN {
 	} else {
 		PRINT_LOG("create memory_node_list success!\n");
 	}
-
 #endif
 
 #ifdef _WIN32

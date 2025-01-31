@@ -19,7 +19,7 @@ typedef struct cg_memory_node {
 	bool_t is_used;
 } cg_memory_node_t;
 
-// memory pool var
+// 用来记录内存池信息
 typedef struct cg_memory_pool_var {
 	// 内存池
 	void *memory_pool;
@@ -36,8 +36,22 @@ typedef struct cg_memory_pool_var {
 	// 内存池剩余可用大小
 	size_t free_size;
 } cg_memory_pool_var_t;
-
-// 创建并初始化内存池
+/*创建内存池方法 示例1
+: cg_memory_pool_var_t memory_pool_var = {
+		.memory_pool = malloc(MEM_POOL_SIZE),
+		.last_memory_end_addr = NULL,
+		.memory_node_count = 0,
+		.memory_node_list = NULL,
+		.is_memory_node_list_in_pool = TRUE,
+		.size = MEM_POOL_SIZE,
+		.free_size = 0};
+		if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
+		goto exit;
+	} else {
+		PRINT_LOG("create memory_pool_var success!\n");
+	}*/
+// 注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池
+// 创建内存池
 bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var);
 
 // 设置内存块信息节点的列表(数据呈逆序排列)本身的内存地址位置
