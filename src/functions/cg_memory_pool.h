@@ -36,7 +36,8 @@ typedef struct cg_memory_pool_var {
 	// 内存池剩余可用大小
 	size_t free_size;
 } cg_memory_pool_var_t;
-/*创建内存池方法 
+
+/*创建内存池方法
 示例1:
 #define MEM_POOL_SIZE 1024 * 1024
  cg_memory_pool_var_t memory_pool_var = {
@@ -51,8 +52,9 @@ typedef struct cg_memory_pool_var {
 		goto exit;
 	} else {
 		PRINT_LOG("create memory_pool_var success!\n");
-	}*/
-// 注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池
+	}
+注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池*/
+
 // 创建内存池
 bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var);
 
