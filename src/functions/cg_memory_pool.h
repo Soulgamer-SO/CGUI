@@ -36,8 +36,10 @@ typedef struct cg_memory_pool_var {
 	// 内存池剩余可用大小
 	size_t free_size;
 } cg_memory_pool_var_t;
-/*创建内存池方法 示例1
-: cg_memory_pool_var_t memory_pool_var = {
+/*创建内存池方法 
+示例1:
+#define MEM_POOL_SIZE 1024 * 1024
+ cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = malloc(MEM_POOL_SIZE),
 		.last_memory_end_addr = NULL,
 		.memory_node_count = 0,
