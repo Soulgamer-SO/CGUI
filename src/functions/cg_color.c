@@ -17,3 +17,11 @@ uint32_t cg_change_ARGB_color(uint32_t red, uint32_t green, uint32_t blue, uint3
 	return ((alpha << 24) | red | (green << 8) | (blue << 16));
 #endif // _WIN32
 }
+
+uint32_t cg_change_AGBR_color(uint32_t red, uint32_t green, uint32_t blue, uint32_t alpha) {
+	return ((alpha << 24) | red | (green << 8) | (blue << 16));
+}
+
+uint32_t cg_change_GBR_color(uint32_t red, uint32_t green, uint32_t blue) {
+	return (red | (green << 8) | (blue << 16));
+}

@@ -36,4 +36,10 @@ uint32_t cg_change_ARGB_color(uint32_t red, uint32_t green, uint32_t blue, uint3
 // 改变RGB格式颜色
 uint32_t cg_change_RGB_color(uint32_t red, uint32_t green, uint32_t blue);
 
+// 改变AGBR格式颜色
+uint32_t cg_change_AGBR_color(uint32_t red, uint32_t green, uint32_t blue, uint32_t alpha);
+
+// 改变GBR格式颜色
+uint32_t cg_change_GBR_color(uint32_t red, uint32_t green, uint32_t blue);
+
 #endif // CG_COLOR_H 1
