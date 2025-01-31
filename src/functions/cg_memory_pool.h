@@ -37,15 +37,15 @@ typedef struct cg_memory_pool_var {
 	size_t free_size;
 } cg_memory_pool_var_t;
 
-/*创建内存池方法
-示例1:
+/*创建内存池
+示例代码:
 #define MEM_POOL_SIZE 1024 * 1024
  cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = malloc(MEM_POOL_SIZE),
 		.last_memory_end_addr = NULL,
 		.memory_node_count = 0,
 		.memory_node_list = NULL,
-		.is_memory_node_list_in_pool = TRUE,// TRUE列表本身也放内存池里
+		.is_memory_node_list_in_pool = TRUE, //TRUE列表本身也放内存池里
 		.size = MEM_POOL_SIZE,
 		.free_size = 0};
 		if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
@@ -54,8 +54,6 @@ typedef struct cg_memory_pool_var {
 		PRINT_LOG("create memory_pool_var success!\n");
 	}
 注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池*/
-
-// 创建内存池
 bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var);
 
 // 设置内存块信息节点的列表(数据呈逆序排列)本身的内存地址位置
