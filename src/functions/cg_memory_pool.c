@@ -254,7 +254,7 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	}
 
 	// 如果该内存块的后一个内存块已被释放
-	cg_memory_node_t *p_next_mem_node = cg_get_memory_node(p_var, NULL, p_memory_node->end_addr);
+	cg_memory_node_t *p_next_mem_node = cg_get_memory_node(p_var, p_memory_node->end_addr, NULL);
 	if (p_next_mem_node->is_used == FALSE) {
 		p_memory_node->end_addr = p_next_mem_node->end_addr;
 		uint32_t next_memory_index = cg_get_memory_node_index(p_var, p_next_mem_node->addr);
