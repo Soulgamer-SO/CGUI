@@ -303,6 +303,8 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 	if (size > old_size) {
 		void *new_memory_addr = cg_alloc_memory(p_var, size);
 		if (new_memory_addr != NULL) {
+			memmove(new_memory_addr, memory_addr, old_size);
+			cg_free_memory(p_var, memory_addr);
 			return new_memory_addr;
 		}
 		return memory_addr;
