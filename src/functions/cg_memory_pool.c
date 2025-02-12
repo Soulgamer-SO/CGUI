@@ -224,6 +224,17 @@ void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, uint32_t index) {
 	}
 }
 
+void cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info) {
+	p_var->memory_node_list = (cg_memory_node_t *)(p_var->memory_pool + p_var->size - p_var->memory_node_count * sizeof(cg_memory_node_t));
+	if (p_var->free_size >= sizeof(cg_memory_node_t)) {
+		p_var->memory_node_list[-1] = memory_node_info;
+		p_var->memory_node_count++;
+		p_var->free_size -= sizeof(cg_memory_node_t);
+		p_var->memory_node_list = (cg_memory_node_t *)(p_var->memory_pool + p_var->size - p_var->memory_node_count * sizeof(cg_memory_node_t));
+		return;
+	}
+}
+
 void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	if (p_var->memory_pool == NULL) {
 		PRINT_ERROR("must create memory pool first!\n");
@@ -303,6 +314,7 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 	size_t old_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
 
 	if (size > old_size) {
+		// 如果该内存块排在最后尾
 		if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
 			p_memory_node->end_addr = p_var->last_memory_end_addr + (size - old_size);
 			p_var->last_memory_end_addr = p_memory_node->end_addr;
@@ -318,8 +330,20 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 		return memory_addr;
 	}
 	if (size < old_size) {
-		p_memory_node->end_addr;
-		p_var->free_size -= (old_size - size);
+		// 如果该内存块排在最后尾
+		if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
+			p_memory_node->end_addr = p_var->last_memory_end_addr - (old_size - size);
+			p_var->last_memory_end_addr = p_memory_node->end_addr;
+			p_var->free_size += (old_size - size);
+			return memory_addr;
+		}
+		cg_add_one_memory_node(
+			p_var,
+			(cg_memory_node_t){
+				.addr = p_memory_node->end_addr - (old_size - size),
+				.end_addr = p_memory_node->end_addr,
+				.is_used = FALSE});
+		p_var->free_size += (old_size - size);
 		return memory_addr;
 	}
 	if (size == old_size) {

@@ -71,6 +71,9 @@ cg_memory_node_t *cg_get_memory_node(cg_memory_pool_var_t *p_var, void *memory_a
 // 删除一个内存块信息节点
 void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, uint32_t index);
 
+// 添加一个内存块信息节点
+void cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info);
+
 // 使用内存池，分配内存块
 void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size);
 
