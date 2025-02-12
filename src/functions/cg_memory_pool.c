@@ -299,8 +299,16 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 		cg_free_memory(p_var, memory_addr);
 		return NULL;
 	}
-	size_t old_size = cg_get_memory_size(p_var, memory_addr);
+	cg_memory_node_t *p_memory_node = cg_get_memory_node(p_var, memory_addr, NULL);
+	size_t old_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
+
 	if (size > old_size) {
+		if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
+			p_memory_node->end_addr = p_var->last_memory_end_addr + (size - old_size);
+			p_var->last_memory_end_addr = p_memory_node->end_addr;
+			p_var->free_size -= (size - old_size);
+			return memory_addr;
+		}
 		void *new_memory_addr = cg_alloc_memory(p_var, size);
 		if (new_memory_addr != NULL) {
 			memmove(new_memory_addr, memory_addr, old_size);
@@ -310,6 +318,8 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 		return memory_addr;
 	}
 	if (size < old_size) {
+		p_memory_node->end_addr;
+		p_var->free_size -= (old_size - size);
 		return memory_addr;
 	}
 	if (size == old_size) {
