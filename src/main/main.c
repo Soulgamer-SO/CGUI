@@ -12,12 +12,13 @@
 MAIN {
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = malloc(MEM_POOL_SIZE),
+		.free_size = 0,
+		.size = MEM_POOL_SIZE,
 		.last_memory_end_addr = NULL,
 		.memory_node_count = 0,
 		.memory_node_list = NULL,
 		.is_memory_node_list_in_pool = TRUE,
-		.size = MEM_POOL_SIZE,
-		.free_size = 0};
+		.memory_node_max_count = 0};
 	cg_var_t var;
 	if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
 		goto exit;
@@ -33,12 +34,13 @@ MAIN {
 	}
 	cg_memory_pool_var_t other_memory_pool_var = {
 		.memory_pool = malloc(MEM_POOL_SIZE),
+		.size = MEM_POOL_SIZE,
+		.free_size = 0,
 		.last_memory_end_addr = NULL,
 		.memory_node_count = 0,
 		.memory_node_list = cg_set_memory_node_list_addr(memory_node_list_memory, NODE_LIST_SIZE),
 		.is_memory_node_list_in_pool = FALSE,
-		.size = MEM_POOL_SIZE,
-		.free_size = 0};
+		.memory_node_max_count = NODE_LIST_SIZE / sizeof(cg_memory_node_t)};
 	if (cg_create_memory_pool(&other_memory_pool_var) == FALSE) {
 		goto exit;
 	} else {
