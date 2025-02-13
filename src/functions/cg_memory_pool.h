@@ -35,7 +35,7 @@ typedef struct cg_memory_pool_var {
 	cg_memory_node_t *memory_node_list;
 	// 内存块信息节点的列表本身是否放在内存池里
 	bool_t is_memory_node_list_in_pool;
-	// 内存块信息节点的最大数量
+	// 内存块信息节点的最大数量(只有节点列表本身不在内存池里才适用)
 	uint32_t memory_node_max_count;
 } cg_memory_pool_var_t;
 
