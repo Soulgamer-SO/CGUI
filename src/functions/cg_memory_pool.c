@@ -1,19 +1,14 @@
 #include "cg_memory_pool.h"
 
 bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
-	size_t memory_node_size = 0;
-	if (p_var->is_memory_node_list_in_pool == TRUE) {
-		memory_node_size = sizeof(cg_memory_node_t);
-		p_var->memory_node_list = NULL;
-	}
-	if (p_var->size <= memory_node_size) {
-		PRINT_ERROR("memory pool size should more bigger than %zu size!\n", memory_node_size);
+	if (p_var->size <= 0) {
+		PRINT_ERROR("memory pool size should more bigger than 0!\n");
 		return FALSE;
 	}
 	p_var->last_memory_end_addr = NULL;
 	p_var->memory_node_count = 0;
 	p_var->free_size = 0;
-	if (p_var->memory_pool == NULL) {
+	if (p_var->memory_pool == NULL || p_var->memory_node_list == NULL) {
 		PRINT_ERROR("create memory pool fail!\n");
 		return FALSE;
 	}
@@ -29,15 +24,8 @@ bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 	return TRUE;
 }
 
-inline cg_memory_node_t *cg_set_memory_node_list_addr(void *node_list_addr, size_t node_list_size) {
-	return (cg_memory_node_t *)(node_list_addr + node_list_size - sizeof(cg_memory_node_t));
-}
-
 void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 	size_t memory_node_size = 0;
-	if (p_var->is_memory_node_list_in_pool == TRUE) {
-		memory_node_size = sizeof(cg_memory_node_t);
-	}
 	if (p_var->memory_pool == NULL) {
 		PRINT_ERROR("allocate memory fail! please create memory pool first!\n");
 		return NULL;
@@ -52,9 +40,6 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 
 	if (p_var->memory_node_count == 0) {
 		p_var->memory_node_count = 1;
-		if (p_var->is_memory_node_list_in_pool == TRUE) {
-			p_var->memory_node_list = (cg_memory_node_t *)(p_var->memory_pool + p_var->size - sizeof(cg_memory_node_t));
-		}
 		p_var->memory_node_list[0].addr = p_var->memory_pool;
 		p_var->memory_node_list[0].end_addr = p_var->memory_pool + size;
 		p_var->memory_node_list[0].is_used = TRUE;
@@ -214,33 +199,16 @@ cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *mem
 }
 
 void cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info) {
-	size_t memory_node_size = 0;
-	if (p_var->is_memory_node_list_in_pool == TRUE) {
-		memory_node_size = sizeof(cg_memory_node_t);
-		if (p_var->free_size < memory_node_size) {
-			PRINT_ERROR("add one memory node fail!\n");
-			return;
-		}
-	}
-
 	p_var->memory_node_list[-1] = memory_node_info;
 	p_var->memory_node_count++;
-	if (p_var->is_memory_node_list_in_pool == TRUE) {
-		p_var->free_size += memory_node_size;
-	}
 	p_var->memory_node_list = &p_var->memory_node_list[-1];
 	return;
 }
 
 void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, uint32_t index) {
-	size_t memory_node_size = 0;
 	if (p_var->memory_node_count == 1) {
 		memset(p_var->memory_node_list, 0, sizeof(cg_memory_node_t));
 		p_var->memory_node_count = 0;
-		if (p_var->is_memory_node_list_in_pool == TRUE) {
-			memory_node_size = sizeof(cg_memory_node_t);
-		}
-		p_var->free_size += memory_node_size;
 		return;
 	}
 	if (index == 0) {
