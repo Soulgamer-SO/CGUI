@@ -4,6 +4,7 @@
 #include "cg_list.h"
 #include "cg_log.h"
 #include "cg_memory_pool.h"
+#include <stdint.h>
 #include <vulkan/vulkan.h>
 #ifdef __linux
 #include <xcb/xcb_icccm.h>

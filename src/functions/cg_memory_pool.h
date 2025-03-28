@@ -2,6 +2,7 @@
 #define CG_MEMORY_POOL_H 1
 #include "cg_bool.h"
 #include "cg_log.h"
+#include <stdint.h>
 #ifdef __linux
 #include <alloca.h>
 #endif // __linux
