@@ -12,12 +12,12 @@
 #endif // __linux
 
 // 选择想要的交换链
-bool_t cg_select_swapchain(cg_var_t *p_var);
+bool cg_select_swapchain(cg_var_t *p_var);
 
 // 创建交换链
-bool_t cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain);
+bool cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain);
 
 // 选择想要的显示模式
-bool_t cg_select_present_mode(cg_var_t *p_var);
+bool cg_select_present_mode(cg_var_t *p_var);
 
 #endif // CG_SWAPCHAIN_H

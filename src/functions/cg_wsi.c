@@ -8,7 +8,7 @@
 #include "cg_physical_device.h"
 #include "cg_swapchain.h"
 
-bool_t cg_create_window(cg_var_t *p_var) {
+bool cg_create_window(cg_var_t *p_var) {
 	p_var->wsi_var.surface = VK_NULL_HANDLE;
 	p_var->wsi_var.window_name = "CGUI-App";
 	p_var->wsi_var.window_x = 200;
@@ -26,7 +26,7 @@ bool_t cg_create_window(cg_var_t *p_var) {
 	p_var->wsi_var.xcb_surface_create_info.flags = 0;
 	p_var->wsi_var.XCB_API_var.screen_num = 0;
 	p_var->wsi_var.xcb_surface_create_info.connection = xcb_connect(NULL, &p_var->wsi_var.XCB_API_var.screen_num);
-	bool_t is_xcb_connect_has_error = FALSE;
+	bool is_xcb_connect_has_error = FALSE;
 	is_xcb_connect_has_error = xcb_connection_has_error(p_var->wsi_var.xcb_surface_create_info.connection);
 	if (is_xcb_connect_has_error == TRUE) {
 		xcb_disconnect(p_var->wsi_var.xcb_surface_create_info.connection);

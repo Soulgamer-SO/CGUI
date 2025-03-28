@@ -1,6 +1,6 @@
 #include "cg_memory_pool.h"
 
-bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
+bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 	if (p_var->size <= 0) {
 		PRINT_ERROR("memory pool size should more bigger than 0!\n");
 		return FALSE;
@@ -17,7 +17,6 @@ bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 	PRINT_LOG("============================memory pool============================\n");
 	PRINT_LOG("create memory_pool success!\n");
 	PRINT_LOG("memory_pool = %p;\n", p_var->memory_pool);
-	PRINT_LOG("last_memory_end_addr = %p;\n", p_var->last_memory_end_addr);
 	PRINT_LOG("memory_pool_size = %zu;\n", p_var->size);
 	PRINT_LOG("free_size = %zu;\n", p_var->free_size);
 	PRINT_LOG("===================================================================\n");
@@ -58,8 +57,8 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 		PRINT_LOG("===================================================================\n");
 		return p_var->memory_node_list[0].addr;
 	} else if (p_var->memory_node_count >= 1) {
-		bool_t is_free_mem_size_equ = FALSE;
-		bool_t is_free_mem_size_bigger = FALSE;
+		bool is_free_mem_size_equ = FALSE;
+		bool is_free_mem_size_bigger = FALSE;
 		uint32_t i = 0;
 		for (i = 0; i < p_var->memory_node_count; i++) {
 			size_t memory_size = (size_t)(p_var->memory_node_list[i].end_addr - p_var->memory_node_list[i].addr);

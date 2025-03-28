@@ -1,6 +1,6 @@
 #include "cg_command_pool.h"
 
-bool_t cg_create_command_pool(cg_var_t *p_var, VkCommandPool *p_command_pool) {
+bool cg_create_command_pool(cg_var_t *p_var, VkCommandPool *p_command_pool) {
 	VkCommandPoolCreateInfo command_pool_create_info = {
 		.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
 		.pNext = NULL,

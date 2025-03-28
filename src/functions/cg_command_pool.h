@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 // 创建命令池
-bool_t cg_create_command_pool(cg_var_t *p_var, VkCommandPool *p_command_pool);
+bool cg_create_command_pool(cg_var_t *p_var, VkCommandPool *p_command_pool);
 
 // 分配命令缓冲区
 void cg_create_command_buffer_list(cg_var_t *p_var, VkCommandPool command_pool, VkCommandBuffer *command_buffer_list, uint32_t command_buffer_count);

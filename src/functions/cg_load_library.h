@@ -6,6 +6,6 @@
 #endif // __linux
 
 // 加载函数库
-bool_t cg_load_library(cg_var_t *p_var);
+bool cg_load_library(cg_var_t *p_var);
 
 #endif // CG_LOAD_LIBRARY_H 1

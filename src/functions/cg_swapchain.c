@@ -1,6 +1,6 @@
 #include "cg_swapchain.h"
 
-bool_t cg_select_swapchain(cg_var_t *p_var) {
+bool cg_select_swapchain(cg_var_t *p_var) {
 	p_var->wsi_var.old_swapchain = VK_NULL_HANDLE;
 
 	// 设置交换链图像的数量
@@ -77,7 +77,7 @@ bool_t cg_select_swapchain(cg_var_t *p_var) {
 	p_var->wsi_var.enabled_surface_format.format = VK_FORMAT_B8G8R8A8_UNORM;
 
 	// 判断是否支持自己想要的交换链图像的格式,VK_FORMAT_UNDEFINED 表示支持任意格式
-	bool_t is_surface_format_supported = FALSE;
+	bool is_surface_format_supported = FALSE;
 	for (uint32_t i = 0; i < p_var->wsi_var.surface_format_count; i++) {
 		if (p_var->wsi_var.surface_format_list[i].format == p_var->wsi_var.enabled_surface_format.format) {
 			p_var->wsi_var.enabled_surface_format.colorSpace = p_var->wsi_var.surface_format_list[i].colorSpace;
@@ -96,7 +96,7 @@ bool_t cg_select_swapchain(cg_var_t *p_var) {
 	return TRUE;
 }
 
-bool_t cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain) {
+bool cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain) {
 	PFN_vkCreateSwapchainKHR create_swapchain = NULL;
 	create_swapchain = (PFN_vkCreateSwapchainKHR)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateSwapchainKHR");
 	if (create_swapchain == NULL) {
@@ -196,7 +196,7 @@ bool_t cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain) {
 	return TRUE;
 }
 
-bool_t cg_select_present_mode(cg_var_t *p_var) {
+bool cg_select_present_mode(cg_var_t *p_var) {
 	p_var->wsi_var.present_mode_count = 0;
 	PFN_vkGetPhysicalDeviceSurfacePresentModesKHR get_physical_device_surface_present_modes = NULL;
 	get_physical_device_surface_present_modes = (PFN_vkGetPhysicalDeviceSurfacePresentModesKHR)p_var->library_var.get_instance_proc_addr(

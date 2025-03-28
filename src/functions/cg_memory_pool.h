@@ -16,7 +16,7 @@ typedef struct cg_memory_node {
 	// 内存块的尾地址
 	void *end_addr;
 	// 表示内存块是否被使用
-	bool_t is_used;
+	bool is_used;
 } cg_memory_node_t;
 
 // 用来记录内存池信息(非侵入式内存池)
@@ -33,8 +33,8 @@ typedef struct cg_memory_pool_var {
 	uint32_t memory_node_count;
 	// 记录内存块信息的节点的列表
 	cg_memory_node_t *memory_node_list;
-	// 内存块信息节点的最大数量
-	uint32_t memory_node_max_count;
+	// 内存块信息节点列表的大小上限
+	size_t memory_node_max_size;
 } cg_memory_pool_var_t;
 
 /*创建内存池(非侵入式内存池)
@@ -53,14 +53,14 @@ cg_memory_node_t *memory_node_list_memory = malloc(NODE_LIST_SIZE);
 		.last_memory_end_addr = NULL,
 		.memory_node_count = 0,
 		.memory_node_list = malloc(NODE_LIST_SIZE),
-		.memory_node_max_count = NODE_LIST_SIZE / sizeof(cg_memory_node_t)};
+		.memory_node_max_size = NODE_LIST_SIZE};
 	if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
 		goto exit;
 	} else {
 		PRINT_LOG("create memory_pool_var success!\n");
 	}
 注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池*/
-bool_t cg_create_memory_pool(cg_memory_pool_var_t *p_var);
+bool cg_create_memory_pool(cg_memory_pool_var_t *p_var);
 
 // 获取内存块内存占用大小
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr);

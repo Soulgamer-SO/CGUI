@@ -17,7 +17,7 @@ MAIN {
 		.last_memory_end_addr = NULL,
 		.memory_node_count = 0,
 		.memory_node_list = malloc(NODE_LIST_SIZE),
-		.memory_node_max_count = NODE_LIST_SIZE / sizeof(cg_memory_node_t)};
+		.memory_node_max_size = NODE_LIST_SIZE};
 	if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
 		goto exit;
 	} else {
@@ -43,6 +43,8 @@ destroy_and_exit:
 	cg_destroy_and_exit(&var);
 	free(memory_pool_var.memory_pool);
 	memory_pool_var.memory_pool = NULL;
+	free(memory_pool_var.memory_node_list);
+	memory_pool_var.memory_node_list = NULL;
 exit:
 	PRINT_LOG("Exit success!\n");
 	return EXIT_SUCCESS;

@@ -8,7 +8,7 @@
 #include "cg_sync.h"
 #include "cg_wsi.h"
 
-bool_t cg_initialize_var(cg_var_t *p_var) {
+bool cg_initialize_var(cg_var_t *p_var) {
 	if (p_var->p_memory_pool_var == NULL) {
 		return FALSE;
 	}

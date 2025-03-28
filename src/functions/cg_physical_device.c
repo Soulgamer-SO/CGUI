@@ -1,6 +1,6 @@
 #include "cg_physical_device.h"
 
-bool_t cg_enumerate_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_count, VkPhysicalDevice *available_physical_device_list) {
+bool cg_enumerate_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_count, VkPhysicalDevice *available_physical_device_list) {
 	// 确认可用物理设备句柄名单之前，先加载实例级函数 PFN_vkEnumeratePhysicalDevices()
 	PFN_vkEnumeratePhysicalDevices enumerate_physical_devices = NULL;
 	enumerate_physical_devices = (PFN_vkEnumeratePhysicalDevices)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkEnumeratePhysicalDevices");
@@ -17,7 +17,7 @@ bool_t cg_enumerate_physical_device(cg_var_t *p_var, uint32_t *p_physical_device
 	return TRUE;
 }
 
-bool_t cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_count, VkPhysicalDevice *available_physical_device_list, VkPhysicalDevice *p_physical_device) {
+bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_count, VkPhysicalDevice *available_physical_device_list, VkPhysicalDevice *p_physical_device) {
 
 	// 初始化物理设备(选择默认显卡并初始)
 	p_var->physical_device_var.physical_device_index = 0;

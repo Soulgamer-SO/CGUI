@@ -1,6 +1,6 @@
 #include "cg_logic_device.h"
 
-bool_t cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
+bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 	p_var->logic_device_var.queue_family_count = 0;
 	PFN_vkGetPhysicalDeviceQueueFamilyProperties get_physical_device_queue_family_properties = NULL;
 	get_physical_device_queue_family_properties = (PFN_vkGetPhysicalDeviceQueueFamilyProperties)p_var->library_var.get_instance_proc_addr(

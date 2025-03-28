@@ -33,7 +33,7 @@ void *cg_add_one_at_list(
 	return NULL;
 }
 
-bool_t cg_remove_one_string(
+bool cg_remove_one_string(
 	char *string_element,
 	uint32_t *p_string_count,
 	char ***p_string_list) {
@@ -47,7 +47,7 @@ bool_t cg_remove_one_string(
 	uint32_t old_string_count = *p_string_count;
 	uint32_t new_string_count = *p_string_count;
 	for (uint32_t i = 0; i < old_string_count; i++) {
-		bool_t is_string_equ = cg_ret_is_string_equ(old_string_list[i], string_element);
+		bool is_string_equ = cg_ret_is_string_equ(old_string_list[i], string_element);
 		if (is_string_equ == TRUE) {
 			new_string_count--;
 			find_index = i;
@@ -95,7 +95,7 @@ bool_t cg_remove_one_string(
 	return TRUE;
 }
 
-bool_t cg_ret_is_string_equ(
+bool cg_ret_is_string_equ(
 	const char *string_1, const char *string_2) {
 	if (strcmp(string_1, string_2) == 0) {
 		return TRUE;

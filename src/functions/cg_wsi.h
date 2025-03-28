@@ -12,6 +12,6 @@
 #endif // _WIN32
 
 // 创建窗口
-bool_t cg_create_window(cg_var_t *p_var);
+bool cg_create_window(cg_var_t *p_var);
 
 #endif // CG_WSI_H 1

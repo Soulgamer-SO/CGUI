@@ -1,6 +1,6 @@
 #include "cg_load_library.h"
 
-bool_t cg_load_library(cg_var_t *p_var) {
+bool cg_load_library(cg_var_t *p_var) {
 #ifdef __linux
 	p_var->library_var.vulkan_library = NULL;
 	p_var->library_var.vulkan_library = dlopen("libvulkan.so.1", RTLD_NOW);

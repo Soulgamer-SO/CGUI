@@ -1,6 +1,6 @@
 #include "cg_instance.h"
 
-bool_t cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
+bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
 	p_var->library_var.vk_result = VK_SUCCESS;
 
 	// 加载Vulkan全局函数 Vulkan只有三个全局函数 PFN_vkEnumerateInstanceExtensionProperties,PFN_vkEnumerateInstanceLayerProperties,PFN_vkCreateInstance

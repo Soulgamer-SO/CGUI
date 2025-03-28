@@ -59,7 +59,7 @@ typedef struct vk_physical_device_var_t {
 	// 可用的物理设备扩展的数量
 	uint32_t physical_device_extensions_count;
 	// 检查物理设备功能和属性,选择想要的物理设备
-	bool_t is_physical_device_supported;
+	bool is_physical_device_supported;
 	VkPhysicalDeviceFeatures device_feature_list;
 	VkPhysicalDeviceProperties device_properties;
 	// 可用的物理设备扩展列表
@@ -122,7 +122,7 @@ typedef struct sync_var {
 	uint32_t fence_count;
 
 	// 是否在等待
-	bool_t is_wait_for;
+	bool is_wait_for;
 	// 单位纳秒 1,000,000,000ns = 1s
 	uint64_t timeout;
 
@@ -140,7 +140,7 @@ typedef struct wsi_var {
 	uint16_t window_width;
 	uint16_t window_height;
 	uint16_t border_width;
-	bool_t is_window_resizeable;
+	bool is_window_resizeable;
 	// 显示表面
 	VkSurfaceKHR surface;
 #ifdef VK_USE_PLATFORM_XCB_KHR
@@ -207,7 +207,7 @@ typedef struct wsi_var {
 
 // event loop var
 typedef struct event_loop_var {
-	bool_t is_running;
+	bool is_running;
 #ifdef VK_USE_PLATFORM_XCB_KHR
 	xcb_generic_event_t *event;
 #endif // VK_USE_PLATFORM_XCB_KHR

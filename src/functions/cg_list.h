@@ -1,6 +1,5 @@
 #ifndef CG_LIST_H
 #define CG_LIST_H 1
-#include "cg_bool.h"
 #include "cg_memory_pool.h"
 #include <stdlib.h>
 #include <string.h>
@@ -20,13 +19,13 @@ void *cg_add_one_at_list(
 	void *p_list);
 
 // 在字符串列表里删除一个指定的字符串元素
-bool_t cg_remove_one_string(
+bool cg_remove_one_string(
 	char *string_element,
 	uint32_t *p_string_count,
 	char ***p_string_list);
 
 // 比较字符串是否相等
-bool_t cg_ret_is_string_equ(
+bool cg_ret_is_string_equ(
 	const char *string_1,
 	const char *string_2);
 #endif
