@@ -33,27 +33,27 @@ typedef struct cg_memory_pool_var {
 	uint32_t memory_node_count;
 	// 记录内存块信息的节点的列表
 	cg_memory_node_t *memory_node_list;
-	// 内存块信息节点列表的大小上限
-	size_t memory_node_max_size;
+	// 内存块信息节点的数量上限
+	uint32_t memory_node_max_count;
 } cg_memory_pool_var_t;
 
 /*创建内存池(非侵入式内存池)
 
 示例代码:
-#define MEM_POOL_SIZE 1024 * 1024
+#define MEMORY_POOL_SIZE 1024 * 1024
 #define NODE_LIST_SIZE 4 * 1024
 cg_memory_node_t *memory_node_list_memory = malloc(NODE_LIST_SIZE);
 	if (memory_node_list_memory == nullptr) {
 		goto exit;
 	}
 	cg_memory_pool_var_t memory_pool_var = {
-		.memory_pool = malloc(MEM_POOL_SIZE),
-		.size = MEM_POOL_SIZE,
+		.memory_pool = malloc(MEMORY_POOL_SIZE),
+		.size = MEMORY_POOL_SIZE,
 		.free_size = 0,
 		.last_memory_end_addr = nullptr,
 		.memory_node_count = 0,
 		.memory_node_list = malloc(NODE_LIST_SIZE),
-		.memory_node_max_size = NODE_LIST_SIZE};
+		.memory_node_max_count = NODE_LIST_SIZE / sizeof(cg_memory_node_t)};
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {
@@ -72,7 +72,7 @@ uint32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr
 cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr);
 
 // 添加一个内存块信息节点
-void cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info);
+bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info);
 
 // 删除一个内存块信息节点
 void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, uint32_t index);

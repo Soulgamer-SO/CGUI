@@ -197,11 +197,17 @@ cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *mem
 	return &p_var->memory_node_list[i];
 }
 
-void cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info) {
-	p_var->memory_node_list[-1] = memory_node_info;
+bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info) {
+	if (p_var->memory_node_count == p_var->memory_node_max_count) {
+		p_var->memory_node_list = realloc(p_var->memory_node_list, sizeof(cg_memory_node_t) * (p_var->memory_node_max_count + 1));
+		if (p_var->memory_node_list == nullptr) {
+			return false;
+		}
+		p_var->memory_node_max_count++;
+	};
+	p_var->memory_node_list[p_var->memory_node_count] = memory_node_info;
 	p_var->memory_node_count++;
-	p_var->memory_node_list = &p_var->memory_node_list[-1];
-	return;
+	return true;
 }
 
 void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, uint32_t index) {
