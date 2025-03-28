@@ -1,7 +1,6 @@
 #ifndef CG_WSI_H
 #define CG_WSI_H 1
 #include "cg_var.h"
-#include <string.h>
 #ifdef __linux
 #include <xcb/xcb_icccm.h>
 #include <xcb/xcb_util.h>

@@ -1,7 +1,5 @@
 #ifndef CG_VAR_H
 #define CG_VAR_H 1
-#include "cg_list.h"
-#include "cg_log.h"
 #include "cg_memory_pool.h"
 #include <stdint.h>
 #include <vulkan/vulkan.h>

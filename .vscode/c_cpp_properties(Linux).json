@@ -13,7 +13,7 @@
                 "false",
                 "nullptr"
             ],
-            "intelliSenseMode": "gcc-x64",
+            "intelliSenseMode": "linux-gcc-x64",
             "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],

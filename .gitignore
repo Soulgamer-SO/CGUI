@@ -1,6 +1,10 @@
 # DIR
 build/
 
+#Clangd
+.cache/
+compile_commands.json
+
 # Vscode
 .VSCodeCounter/
 

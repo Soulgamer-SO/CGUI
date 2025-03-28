@@ -1,8 +1,6 @@
 #ifndef CG_SYNC_H
 #define CG_SYNC_H 1
 #include "cg_var.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 // 创建信号量
 void cg_create_semaphore(cg_var_t *p_var);

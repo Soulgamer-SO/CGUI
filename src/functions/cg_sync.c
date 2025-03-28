@@ -93,13 +93,13 @@ void cg_submit_command_buff_to_queue(cg_var_t *p_var) {
 	VkSubmitInfo submit_info = {
 		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
 		.pNext = nullptr,
-		.waitSemaphoreCount = 0,   // p_var->sync_var.wait_semaphore_count,
+		.waitSemaphoreCount = 0,      // p_var->sync_var.wait_semaphore_count,
 		.pWaitSemaphores = nullptr,   //&p_var->sync_var.wait_semaphore_list[0],
 		.pWaitDstStageMask = nullptr, //&p_var->sync_var.semaphore_pipeline_stage_list[0],
 		.commandBufferCount = p_var->command_pool_var.command_buffer_count,
 		.pCommandBuffers = &p_var->command_pool_var.command_buffer_list[0],
-		.signalSemaphoreCount = 0, // p_var->sync_var.semaphore_count,
-		.pSignalSemaphores = nullptr  //&p_var->sync_var.semaphore_list[0]
+		.signalSemaphoreCount = 0,   // p_var->sync_var.semaphore_count,
+		.pSignalSemaphores = nullptr //&p_var->sync_var.semaphore_list[0]
 	};
 	PFN_vkQueueSubmit vkQueueSubmit = nullptr;
 	vkQueueSubmit = (PFN_vkQueueSubmit)p_var->library_var.get_device_proc_addr(

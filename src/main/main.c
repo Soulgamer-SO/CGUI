@@ -2,9 +2,7 @@
 #include "../functions/cg_event_loop.h"
 #include "../functions/cg_initialize.h"
 #include "../functions/cg_memory_pool.h"
-#include "../functions/cg_wsi.h"
 #include "cg_platform.h"
-#include <string.h>
 #define MEM_POOL_SIZE 1024 * 1024
 #define NODE_LIST_SIZE 4 * 1024
 
