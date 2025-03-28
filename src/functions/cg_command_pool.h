@@ -1,8 +1,6 @@
 #ifndef CG_COMMAND_POOL_H
 #define CG_COMMAND_POOL_H 1
 #include "cg_var.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 // 创建命令池
 bool cg_create_command_pool(cg_var_t *p_var, VkCommandPool *p_command_pool);

@@ -1,11 +1,5 @@
 #include "cg_wsi.h"
 #include "cg_color.h"
-#include "cg_command_pool.h"
-#include "cg_destroy.h"
-#include "cg_event_loop.h"
-#include "cg_instance.h"
-#include "cg_logic_device.h"
-#include "cg_physical_device.h"
 #include "cg_swapchain.h"
 
 bool cg_create_window(cg_var_t *p_var) {

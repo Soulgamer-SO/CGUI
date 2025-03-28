@@ -1,6 +1,5 @@
 #ifndef CG_PLATFORM_H
 #define CG_PLATFORM_H 1
-#include <stdlib.h>
 #ifdef __linux
 #define MAIN int main(void)
 #endif // Linux

@@ -1,7 +1,6 @@
 #ifndef CG_DESTROY_H
 #define CG_DESTROY_H 1
 #include "cg_var.h"
-#include <stdio.h>
 #ifdef __linux
 #include <dlfcn.h>
 #endif // __linux
