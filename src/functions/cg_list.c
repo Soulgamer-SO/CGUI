@@ -38,7 +38,7 @@ bool cg_remove_one_string(
 	uint32_t *p_string_count,
 	char ***p_string_list) {
 	if (*p_string_count == 0) {
-		return FALSE;
+		return false;
 	}
 
 	// 获得要被删除的元素的索引 find_index
@@ -48,7 +48,7 @@ bool cg_remove_one_string(
 	uint32_t new_string_count = *p_string_count;
 	for (uint32_t i = 0; i < old_string_count; i++) {
 		bool is_string_equ = cg_ret_is_string_equ(old_string_list[i], string_element);
-		if (is_string_equ == TRUE) {
+		if (is_string_equ == true) {
 			new_string_count--;
 			find_index = i;
 			break;
@@ -57,12 +57,12 @@ bool cg_remove_one_string(
 
 	// 如果find_index不存在
 	if (find_index == 0 && new_string_count == old_string_count) {
-		return FALSE;
+		return false;
 	}
 
 	char **new_string_list = (char **)malloc(new_string_count * sizeof(char *));
 	if (new_string_list == NULL) {
-		return FALSE;
+		return false;
 	}
 
 	// 如果find_index在末尾
@@ -92,15 +92,15 @@ bool cg_remove_one_string(
 	*p_string_count = new_string_count;
 	*p_string_list = realloc(*p_string_list, new_string_count * sizeof(char *));
 	*p_string_list = new_string_list;
-	return TRUE;
+	return true;
 }
 
 bool cg_ret_is_string_equ(
 	const char *string_1, const char *string_2) {
 	if (strcmp(string_1, string_2) == 0) {
-		return TRUE;
+		return true;
 	} else {
-		return FALSE;
+		return false;
 	}
 }
 #endif

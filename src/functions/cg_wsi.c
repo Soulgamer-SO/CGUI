@@ -16,7 +16,7 @@ bool cg_create_window(cg_var_t *p_var) {
 	p_var->wsi_var.window_width = 1280;
 	p_var->wsi_var.window_height = 720;
 	p_var->wsi_var.border_width = 0;
-	p_var->wsi_var.is_window_resizeable = TRUE;
+	p_var->wsi_var.is_window_resizeable = true;
 	p_var->wsi_var.swapchain = VK_NULL_HANDLE;
 	p_var->wsi_var.old_swapchain = VK_NULL_HANDLE;
 
@@ -26,12 +26,12 @@ bool cg_create_window(cg_var_t *p_var) {
 	p_var->wsi_var.xcb_surface_create_info.flags = 0;
 	p_var->wsi_var.XCB_API_var.screen_num = 0;
 	p_var->wsi_var.xcb_surface_create_info.connection = xcb_connect(NULL, &p_var->wsi_var.XCB_API_var.screen_num);
-	bool is_xcb_connect_has_error = FALSE;
+	bool is_xcb_connect_has_error = false;
 	is_xcb_connect_has_error = xcb_connection_has_error(p_var->wsi_var.xcb_surface_create_info.connection);
-	if (is_xcb_connect_has_error == TRUE) {
+	if (is_xcb_connect_has_error == true) {
 		xcb_disconnect(p_var->wsi_var.xcb_surface_create_info.connection);
 		PRINT_ERROR("xcb connect fail!\n");
-		return FALSE;
+		return false;
 	}
 	p_var->wsi_var.xcb_surface_create_info.window = xcb_generate_id(p_var->wsi_var.xcb_surface_create_info.connection);
 	p_var->wsi_var.XCB_API_var.mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
@@ -54,7 +54,7 @@ bool cg_create_window(cg_var_t *p_var) {
 	create_xcb_surface = (PFN_vkCreateXcbSurfaceKHR)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkCreateXcbSurfaceKHR");
 	if (create_xcb_surface == NULL) {
 		PRINT_ERROR("load vkCreateXcbSurfaceKHR fail!\n");
-		return FALSE;
+		return false;
 	}
 	p_var->library_var.vk_result = create_xcb_surface(
 		p_var->instance_var.vk_instance,
@@ -62,7 +62,7 @@ bool cg_create_window(cg_var_t *p_var) {
 		NULL, &p_var->wsi_var.surface);
 	if (p_var->library_var.vk_result != VK_SUCCESS || p_var->wsi_var.surface == VK_NULL_HANDLE) {
 		PRINT_ERROR("create xcb surface fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	xcb_icccm_set_wm_name(
@@ -71,7 +71,7 @@ bool cg_create_window(cg_var_t *p_var) {
 		XCB_ATOM_STRING,
 		8, strlen(p_var->wsi_var.window_name),
 		p_var->wsi_var.window_name);
-	if (p_var->wsi_var.is_window_resizeable == FALSE) {
+	if (p_var->wsi_var.is_window_resizeable == false) {
 		xcb_icccm_size_hints_set_min_size(
 			&p_var->wsi_var.XCB_API_var.window_size_hints,
 			p_var->wsi_var.window_width, p_var->wsi_var.window_height);
@@ -111,9 +111,9 @@ bool cg_create_window(cg_var_t *p_var) {
 			"content/Soul.ico", IMAGE_ICON,
 			GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON),
 			LR_DEFAULTSIZE | LR_LOADFROMFILE)};
-	if (RegisterClassEx(&p_var->wsi_var.WinAPI_var.wnd_class) == FALSE) {
+	if (RegisterClassEx(&p_var->wsi_var.WinAPI_var.wnd_class) == false) {
 		PRINT_ERROR("Windows API RegisterClassEx fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	// 用Windows API创建窗口
@@ -135,20 +135,20 @@ bool cg_create_window(cg_var_t *p_var) {
 		(LPVOID)NULL);
 	if (p_var->wsi_var.win32_surface_create_info.hwnd == NULL) {
 		PRINT_ERROR("Windows API CreateWindowEx fail!\n");
-		return FALSE;
+		return false;
 	}
 	PFN_vkCreateWin32SurfaceKHR create_win32_surface = NULL;
 	create_win32_surface = (PFN_vkCreateWin32SurfaceKHR)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkCreateWin32SurfaceKHR");
 	if (create_win32_surface == NULL) {
 		PRINT_ERROR("load vkCreateWin32SurfaceKHR fail!\n");
-		return FALSE;
+		return false;
 	}
 	p_var->library_var.vk_result = create_win32_surface(
 		p_var->instance_var.vk_instance, &p_var->wsi_var.win32_surface_create_info,
 		NULL, &p_var->wsi_var.surface);
 	if (p_var->library_var.vk_result != VK_SUCCESS || p_var->wsi_var.surface == VK_NULL_HANDLE) {
 		PRINT_ERROR("create win32 surface fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	// 弹出窗口
@@ -158,17 +158,17 @@ bool cg_create_window(cg_var_t *p_var) {
 
 #endif // VK_USE_PLATFORM_WIN32_KHR
 
-	if (cg_select_present_mode(p_var) == FALSE) {
-		return FALSE;
+	if (cg_select_present_mode(p_var) == false) {
+		return false;
 	}
-	if (cg_select_swapchain(p_var) == FALSE) {
-		return FALSE;
+	if (cg_select_swapchain(p_var) == false) {
+		return false;
 	}
 	p_var->wsi_var.swapchain = VK_NULL_HANDLE;
 	p_var->wsi_var.old_swapchain = VK_NULL_HANDLE;
-	if (cg_create_swapchain(p_var, &p_var->wsi_var.swapchain) == FALSE) {
-		return FALSE;
+	if (cg_create_swapchain(p_var, &p_var->wsi_var.swapchain) == false) {
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }

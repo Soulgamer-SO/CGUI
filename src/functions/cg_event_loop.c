@@ -3,7 +3,7 @@
 #include <xcb/xcb_event.h>
 
 void cg_event_loop(cg_var_t *p_var) {
-	p_var->event_loop_var.is_running = TRUE;
+	p_var->event_loop_var.is_running = true;
 	while (p_var->event_loop_var.is_running && (p_var->event_loop_var.event = xcb_wait_for_event(p_var->wsi_var.xcb_surface_create_info.connection))) {
 		switch (XCB_EVENT_RESPONSE_TYPE(p_var->event_loop_var.event)) {
 		case XCB_EXPOSE: {
@@ -31,11 +31,11 @@ void cg_event_loop(cg_var_t *p_var) {
 #include "cg_input.h"
 
 void cg_event_loop(cg_var_t *p_var) {
-	p_var->event_loop_var.is_running = TRUE;
+	p_var->event_loop_var.is_running = true;
 	p_var->event_loop_var.msg.message = WM_NULL;
 	GetMessage(&p_var->event_loop_var.msg, NULL, 0, 0);
 	while (p_var->event_loop_var.is_running && (p_var->event_loop_var.msg.message != WM_QUIT)) {
-		if (PeekMessage(&p_var->event_loop_var.msg, NULL, 0, 0, PM_REMOVE) != FALSE) {
+		if (PeekMessage(&p_var->event_loop_var.msg, NULL, 0, 0, PM_REMOVE) != false) {
 			TranslateMessage(&p_var->event_loop_var.msg);
 			DispatchMessage(&p_var->event_loop_var.msg);
 		}

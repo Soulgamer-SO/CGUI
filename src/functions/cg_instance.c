@@ -8,28 +8,28 @@ bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
 	enumerate_instance_extension_properties = (PFN_vkEnumerateInstanceExtensionProperties)p_var->library_var.get_instance_proc_addr(NULL, "vkEnumerateInstanceExtensionProperties");
 	if (enumerate_instance_extension_properties == NULL) {
 		PRINT_ERROR("load vkEnumerateInstanceExtensionProperties fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	PFN_vkEnumerateInstanceLayerProperties enumerate_instance_layer_properties = NULL;
 	enumerate_instance_layer_properties = (PFN_vkEnumerateInstanceLayerProperties)p_var->library_var.get_instance_proc_addr(NULL, "vkEnumerateInstanceLayerProperties");
 	if (enumerate_instance_layer_properties == NULL) {
 		PRINT_ERROR("load vkEnumerateInstanceLayerProperties fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	PFN_vkCreateInstance create_instance = NULL;
 	create_instance = (PFN_vkCreateInstance)p_var->library_var.get_instance_proc_addr(NULL, "vkCreateInstance");
 	if (create_instance == NULL) {
 		PRINT_ERROR("load vkCreateInstance fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	p_var->instance_var.instance_extension_count = 0;
 	p_var->library_var.vk_result = enumerate_instance_extension_properties(NULL, &p_var->instance_var.instance_extension_count, NULL);
 	if (p_var->library_var.vk_result != VK_SUCCESS || p_var->instance_var.instance_extension_count == 0) {
 		PRINT_ERROR("get instance_extensions_count fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	p_var->instance_var.instance_extension_list = (VkExtensionProperties *)cg_alloc_memory(p_var->p_memory_pool_var, p_var->instance_var.instance_extension_count * sizeof(VkExtensionProperties));
@@ -38,7 +38,7 @@ bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
 		p_var->library_var.vk_result = enumerate_instance_extension_properties(NULL, &p_var->instance_var.instance_extension_count, &p_var->instance_var.instance_extension_list[0]);
 		if (p_var->library_var.vk_result != VK_SUCCESS || p_var->instance_var.instance_extension_count == 0) {
 			PRINT_ERROR("get available_extension_list fail!\n");
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -63,7 +63,7 @@ bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
 	/* p_var->instance_var.enabled_extension_name_list = (char***)malloc(p_var->instance_var.enabled_instance_extension_count * sizeof(char *));
 	    if (p_var->instance_var.enabled_extension_name_list == NULL)
 	    {
-		return FALSE;
+		return false;
 	    }
 	    p_var->instance_var.enabled_extension_name_list[0] = VK_KHR_SURFACE_EXTENSION_NAME;
 	#ifdef __linux
@@ -96,7 +96,7 @@ bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
 	p_var->library_var.vk_result = create_instance(&instance_create_info, NULL, p_vk_instance);
 	if (p_var->library_var.vk_result != VK_SUCCESS || p_vk_instance == VK_NULL_HANDLE) {
 		PRINT_ERROR("create instance fail!\n");
-		return FALSE;
+		return false;
 	} else {
 #ifdef DEBUG
 		// 打印已启用的实例扩展列表
@@ -108,5 +108,5 @@ bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
 #endif // DEBUG
 	}
 
-	return TRUE;
+	return true;
 }

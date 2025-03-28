@@ -10,7 +10,7 @@
 
 bool cg_initialize_var(cg_var_t *p_var) {
 	if (p_var->p_memory_pool_var == NULL) {
-		return FALSE;
+		return false;
 	}
 	p_var->library_var.vk_result = VK_SUCCESS;
 	p_var->instance_var.vk_instance = VK_NULL_HANDLE;
@@ -18,7 +18,7 @@ bool cg_initialize_var(cg_var_t *p_var) {
 	p_var->physical_device_var.enabled_physical_device_extensions_count = 2;
 	p_var->physical_device_var.enabled_physcial_device_extension_list = (char **)cg_alloc_memory(p_var->p_memory_pool_var, p_var->physical_device_var.enabled_physical_device_extensions_count * sizeof(char *));
 	if (p_var->physical_device_var.enabled_physcial_device_extension_list == NULL) {
-		return FALSE;
+		return false;
 	} else {
 		PRINT_LOG("alloc memory success!\n");
 	}
@@ -27,32 +27,32 @@ bool cg_initialize_var(cg_var_t *p_var) {
 	p_var->physical_device_var.enabled_physcial_device_extension_list[1] = VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME;
 	p_var->logic_device_var.vk_logic_device = VK_NULL_HANDLE;
 
-	if (cg_load_library(p_var) == FALSE) {
-		return FALSE;
+	if (cg_load_library(p_var) == false) {
+		return false;
 	}
-	if (cg_create_instance(p_var, &p_var->instance_var.vk_instance) == FALSE) {
-		return FALSE;
+	if (cg_create_instance(p_var, &p_var->instance_var.vk_instance) == false) {
+		return false;
 	}
 	p_var->physical_device_var.physical_device_count = 0;
-	if (cg_enumerate_physical_device(p_var, &p_var->physical_device_var.physical_device_count, NULL) == FALSE) {
-		return FALSE;
+	if (cg_enumerate_physical_device(p_var, &p_var->physical_device_var.physical_device_count, NULL) == false) {
+		return false;
 	}
 	p_var->physical_device_var.available_physical_device_list = (VkPhysicalDevice *)cg_alloc_memory(p_var->p_memory_pool_var, p_var->physical_device_var.physical_device_count * sizeof(VkPhysicalDevice));
 	if (p_var->physical_device_var.available_physical_device_list == NULL) {
 		PRINT_ERROR("create available_handle_device_list fail!\n");
-		return FALSE;
+		return false;
 	} else {
 		PRINT_LOG("alloc memory success!\n");
 	}
 
-	if (cg_enumerate_physical_device(p_var, &p_var->physical_device_var.physical_device_count, &p_var->physical_device_var.available_physical_device_list[0]) == FALSE) {
-		return FALSE;
+	if (cg_enumerate_physical_device(p_var, &p_var->physical_device_var.physical_device_count, &p_var->physical_device_var.available_physical_device_list[0]) == false) {
+		return false;
 	}
-	if (cg_select_physical_device(p_var, &p_var->physical_device_var.physical_device_count, &p_var->physical_device_var.available_physical_device_list[0], &p_var->physical_device_var.physical_device) == FALSE) {
-		return FALSE;
+	if (cg_select_physical_device(p_var, &p_var->physical_device_var.physical_device_count, &p_var->physical_device_var.available_physical_device_list[0], &p_var->physical_device_var.physical_device) == false) {
+		return false;
 	}
-	if (cg_create_logic_device(p_var, &p_var->logic_device_var.vk_logic_device) == FALSE) {
-		return FALSE;
+	if (cg_create_logic_device(p_var, &p_var->logic_device_var.vk_logic_device) == false) {
+		return false;
 	}
 
 	PRINT_LOG("%s\n", (char *)p_var->physical_device_var.enabled_physcial_device_extension_list[0]);
@@ -66,7 +66,7 @@ bool cg_initialize_var(cg_var_t *p_var) {
 		PRINT_LOG("alloc memory success!\n");
 		cg_create_command_pool(p_var, &p_var->command_pool_var.command_pool);
 		if (p_var->command_pool_var.command_pool == VK_NULL_HANDLE) {
-			return FALSE;
+			return false;
 		}
 		cg_create_command_buffer_list(p_var, p_var->command_pool_var.command_pool, &p_var->command_pool_var.command_buffer_list[0], p_var->command_pool_var.command_buffer_count);
 		cg_begin_record_command_buffer(p_var, p_var->command_pool_var.command_buffer_list[0], VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
@@ -90,8 +90,8 @@ bool cg_initialize_var(cg_var_t *p_var) {
 	    reset_for_fences(p_var);
 	} */
 
-	if (cg_create_window(p_var) == FALSE) {
-		return FALSE;
+	if (cg_create_window(p_var) == false) {
+		return false;
 	}
 
 	/* p_var->sync_var.wait_semaphore_count = 1;
@@ -107,5 +107,5 @@ bool cg_initialize_var(cg_var_t *p_var) {
 	} */
 
 	PRINT_LOG("initialize success!\n");
-	return TRUE;
+	return true;
 }

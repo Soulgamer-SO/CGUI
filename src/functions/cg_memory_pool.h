@@ -1,6 +1,5 @@
 #ifndef CG_MEMORY_POOL_H
 #define CG_MEMORY_POOL_H 1
-#include "cg_bool.h"
 #include "cg_log.h"
 #include <stdint.h>
 #ifdef __linux
@@ -55,7 +54,7 @@ cg_memory_node_t *memory_node_list_memory = malloc(NODE_LIST_SIZE);
 		.memory_node_count = 0,
 		.memory_node_list = malloc(NODE_LIST_SIZE),
 		.memory_node_max_size = NODE_LIST_SIZE};
-	if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
+	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {
 		PRINT_LOG("create memory_pool_var success!\n");

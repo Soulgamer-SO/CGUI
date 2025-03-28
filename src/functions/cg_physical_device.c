@@ -6,15 +6,15 @@ bool cg_enumerate_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_c
 	enumerate_physical_devices = (PFN_vkEnumeratePhysicalDevices)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkEnumeratePhysicalDevices");
 	if (enumerate_physical_devices == NULL) {
 		PRINT_ERROR("load vkEnumeratePhysicalDevices fail!\n");
-		return FALSE;
+		return false;
 	}
 	p_var->library_var.vk_result = enumerate_physical_devices(p_var->instance_var.vk_instance, p_physical_device_count, available_physical_device_list);
 	if (p_var->library_var.vk_result != VK_SUCCESS || *p_physical_device_count == 0) {
 		PRINT_ERROR("get available_handle_device_list fail!\n");
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_count, VkPhysicalDevice *available_physical_device_list, VkPhysicalDevice *p_physical_device) {
@@ -31,20 +31,20 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 	enumerate_device_extension_properties = (PFN_vkEnumerateDeviceExtensionProperties)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkEnumerateDeviceExtensionProperties");
 	if (enumerate_device_extension_properties == NULL) {
 		PRINT_ERROR("load vkEnumerateDeviceExtensionProperties fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	p_var->library_var.vk_result = enumerate_device_extension_properties(p_var->physical_device_var.physical_device, NULL, &p_var->physical_device_var.physical_device_extensions_count, NULL);
 	if (p_var->library_var.vk_result != VK_SUCCESS || p_var->physical_device_var.physical_device_extensions_count == 0) {
 		PRINT_ERROR("get extensions_device_count fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	PFN_vkGetPhysicalDeviceFeatures get_physical_device_features = NULL;
 	get_physical_device_features = (PFN_vkGetPhysicalDeviceFeatures)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceFeatures");
 	if (get_physical_device_features == NULL) {
 		PRINT_ERROR("load vkGetPhysicalDeviceFeatures fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	// 获取物理设备属性
@@ -52,7 +52,7 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 	get_physical_device_properties = (PFN_vkGetPhysicalDeviceProperties)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceProperties");
 	if (get_physical_device_properties == NULL) {
 		PRINT_ERROR("load vkGetPhysicalDeviceProperties fail!\n");
-		return FALSE;
+		return false;
 	}
 
 #ifdef DEBUG
@@ -71,14 +71,14 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 		get_physical_device_properties(p_var->physical_device_var.physical_device, &p_var->physical_device_var.device_properties);
 		PRINT_LOG("当前的 physical_device = physical_handle_device[%d], deviceName = %s;\n", p_var->physical_device_var.physical_device_index, p_var->physical_device_var.device_properties.deviceName);
 		if (p_var->physical_device_var.device_properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
-			if (((p_var->physical_device_var.device_feature_list.geometryShader && p_var->physical_device_var.device_feature_list.textureCompressionBC) && (p_var->physical_device_var.device_feature_list.shaderFloat64 && p_var->physical_device_var.device_feature_list.multiViewport)) == TRUE) {
+			if (((p_var->physical_device_var.device_feature_list.geometryShader && p_var->physical_device_var.device_feature_list.textureCompressionBC) && (p_var->physical_device_var.device_feature_list.shaderFloat64 && p_var->physical_device_var.device_feature_list.multiViewport)) == true) {
 				PRINT_LOG("device_properties.deviceType = VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;\ndevice_feature_list.geometryShader = 1;\n");
 				PRINT_LOG("device_feature_list.textureCompressionBC = %d;\ndevice_feature_list.shaderFloat64 = %d;\ndevice_feature_list.multiViewport = %d;\n", p_var->physical_device_var.device_feature_list.textureCompressionBC, p_var->physical_device_var.device_feature_list.shaderFloat64, p_var->physical_device_var.device_feature_list.multiViewport);
-				p_var->physical_device_var.is_physical_device_supported = TRUE;
+				p_var->physical_device_var.is_physical_device_supported = true;
 			}
 		}
-		if (p_var->physical_device_var.is_physical_device_supported == TRUE) {
-			PRINT_LOG("is_physical_device_supported = TRUE;\n");
+		if (p_var->physical_device_var.is_physical_device_supported == true) {
+			PRINT_LOG("is_physical_device_supported = true;\n");
 			break;
 		}
 	}
@@ -93,14 +93,14 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 		&p_var->physical_device_var.physical_device_extensions_count, NULL);
 	if (p_var->library_var.vk_result != VK_SUCCESS || p_var->physical_device_var.physical_device_extensions_count == 0) {
 		PRINT_ERROR("get extensions_device_count fail!\n");
-		return FALSE;
+		return false;
 	}
 	p_var->physical_device_var.available_physcial_device_extension_list = (VkExtensionProperties *)cg_alloc_memory(
 		p_var->p_memory_pool_var,
 		p_var->physical_device_var.physical_device_extensions_count * sizeof(VkExtensionProperties));
 	if (p_var->physical_device_var.available_physcial_device_extension_list == NULL) {
 		PRINT_ERROR("create available_physcial_device_extension_list fail!\n");
-		return FALSE;
+		return false;
 	} else if (p_var->physical_device_var.available_physcial_device_extension_list != NULL) {
 		PRINT_LOG("alloc memory success!\n");
 		p_var->library_var.vk_result = enumerate_device_extension_properties(
@@ -109,7 +109,7 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 			&p_var->physical_device_var.available_physcial_device_extension_list[0]);
 		if (p_var->physical_device_var.physical_device_extensions_count == 0) {
 			PRINT_ERROR("get available_physcial_device_extension_list fail!\n");
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -130,9 +130,9 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 			p_var->physical_device_var.physical_device, &p_var->physical_device_var.physical_device_memory_properties);
 		if (p_var->library_var.vk_result != VK_SUCCESS) {
 			PRINT_ERROR("get physical_device_memory_properties fail!\n");
-			return FALSE;
+			return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }

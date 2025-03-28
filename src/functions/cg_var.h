@@ -1,6 +1,5 @@
 #ifndef CG_VAR_H
 #define CG_VAR_H 1
-#include "cg_bool.h"
 #include "cg_list.h"
 #include "cg_log.h"
 #include "cg_memory_pool.h"

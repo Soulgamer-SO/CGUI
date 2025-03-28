@@ -8,9 +8,11 @@
             "cStandard": "c23",
             "defines": [
                 "DEBUG",
-                "VK_USE_PLATFORM_XCB_KHR"
+                "VK_USE_PLATFORM_XCB_KHR",
+                "true",
+                "false"
             ],
-            "intelliSenseMode": "gcc-x64",
+            "intelliSenseMode": "linux-gcc-x64",
             "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],

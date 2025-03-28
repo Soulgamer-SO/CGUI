@@ -6,7 +6,7 @@ bool cg_load_library(cg_var_t *p_var) {
 	p_var->library_var.vulkan_library = dlopen("libvulkan.so.1", RTLD_NOW);
 	if (p_var->library_var.vulkan_library == NULL) {
 		PRINT_ERROR("load libvulkan.so.1 fail!\n");
-		return FALSE;
+		return false;
 	} else {
 		PRINT_LOG("load vulkan.so.1 success!\n");
 	}
@@ -17,7 +17,7 @@ bool cg_load_library(cg_var_t *p_var) {
 		p_var->library_var.vulkan_library, "vkGetInstanceProcAddr");
 	if (p_var->library_var.get_instance_proc_addr == NULL) {
 		PRINT_ERROR("load vkGetInstanceProcAddr fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	// 加载设备函数的函数 vkGetDeviceProcAddr
@@ -26,7 +26,7 @@ bool cg_load_library(cg_var_t *p_var) {
 		p_var->library_var.vulkan_library, "vkGetDeviceProcAddr");
 	if (p_var->library_var.get_device_proc_addr == NULL) {
 		PRINT_ERROR("load vkGetDeviceProcAddr fail!\n");
-		return FALSE;
+		return false;
 	}
 #endif // __linux
 
@@ -35,7 +35,7 @@ bool cg_load_library(cg_var_t *p_var) {
 	p_var->library_var.vulkan_library = LoadLibrary("vulkan-1.dll");
 	if (p_var->library_var.vulkan_library == NULL) {
 		PRINT_ERROR("load vulkan-1.dll fail!\n");
-		return FALSE;
+		return false;
 	} else {
 		PRINT_LOG("load vulkan-1.dll success!\n");
 	}
@@ -45,7 +45,7 @@ bool cg_load_library(cg_var_t *p_var) {
 	p_var->library_var.get_instance_proc_addr = (PFN_vkGetInstanceProcAddr)GetProcAddress(p_var->library_var.vulkan_library, "vkGetInstanceProcAddr");
 	if (p_var->library_var.get_instance_proc_addr == NULL) {
 		PRINT_ERROR("load vkGetInstanceProcAddr fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	// 加载设备函数的函数 vkGetDeviceProcAddr
@@ -53,9 +53,9 @@ bool cg_load_library(cg_var_t *p_var) {
 	p_var->library_var.get_device_proc_addr = (PFN_vkGetDeviceProcAddr)GetProcAddress(p_var->library_var.vulkan_library, "vkGetDeviceProcAddr");
 	if (p_var->library_var.get_device_proc_addr == NULL) {
 		PRINT_ERROR("load vkGetDeviceProcAddr fail!\n");
-		return FALSE;
+		return false;
 	}
 #endif // _WIN32
 
-	return TRUE;
+	return true;
 }

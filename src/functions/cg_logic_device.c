@@ -7,14 +7,14 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		p_var->instance_var.vk_instance, "vkGetPhysicalDeviceQueueFamilyProperties");
 	if (get_physical_device_queue_family_properties == NULL) {
 		PRINT_ERROR("load vkGetPhysicalDeviceQueueFamilyProperties fail");
-		return FALSE;
+		return false;
 	}
 
 	get_physical_device_queue_family_properties(
 		p_var->physical_device_var.physical_device, &p_var->logic_device_var.queue_family_count, NULL);
 	if (p_var->logic_device_var.queue_family_count == 0) {
 		PRINT_ERROR("get queue_families_count fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	p_var->logic_device_var.queue_family_list = (VkQueueFamilyProperties *)cg_alloc_memory(
@@ -22,7 +22,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		p_var->logic_device_var.queue_family_count * sizeof(VkQueueFamilyProperties));
 	if (p_var->logic_device_var.queue_family_list == NULL) {
 		PRINT_ERROR("get queue_familiy_list fail!\n");
-		return FALSE;
+		return false;
 	} else {
 		PRINT_LOG("alloc memory success!\n");
 	}
@@ -31,7 +31,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		p_var->physical_device_var.physical_device, &p_var->logic_device_var.queue_family_count, p_var->logic_device_var.queue_family_list);
 	if (p_var->logic_device_var.queue_family_count == 0) {
 		PRINT_ERROR("get queue_familiy_list fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	p_var->logic_device_var.queue_family_index = 0;
@@ -52,7 +52,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 	// 打印所有队列信息
 	char **queue_info = cg_alloc_memory(p_var->p_memory_pool_var, 5 * sizeof(char *));
 	if (queue_info == NULL) {
-		return FALSE;
+		return false;
 	} else {
 		PRINT_LOG("alloc memory success!\n");
 	}
@@ -145,7 +145,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		p_var->instance_var.vk_instance, "vkCreateDevice");
 	if (create_device == NULL) {
 		PRINT_ERROR("load vkCreateDevice device fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	p_var->library_var.vk_result = create_device(
@@ -153,7 +153,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		NULL, p_vk_logic_device);
 	if (p_var->library_var.vk_result != VK_SUCCESS || p_vk_logic_device == VK_NULL_HANDLE) {
 		PRINT_ERROR("create vulkan logic device fail!\n");
-		return FALSE;
+		return false;
 	}
 
 #ifdef DEBUG
@@ -171,7 +171,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		*p_vk_logic_device, "vkGetDeviceQueue");
 	if (get_device_queue == NULL) {
 		PRINT_ERROR("load vkGetDeviceQueue fail!\n");
-		return FALSE;
+		return false;
 	}
 	p_var->logic_device_var.queue_family_handle = NULL;
 	get_device_queue(
@@ -181,10 +181,10 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		&p_var->logic_device_var.queue_family_handle);
 	if (p_var->logic_device_var.queue_family_handle == NULL) {
 		PRINT_ERROR("get vulkan device queue fail!\n");
-		return FALSE;
+		return false;
 	} else {
 		PRINT_LOG("queue_family_handle = %p;\n", p_var->logic_device_var.queue_family_handle);
 	}
 
-	return TRUE;
+	return true;
 }

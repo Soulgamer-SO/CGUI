@@ -18,7 +18,7 @@ MAIN {
 		.memory_node_count = 0,
 		.memory_node_list = malloc(NODE_LIST_SIZE),
 		.memory_node_max_size = NODE_LIST_SIZE};
-	if (cg_create_memory_pool(&memory_pool_var) == FALSE) {
+	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {
 		PRINT_LOG("create memory_pool_var success!\n");
@@ -32,7 +32,7 @@ MAIN {
 	var.wsi_var.WinAPI_var.pCmdLine = pCmdLine;
 	var.wsi_var.WinAPI_var.nCmdShow = nCmdShow;
 #endif // _WIN32
-	if (cg_initialize_var(&var) == FALSE) {
+	if (cg_initialize_var(&var) == false) {
 		PRINT_ERROR("initialize fail!\n");
 		goto destroy_and_exit;
 	}

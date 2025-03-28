@@ -11,7 +11,7 @@ bool cg_create_command_pool(cg_var_t *p_var, VkCommandPool *p_command_pool) {
 	create_command_pool = (PFN_vkCreateCommandPool)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateCommandPool");
 	if (create_command_pool == NULL) {
 		PRINT_ERROR("load vkCreateCommandPool fail!\n");
-		return FALSE;
+		return false;
 	}
 
 	*p_command_pool = VK_NULL_HANDLE;
@@ -20,10 +20,10 @@ bool cg_create_command_pool(cg_var_t *p_var, VkCommandPool *p_command_pool) {
 		NULL, p_command_pool);
 	if (p_var->library_var.vk_result != VK_SUCCESS) {
 		PRINT_ERROR("create command_pool fail!\n");
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 void cg_create_command_buffer_list(cg_var_t *p_var, VkCommandPool command_pool, VkCommandBuffer *command_buffer_list, uint32_t command_buffer_count) {
