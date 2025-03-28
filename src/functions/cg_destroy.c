@@ -2,10 +2,10 @@
 
 void cg_destroy_instance(cg_var_t *p_var, VkInstance vk_instance) {
 	if (vk_instance != VK_NULL_HANDLE && p_var->instance_var.vk_instance != VK_NULL_HANDLE) {
-		PFN_vkDestroyInstance destroy_instance = NULL;
+		PFN_vkDestroyInstance destroy_instance = nullptr;
 		destroy_instance = (PFN_vkDestroyInstance)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkDestroyInstance");
-		if (destroy_instance != NULL) {
-			destroy_instance(vk_instance, NULL);
+		if (destroy_instance != nullptr) {
+			destroy_instance(vk_instance, nullptr);
 		}
 	}
 
@@ -14,10 +14,10 @@ void cg_destroy_instance(cg_var_t *p_var, VkInstance vk_instance) {
 
 void cg_destroy_swapchain(cg_var_t *p_var, VkSwapchainKHR swapchain) {
 	if (swapchain != VK_NULL_HANDLE && p_var->logic_device_var.vk_logic_device != VK_NULL_HANDLE) {
-		PFN_vkDestroySwapchainKHR destroy_swapchain = NULL;
+		PFN_vkDestroySwapchainKHR destroy_swapchain = nullptr;
 		destroy_swapchain = (PFN_vkDestroySwapchainKHR)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkDestroySwapchainKHR");
-		if (destroy_swapchain != NULL) {
-			destroy_swapchain(p_var->logic_device_var.vk_logic_device, swapchain, NULL);
+		if (destroy_swapchain != nullptr) {
+			destroy_swapchain(p_var->logic_device_var.vk_logic_device, swapchain, nullptr);
 		}
 	}
 
@@ -26,11 +26,11 @@ void cg_destroy_swapchain(cg_var_t *p_var, VkSwapchainKHR swapchain) {
 
 void cg_destroy_command_pool(cg_var_t *p_var, VkCommandPool command_pool) {
 	if (command_pool != VK_NULL_HANDLE && p_var->logic_device_var.vk_logic_device != VK_NULL_HANDLE) {
-		PFN_vkDestroyCommandPool destroy_command_pool = NULL;
+		PFN_vkDestroyCommandPool destroy_command_pool = nullptr;
 		destroy_command_pool = (PFN_vkDestroyCommandPool)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkDestroyCommandPool");
-		if (destroy_command_pool != NULL) {
+		if (destroy_command_pool != nullptr) {
 			if (p_var->command_pool_var.command_pool != VK_NULL_HANDLE) {
-				destroy_command_pool(p_var->logic_device_var.vk_logic_device, p_var->command_pool_var.command_pool, NULL);
+				destroy_command_pool(p_var->logic_device_var.vk_logic_device, p_var->command_pool_var.command_pool, nullptr);
 			}
 		}
 	}
@@ -42,8 +42,8 @@ void cg_destroy_and_exit(cg_var_t *p_var) {
 #ifdef VK_USE_PLATFORM_XCB_KHR
 	xcb_disconnect(p_var->wsi_var.xcb_surface_create_info.connection);
 #endif // VK_USE_PLATFORM_XCB_KHR
-	PFN_vkDestroySurfaceKHR destroy_surface = NULL;
-	PFN_vkDestroyDevice destroy_device = NULL;
+	PFN_vkDestroySurfaceKHR destroy_surface = nullptr;
+	PFN_vkDestroyDevice destroy_device = nullptr;
 	if (p_var->wsi_var.swapchain != VK_NULL_HANDLE) {
 		cg_destroy_swapchain(p_var, p_var->wsi_var.swapchain);
 		p_var->wsi_var.swapchain = VK_NULL_HANDLE;
@@ -60,7 +60,7 @@ void cg_destroy_and_exit(cg_var_t *p_var) {
 	if (p_var->instance_var.vk_instance != VK_NULL_HANDLE) {
 		goto destroy_instance;
 	}
-	if (p_var->library_var.vulkan_library != NULL) {
+	if (p_var->library_var.vulkan_library != nullptr) {
 		goto destroy_vulkan_library;
 	} else {
 		goto exit;
@@ -72,16 +72,16 @@ destroy_command_pool:
 
 destroy_surface:
 	destroy_surface = (PFN_vkDestroySurfaceKHR)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkDestroySurfaceKHR");
-	if (destroy_surface != NULL) {
-		destroy_surface(p_var->instance_var.vk_instance, p_var->wsi_var.surface, NULL);
+	if (destroy_surface != nullptr) {
+		destroy_surface(p_var->instance_var.vk_instance, p_var->wsi_var.surface, nullptr);
 		p_var->wsi_var.surface = VK_NULL_HANDLE;
 	}
 
 destroy_device:
 	destroy_device = (PFN_vkDestroyDevice)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkDestroyDevice");
-	if (destroy_device != NULL) {
+	if (destroy_device != nullptr) {
 		if (p_var->logic_device_var.vk_logic_device != VK_NULL_HANDLE) {
-			destroy_device(p_var->logic_device_var.vk_logic_device, NULL);
+			destroy_device(p_var->logic_device_var.vk_logic_device, nullptr);
 		}
 	}
 
@@ -99,7 +99,7 @@ destroy_vulkan_library:
 #ifdef _WIN32
 	FreeLibrary(p_var->library_var.vulkan_library);
 #endif // _WIN32
-	p_var->library_var.vulkan_library = NULL;
+	p_var->library_var.vulkan_library = nullptr;
 
 exit:
 	return;

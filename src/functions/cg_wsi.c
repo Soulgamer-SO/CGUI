@@ -22,10 +22,10 @@ bool cg_create_window(cg_var_t *p_var) {
 
 #ifdef VK_USE_PLATFORM_XCB_KHR
 	p_var->wsi_var.xcb_surface_create_info.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
-	p_var->wsi_var.xcb_surface_create_info.pNext = NULL;
+	p_var->wsi_var.xcb_surface_create_info.pNext = nullptr;
 	p_var->wsi_var.xcb_surface_create_info.flags = 0;
 	p_var->wsi_var.XCB_API_var.screen_num = 0;
-	p_var->wsi_var.xcb_surface_create_info.connection = xcb_connect(NULL, &p_var->wsi_var.XCB_API_var.screen_num);
+	p_var->wsi_var.xcb_surface_create_info.connection = xcb_connect(nullptr, &p_var->wsi_var.XCB_API_var.screen_num);
 	bool is_xcb_connect_has_error = false;
 	is_xcb_connect_has_error = xcb_connection_has_error(p_var->wsi_var.xcb_surface_create_info.connection);
 	if (is_xcb_connect_has_error == true) {
@@ -50,16 +50,16 @@ bool cg_create_window(cg_var_t *p_var) {
 		&(xcb_create_window_value_list_t){
 			.background_pixel = cg_change_RGB_color(255, 0, 0),
 			.event_mask = XCB_EVENT_MASK_EXPOSURE});
-	PFN_vkCreateXcbSurfaceKHR create_xcb_surface = NULL;
+	PFN_vkCreateXcbSurfaceKHR create_xcb_surface = nullptr;
 	create_xcb_surface = (PFN_vkCreateXcbSurfaceKHR)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkCreateXcbSurfaceKHR");
-	if (create_xcb_surface == NULL) {
+	if (create_xcb_surface == nullptr) {
 		PRINT_ERROR("load vkCreateXcbSurfaceKHR fail!\n");
 		return false;
 	}
 	p_var->library_var.vk_result = create_xcb_surface(
 		p_var->instance_var.vk_instance,
 		&p_var->wsi_var.xcb_surface_create_info,
-		NULL, &p_var->wsi_var.surface);
+		nullptr, &p_var->wsi_var.surface);
 	if (p_var->library_var.vk_result != VK_SUCCESS || p_var->wsi_var.surface == VK_NULL_HANDLE) {
 		PRINT_ERROR("create xcb surface fail!\n");
 		return false;
@@ -102,7 +102,7 @@ bool cg_create_window(cg_var_t *p_var) {
 		.cbWndExtra = 0,
 		.hInstance = p_var->wsi_var.WinAPI_var.hInstance,
 		.hIcon = LoadIcon(p_var->wsi_var.WinAPI_var.hInstance, "content/Soul.ico"),
-		.hCursor = LoadCursor(NULL, IDC_ARROW),
+		.hCursor = LoadCursor(nullptr, IDC_ARROW),
 		.hbrBackground = CreateSolidBrush(cg_change_RGB_color(255, 0, 0)),
 		.lpszMenuName = "menu",
 		.lpszClassName = p_var->wsi_var.WinAPI_var.w_class_name,
@@ -118,10 +118,10 @@ bool cg_create_window(cg_var_t *p_var) {
 
 	// 用Windows API创建窗口
 	p_var->wsi_var.win32_surface_create_info.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-	p_var->wsi_var.win32_surface_create_info.pNext = NULL;
+	p_var->wsi_var.win32_surface_create_info.pNext = nullptr;
 	p_var->wsi_var.win32_surface_create_info.flags = 0;
 	p_var->wsi_var.win32_surface_create_info.hinstance = p_var->wsi_var.WinAPI_var.hInstance;
-	p_var->wsi_var.win32_surface_create_info.hwnd = NULL;
+	p_var->wsi_var.win32_surface_create_info.hwnd = nullptr;
 	p_var->wsi_var.win32_surface_create_info.hwnd = CreateWindowEx(
 		0,
 		p_var->wsi_var.WinAPI_var.w_class_name,
@@ -129,23 +129,23 @@ bool cg_create_window(cg_var_t *p_var) {
 		WS_OVERLAPPEDWINDOW,
 		p_var->wsi_var.window_x, p_var->wsi_var.window_y,
 		p_var->wsi_var.window_width, p_var->wsi_var.window_height,
-		(HWND)NULL,
-		(HMENU)NULL,
+		(HWND)nullptr,
+		(HMENU)nullptr,
 		p_var->wsi_var.WinAPI_var.hInstance,
-		(LPVOID)NULL);
-	if (p_var->wsi_var.win32_surface_create_info.hwnd == NULL) {
+		(LPVOID)nullptr);
+	if (p_var->wsi_var.win32_surface_create_info.hwnd == nullptr) {
 		PRINT_ERROR("Windows API CreateWindowEx fail!\n");
 		return false;
 	}
-	PFN_vkCreateWin32SurfaceKHR create_win32_surface = NULL;
+	PFN_vkCreateWin32SurfaceKHR create_win32_surface = nullptr;
 	create_win32_surface = (PFN_vkCreateWin32SurfaceKHR)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkCreateWin32SurfaceKHR");
-	if (create_win32_surface == NULL) {
+	if (create_win32_surface == nullptr) {
 		PRINT_ERROR("load vkCreateWin32SurfaceKHR fail!\n");
 		return false;
 	}
 	p_var->library_var.vk_result = create_win32_surface(
 		p_var->instance_var.vk_instance, &p_var->wsi_var.win32_surface_create_info,
-		NULL, &p_var->wsi_var.surface);
+		nullptr, &p_var->wsi_var.surface);
 	if (p_var->library_var.vk_result != VK_SUCCESS || p_var->wsi_var.surface == VK_NULL_HANDLE) {
 		PRINT_ERROR("create win32 surface fail!\n");
 		return false;

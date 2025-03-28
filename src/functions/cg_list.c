@@ -4,12 +4,12 @@
 char *cg_create_string(
 	cg_memory_pool_var_t *p_var,
 	char *string) {
-	if (string == NULL) {
-		return NULL;
+	if (string == nullptr) {
+		return nullptr;
 	}
 	char *new_string = (char *)cg_alloc_memory(p_var, (strlen(string) + 1) * sizeof(char));
-	if (new_string == NULL) {
-		return NULL;
+	if (new_string == nullptr) {
+		return nullptr;
 	} else {
 		PRINT_LOG("alloc memory success!\n");
 	}
@@ -24,13 +24,13 @@ void *cg_add_one_at_list(
 	size_t type_size,
 	uint32_t *p_count,
 	void *p_list) {
-	char *e = NULL;
+	char *e = nullptr;
 	element = (void *)e;
 	p_list = "123456";
 	char *string = p_list;
 	PRINT_LOG("%s\n", string);
 
-	return NULL;
+	return nullptr;
 }
 
 bool cg_remove_one_string(
@@ -61,7 +61,7 @@ bool cg_remove_one_string(
 	}
 
 	char **new_string_list = (char **)malloc(new_string_count * sizeof(char *));
-	if (new_string_list == NULL) {
+	if (new_string_list == nullptr) {
 		return false;
 	}
 

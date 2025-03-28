@@ -43,14 +43,14 @@ typedef struct cg_memory_pool_var {
 #define MEM_POOL_SIZE 1024 * 1024
 #define NODE_LIST_SIZE 4 * 1024
 cg_memory_node_t *memory_node_list_memory = malloc(NODE_LIST_SIZE);
-	if (memory_node_list_memory == NULL) {
+	if (memory_node_list_memory == nullptr) {
 		goto exit;
 	}
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = malloc(MEM_POOL_SIZE),
 		.size = MEM_POOL_SIZE,
 		.free_size = 0,
-		.last_memory_end_addr = NULL,
+		.last_memory_end_addr = nullptr,
 		.memory_node_count = 0,
 		.memory_node_list = malloc(NODE_LIST_SIZE),
 		.memory_node_max_size = NODE_LIST_SIZE};

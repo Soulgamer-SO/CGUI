@@ -10,7 +10,8 @@
                 "DEBUG",
                 "VK_USE_PLATFORM_XCB_KHR",
                 "true",
-                "false"
+                "false",
+                "nullptr"
             ],
             "intelliSenseMode": "gcc-x64",
             "configurationProvider": "ms-vscode.makefile-tools"

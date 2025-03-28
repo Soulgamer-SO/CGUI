@@ -2,16 +2,16 @@
 
 bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 	p_var->logic_device_var.queue_family_count = 0;
-	PFN_vkGetPhysicalDeviceQueueFamilyProperties get_physical_device_queue_family_properties = NULL;
+	PFN_vkGetPhysicalDeviceQueueFamilyProperties get_physical_device_queue_family_properties = nullptr;
 	get_physical_device_queue_family_properties = (PFN_vkGetPhysicalDeviceQueueFamilyProperties)p_var->library_var.get_instance_proc_addr(
 		p_var->instance_var.vk_instance, "vkGetPhysicalDeviceQueueFamilyProperties");
-	if (get_physical_device_queue_family_properties == NULL) {
+	if (get_physical_device_queue_family_properties == nullptr) {
 		PRINT_ERROR("load vkGetPhysicalDeviceQueueFamilyProperties fail");
 		return false;
 	}
 
 	get_physical_device_queue_family_properties(
-		p_var->physical_device_var.physical_device, &p_var->logic_device_var.queue_family_count, NULL);
+		p_var->physical_device_var.physical_device, &p_var->logic_device_var.queue_family_count, nullptr);
 	if (p_var->logic_device_var.queue_family_count == 0) {
 		PRINT_ERROR("get queue_families_count fail!\n");
 		return false;
@@ -20,7 +20,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 	p_var->logic_device_var.queue_family_list = (VkQueueFamilyProperties *)cg_alloc_memory(
 		p_var->p_memory_pool_var,
 		p_var->logic_device_var.queue_family_count * sizeof(VkQueueFamilyProperties));
-	if (p_var->logic_device_var.queue_family_list == NULL) {
+	if (p_var->logic_device_var.queue_family_list == nullptr) {
 		PRINT_ERROR("get queue_familiy_list fail!\n");
 		return false;
 	} else {
@@ -40,7 +40,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 	p_var->logic_device_var.queue_priority_list = (float *)cg_alloc_memory(
 		p_var->p_memory_pool_var,
 		p_var->logic_device_var.queue_priority_list_count * sizeof(float));
-	if (p_var->logic_device_var.queue_priority_list != NULL) {
+	if (p_var->logic_device_var.queue_priority_list != nullptr) {
 		PRINT_LOG("alloc memory success!\n");
 		for (uint32_t i = 0; i < p_var->logic_device_var.queue_priority_list_count; i++) {
 			p_var->logic_device_var.queue_priority_list[i] = 0.001f * (i + 1);
@@ -51,7 +51,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 #ifdef DEBUG
 	// 打印所有队列信息
 	char **queue_info = cg_alloc_memory(p_var->p_memory_pool_var, 5 * sizeof(char *));
-	if (queue_info == NULL) {
+	if (queue_info == nullptr) {
 		return false;
 	} else {
 		PRINT_LOG("alloc memory success!\n");
@@ -121,7 +121,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 
 	VkDeviceQueueCreateInfo queue_create_info = {
 		.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-		.pNext = NULL,
+		.pNext = nullptr,
 		.flags = 0,
 		.queueFamilyIndex = p_var->logic_device_var.graphic_queue_family_index,
 		.queueCount = p_var->logic_device_var.queue_family_list[p_var->logic_device_var.graphic_queue_family_index].queueCount,
@@ -129,28 +129,28 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 
 	VkDeviceCreateInfo device_create_info = {
 		.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-		.pNext = NULL,
+		.pNext = nullptr,
 		.flags = 0,
 		.queueCreateInfoCount = 1,
 		.pQueueCreateInfos = &queue_create_info,
 		.enabledLayerCount = 0,
-		.ppEnabledLayerNames = NULL,
+		.ppEnabledLayerNames = nullptr,
 		.enabledExtensionCount = p_var->physical_device_var.enabled_physical_device_extensions_count,
 		.ppEnabledExtensionNames = (const char *const *)&p_var->physical_device_var.enabled_physcial_device_extension_list[0],
 		.pEnabledFeatures = &p_var->physical_device_var.device_feature_list};
 
 	// create logic device
-	PFN_vkCreateDevice create_device = NULL;
+	PFN_vkCreateDevice create_device = nullptr;
 	create_device = (PFN_vkCreateDevice)p_var->library_var.get_instance_proc_addr(
 		p_var->instance_var.vk_instance, "vkCreateDevice");
-	if (create_device == NULL) {
+	if (create_device == nullptr) {
 		PRINT_ERROR("load vkCreateDevice device fail!\n");
 		return false;
 	}
 
 	p_var->library_var.vk_result = create_device(
 		p_var->physical_device_var.physical_device, &device_create_info,
-		NULL, p_vk_logic_device);
+		nullptr, p_vk_logic_device);
 	if (p_var->library_var.vk_result != VK_SUCCESS || p_vk_logic_device == VK_NULL_HANDLE) {
 		PRINT_ERROR("create vulkan logic device fail!\n");
 		return false;
@@ -166,20 +166,20 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 #endif // DEBUG
 
 	// 获取队列的句柄
-	PFN_vkGetDeviceQueue get_device_queue = NULL;
+	PFN_vkGetDeviceQueue get_device_queue = nullptr;
 	get_device_queue = (PFN_vkGetDeviceQueue)p_var->library_var.get_device_proc_addr(
 		*p_vk_logic_device, "vkGetDeviceQueue");
-	if (get_device_queue == NULL) {
+	if (get_device_queue == nullptr) {
 		PRINT_ERROR("load vkGetDeviceQueue fail!\n");
 		return false;
 	}
-	p_var->logic_device_var.queue_family_handle = NULL;
+	p_var->logic_device_var.queue_family_handle = nullptr;
 	get_device_queue(
 		*p_vk_logic_device,
 		p_var->logic_device_var.queue_family_index,
 		0,
 		&p_var->logic_device_var.queue_family_handle);
-	if (p_var->logic_device_var.queue_family_handle == NULL) {
+	if (p_var->logic_device_var.queue_family_handle == nullptr) {
 		PRINT_ERROR("get vulkan device queue fail!\n");
 		return false;
 	} else {

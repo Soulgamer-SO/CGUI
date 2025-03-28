@@ -5,10 +5,10 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 		PRINT_ERROR("memory pool size should more bigger than 0!\n");
 		return false;
 	}
-	p_var->last_memory_end_addr = NULL;
+	p_var->last_memory_end_addr = nullptr;
 	p_var->memory_node_count = 0;
 	p_var->free_size = 0;
-	if (p_var->memory_pool == NULL || p_var->memory_node_list == NULL) {
+	if (p_var->memory_pool == nullptr || p_var->memory_node_list == nullptr) {
 		PRINT_ERROR("create memory pool fail!\n");
 		return false;
 	}
@@ -25,16 +25,16 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 
 void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 
-	if (p_var->memory_pool == NULL) {
+	if (p_var->memory_pool == nullptr) {
 		PRINT_ERROR("allocate memory fail! please create memory pool first!\n");
-		return NULL;
+		return nullptr;
 	} else if (size > p_var->free_size) {
 		PRINT_ERROR("allocate memory fail! the size is too big!\n");
-		return NULL;
+		return nullptr;
 	}
 	if (size == 0) {
 		PRINT_ERROR("size can not be 0!\n");
-		return NULL;
+		return nullptr;
 	}
 
 	if (p_var->memory_node_count == 0) {
@@ -115,12 +115,12 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 		return p_var->memory_node_list->addr;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	size_t memory_size = 0;
-	if (p_var->memory_pool == NULL) {
+	if (p_var->memory_pool == nullptr) {
 		PRINT_ERROR("must create memory pool first!\n");
 		return 0;
 	}
@@ -128,8 +128,8 @@ size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr) {
 		PRINT_ERROR("memory is not in the memory pool!\n");
 		return 0;
 	}
-	if (memory_addr == NULL) {
-		PRINT_ERROR("memory address must not be NULL!\n");
+	if (memory_addr == nullptr) {
+		PRINT_ERROR("memory address must not be nullptr!\n");
 		return 0;
 	}
 	for (uint32_t i = 0; i < p_var->memory_node_count; i++) {
@@ -143,7 +143,7 @@ size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr) {
 }
 
 uint32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr) {
-	if (p_var->memory_pool == NULL) {
+	if (p_var->memory_pool == nullptr) {
 		PRINT_ERROR("must create memory pool first!\n");
 		return 0;
 	}
@@ -151,8 +151,8 @@ uint32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr
 		PRINT_ERROR("memory is not in the memory pool!\n");
 		return 0;
 	}
-	if (memory_addr == NULL) {
-		PRINT_ERROR("memory address must not be NULL!\n");
+	if (memory_addr == nullptr) {
+		PRINT_ERROR("memory address must not be nullptr!\n");
 		return 0;
 	}
 	uint32_t i = 0;
@@ -166,27 +166,27 @@ uint32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr
 }
 
 cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr) {
-	if (p_var->memory_pool == NULL) {
+	if (p_var->memory_pool == nullptr) {
 		PRINT_ERROR("must create memory pool first!\n");
-		return NULL;
+		return nullptr;
 	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
 		PRINT_ERROR("memory is not in the memory pool!\n");
-		return NULL;
+		return nullptr;
 	}
-	if ((memory_addr == NULL && memory_end_addr == NULL) || (!(memory_addr == NULL || memory_end_addr == NULL))) {
-		PRINT_ERROR("one of them must be NULL and the other must not be NULL!\n");
-		return NULL;
+	if ((memory_addr == nullptr && memory_end_addr == nullptr) || (!(memory_addr == nullptr || memory_end_addr == nullptr))) {
+		PRINT_ERROR("one of them must be nullptr and the other must not be nullptr!\n");
+		return nullptr;
 	}
 
 	uint32_t i = 0;
-	if (memory_addr != NULL && memory_end_addr == NULL) {
+	if (memory_addr != nullptr && memory_end_addr == nullptr) {
 		for (i = 0; i < p_var->memory_node_count; i++) {
 			if (p_var->memory_node_list[i].addr == memory_addr) {
 				break;
 			}
 		}
-	} else if (memory_addr == NULL && memory_end_addr != NULL) {
+	} else if (memory_addr == nullptr && memory_end_addr != nullptr) {
 		for (i = 0; i < p_var->memory_node_count; i++) {
 			if (p_var->memory_node_list[i].end_addr == memory_end_addr) {
 				break;
@@ -231,7 +231,7 @@ void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, uint32_t index) {
 }
 
 void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
-	if (p_var->memory_pool == NULL) {
+	if (p_var->memory_pool == nullptr) {
 		PRINT_ERROR("must create memory pool first!\n");
 		return;
 	}
@@ -239,12 +239,12 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 		PRINT_ERROR("memory is not in the memory pool!\n");
 		return;
 	}
-	if (memory_addr == NULL) {
-		PRINT_ERROR("memory address must not be NULL!\n");
+	if (memory_addr == nullptr) {
+		PRINT_ERROR("memory address must not be nullptr!\n");
 		return;
 	}
 
-	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_var, memory_addr, NULL);
+	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_var, memory_addr, nullptr);
 	size_t free_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
 	uint32_t memory_index = cg_get_memory_node_index(p_var, memory_addr);
 
@@ -258,7 +258,7 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	}
 
 	// 如果该内存块的前一个内存块已被释放
-	cg_memory_node_t *p_previous_mem_node = cg_get_memory_node_addr(p_var, NULL, memory_addr);
+	cg_memory_node_t *p_previous_mem_node = cg_get_memory_node_addr(p_var, nullptr, memory_addr);
 	if (p_previous_mem_node->is_used == false) {
 		p_previous_mem_node->end_addr = p_memory_node->end_addr;
 		cg_rm_one_memory_node(p_var, memory_index);
@@ -268,7 +268,7 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	}
 
 	// 如果该内存块的后一个内存块已被释放
-	cg_memory_node_t *p_next_mem_node = cg_get_memory_node_addr(p_var, p_memory_node->end_addr, NULL);
+	cg_memory_node_t *p_next_mem_node = cg_get_memory_node_addr(p_var, p_memory_node->end_addr, nullptr);
 	if (p_next_mem_node->is_used == false) {
 		p_memory_node->end_addr = p_next_mem_node->end_addr;
 		uint32_t next_memory_index = cg_get_memory_node_index(p_var, p_next_mem_node->addr);
@@ -286,26 +286,26 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 
 #ifdef DEBUG
 void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t size) {
-	if (p_var->memory_pool == NULL) {
+	if (p_var->memory_pool == nullptr) {
 		PRINT_ERROR("must create memory pool first!\n");
 		return memory_addr;
 	} else if ((size + sizeof(cg_memory_node_t)) > p_var->free_size) {
 		PRINT_ERROR("allocate memory fail! the size is too big!\n");
-		return NULL;
+		return nullptr;
 	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
 		PRINT_ERROR("memory is not in the memory pool!\n");
 		return memory_addr;
 	}
-	if (memory_addr == NULL) {
-		PRINT_ERROR("memory address must not be NULL!\n");
+	if (memory_addr == nullptr) {
+		PRINT_ERROR("memory address must not be nullptr!\n");
 		return memory_addr;
 	}
 	if (size == 0) {
 		cg_free_memory(p_var, memory_addr);
-		return NULL;
+		return nullptr;
 	}
-	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_var, memory_addr, NULL);
+	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_var, memory_addr, nullptr);
 	size_t old_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
 
 	if (size > old_size) {
@@ -317,7 +317,7 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 			return memory_addr;
 		}
 		void *new_memory_addr = cg_alloc_memory(p_var, size);
-		if (new_memory_addr != NULL) {
+		if (new_memory_addr != nullptr) {
 			memmove(new_memory_addr, memory_addr, old_size);
 			cg_free_memory(p_var, memory_addr);
 			return new_memory_addr;

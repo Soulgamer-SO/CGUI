@@ -33,9 +33,9 @@ void cg_event_loop(cg_var_t *p_var) {
 void cg_event_loop(cg_var_t *p_var) {
 	p_var->event_loop_var.is_running = true;
 	p_var->event_loop_var.msg.message = WM_NULL;
-	GetMessage(&p_var->event_loop_var.msg, NULL, 0, 0);
+	GetMessage(&p_var->event_loop_var.msg, nullptr, 0, 0);
 	while (p_var->event_loop_var.is_running && (p_var->event_loop_var.msg.message != WM_QUIT)) {
-		if (PeekMessage(&p_var->event_loop_var.msg, NULL, 0, 0, PM_REMOVE) != false) {
+		if (PeekMessage(&p_var->event_loop_var.msg, nullptr, 0, 0, PM_REMOVE) != false) {
 			TranslateMessage(&p_var->event_loop_var.msg);
 			DispatchMessage(&p_var->event_loop_var.msg);
 		}

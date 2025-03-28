@@ -14,7 +14,7 @@ MAIN {
 		.memory_pool = malloc(MEM_POOL_SIZE),
 		.size = MEM_POOL_SIZE,
 		.free_size = 0,
-		.last_memory_end_addr = NULL,
+		.last_memory_end_addr = nullptr,
 		.memory_node_count = 0,
 		.memory_node_list = malloc(NODE_LIST_SIZE),
 		.memory_node_max_size = NODE_LIST_SIZE};
@@ -42,9 +42,9 @@ MAIN {
 destroy_and_exit:
 	cg_destroy_and_exit(&var);
 	free(memory_pool_var.memory_pool);
-	memory_pool_var.memory_pool = NULL;
+	memory_pool_var.memory_pool = nullptr;
 	free(memory_pool_var.memory_node_list);
-	memory_pool_var.memory_node_list = NULL;
+	memory_pool_var.memory_node_list = nullptr;
 exit:
 	PRINT_LOG("Exit success!\n");
 	return EXIT_SUCCESS;
