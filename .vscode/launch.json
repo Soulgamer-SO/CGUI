@@ -2,44 +2,36 @@
     "version": "2.0.0",
     "configurations": [
         {
-            "type": "cppdbg",
+            "type": "gdb",
+            "request": "launch",
             "preLaunchTask": "make_debug",
             "name": "LinuxDebugMake",
-            "MIMode": "gdb",
-            "stopAtEntry": false,
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/build/debug/cgui-app"
+            "program": "${workspaceFolder}/build/debug/cgui-app",
+            "stopOnEntry": false
         },
         {
-            "type": "cppdbg",
+            "type": "gdb",
+            "request": "launch",
             "preLaunchTask": "make_release",
             "name": "LinuxReleaseMake",
-            "MIMode": "gdb",
-            "stopAtEntry": false,
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/build/debug/cgui-app"
+            "program": "${workspaceFolder}/build/debug/cgui-app",
+            "stopOnEntry": false
         },
         {
-            "type": "cppdbg",
+            "type": "gdb",
+            "request": "launch",
             "preLaunchTask": "make_debug",
             "name": "WinDebugMake",
-            "MIMode": "gdb",
-            "stopAtEntry": false,
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/build/debug/cgui-app.exe"
+            "program": "${workspaceFolder}/build/debug/cgui-app.exe",
+            "stopOnEntry": false
         },
         {
-            "type": "cppdbg",
+            "type": "gdb",
+            "request": "launch",
             "preLaunchTask": "make_release",
             "name": "WinReleaseMake",
-            "MIMode": "gdb",
-            "stopAtEntry": false,
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/build/debug/cgui-app.exe"
+            "program": "${workspaceFolder}/build/debug/cgui-app.exe",
+            "stopOnEntry": false
         }
     ]
 }
