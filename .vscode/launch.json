@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "configurations": [
         {
-            "type": "gdb",
+            "type": "vgdb",
             "request": "launch",
             "preLaunchTask": "make_debug",
             "name": "LinuxDebugMake",
@@ -10,7 +10,7 @@
             "stopOnEntry": false
         },
         {
-            "type": "gdb",
+            "type": "vgdb",
             "request": "launch",
             "preLaunchTask": "make_release",
             "name": "LinuxReleaseMake",
@@ -18,7 +18,7 @@
             "stopOnEntry": false
         },
         {
-            "type": "gdb",
+            "type": "vgdb",
             "request": "launch",
             "preLaunchTask": "make_debug",
             "name": "WinDebugMake",
@@ -26,7 +26,7 @@
             "stopOnEntry": false
         },
         {
-            "type": "gdb",
+            "type": "vgdb",
             "request": "launch",
             "preLaunchTask": "make_release",
             "name": "WinReleaseMake",
