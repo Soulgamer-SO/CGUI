@@ -1,4 +1,5 @@
 #include "cg_memory_pool.h"
+#include <src/functions/cg_log.h>
 
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 	if (p_var->size <= 0) {
@@ -26,18 +27,27 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 
 	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("allocate memory fail! please create memory pool first!\n");
+		PRINT_ERROR("memory pool address must not be nullptr!\n");
 		return nullptr;
 	} else if (size > p_var->free_size) {
-		PRINT_ERROR("allocate memory fail! the size is too big!\n");
+		PRINT_ERROR("the size is too big!\n");
 		return nullptr;
 	}
 	if (size == 0) {
-		PRINT_ERROR("size can not be 0!\n");
+		PRINT_ERROR("size can must not be 0!\n");
 		return nullptr;
 	}
 
 	if (p_var->memory_node_count == 0) {
+
+		if (cg_add_one_memory_node(
+			    p_var,
+			    ((cg_memory_node_t){
+				    .addr = p_var->memory_pool,
+				    .end_addr = p_var->memory_pool + size,
+				    .is_used = true})) == false) {
+			PRINT_ERROR("add_one_memory_node fail!\n");
+		}
 		p_var->memory_node_count = 1;
 		p_var->memory_node_list[0].addr = p_var->memory_pool;
 		p_var->memory_node_list[0].end_addr = p_var->memory_pool + size;
@@ -121,15 +131,15 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	size_t memory_size = 0;
 	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("must create memory pool first!\n");
+		PRINT_ERROR("memory pool address must not be nullptr!\n");
 		return 0;
 	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
-		PRINT_ERROR("memory is not in the memory pool!\n");
+		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return 0;
 	}
 	if (memory_addr == nullptr) {
-		PRINT_ERROR("memory address must not be nullptr!\n");
+		PRINT_ERROR("this memory address must not be nullptr!\n");
 		return 0;
 	}
 	for (uint32_t i = 0; i < p_var->memory_node_count; i++) {
@@ -144,15 +154,15 @@ size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr) {
 
 uint32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("must create memory pool first!\n");
+		PRINT_ERROR("memory pool address must not be nullptr!\n");
 		return 0;
 	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
-		PRINT_ERROR("memory is not in the memory pool!\n");
+		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return 0;
 	}
 	if (memory_addr == nullptr) {
-		PRINT_ERROR("memory address must not be nullptr!\n");
+		PRINT_ERROR("this memory address must not be nullptr!\n");
 		return 0;
 	}
 	uint32_t i = 0;
@@ -167,11 +177,11 @@ uint32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr
 
 cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr) {
 	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("must create memory pool first!\n");
+		PRINT_ERROR("memory pool address must not be nullptr!\n");
 		return nullptr;
 	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
-		PRINT_ERROR("memory is not in the memory pool!\n");
+		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return nullptr;
 	}
 	if ((memory_addr == nullptr && memory_end_addr == nullptr) || (!(memory_addr == nullptr || memory_end_addr == nullptr))) {
@@ -198,12 +208,14 @@ cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *mem
 }
 
 bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info) {
+	if (p_var->memory_node_count == 0) {
+	}
 	if (p_var->memory_node_count == p_var->memory_node_max_count) {
-		p_var->memory_node_list = realloc(p_var->memory_node_list, sizeof(cg_memory_node_t) * (p_var->memory_node_max_count + 1));
+		p_var->memory_node_list = realloc(p_var->memory_node_list, sizeof(cg_memory_node_t) * (p_var->memory_node_max_count + 8));
 		if (p_var->memory_node_list == nullptr) {
 			return false;
 		}
-		p_var->memory_node_max_count++;
+		p_var->memory_node_max_count = p_var->memory_node_max_count + 8;
 	};
 	p_var->memory_node_list[p_var->memory_node_count] = memory_node_info;
 	p_var->memory_node_count++;
@@ -238,15 +250,15 @@ void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, uint32_t index) {
 
 void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("must create memory pool first!\n");
+		PRINT_ERROR("memory pool address must not be nullptr!\n");
 		return;
 	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
-		PRINT_ERROR("memory is not in the memory pool!\n");
+		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return;
 	}
 	if (memory_addr == nullptr) {
-		PRINT_ERROR("memory address must not be nullptr!\n");
+		PRINT_ERROR("this memory address must not be nullptr!\n");
 		return;
 	}
 
@@ -293,18 +305,18 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 #ifdef DEBUG
 void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t size) {
 	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("must create memory pool first!\n");
+		PRINT_ERROR("memory pool address must not be nullptr!\n");
 		return memory_addr;
 	} else if ((size + sizeof(cg_memory_node_t)) > p_var->free_size) {
-		PRINT_ERROR("allocate memory fail! the size is too big!\n");
+		PRINT_ERROR("fail! the size is too big!\n");
 		return nullptr;
 	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
-		PRINT_ERROR("memory is not in the memory pool!\n");
+		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return memory_addr;
 	}
 	if (memory_addr == nullptr) {
-		PRINT_ERROR("memory address must not be nullptr!\n");
+		PRINT_ERROR("this memory address must not be nullptr!\n");
 		return memory_addr;
 	}
 	if (size == 0) {
