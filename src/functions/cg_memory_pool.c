@@ -39,7 +39,6 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 	}
 
 	if (p_var->memory_node_count == 0) {
-
 		if (cg_add_one_memory_node(
 			    p_var,
 			    ((cg_memory_node_t){
@@ -208,8 +207,6 @@ cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *mem
 }
 
 bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info) {
-	if (p_var->memory_node_count == 0) {
-	}
 	if (p_var->memory_node_count == p_var->memory_node_max_count) {
 		p_var->memory_node_list = realloc(p_var->memory_node_list, sizeof(cg_memory_node_t) * (p_var->memory_node_max_count + 8));
 		if (p_var->memory_node_list == nullptr) {
