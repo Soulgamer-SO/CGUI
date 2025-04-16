@@ -1,16 +1,20 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "name": "Windows",
             "includePath": [
                 "${workspaceFolder}/**"
             ],
             "cStandard": "c23",
             "defines": [
                 "DEBUG",
-                "VK_USE_PLATFORM_XCB_KHR"
+                "VK_USE_PLATFORM_WIN32_KHR",
+                "nullptr",
+                "true",
+                "false"
             ],
-            "intelliSenseMode": "linux-gcc-x64"
+            "intelliSenseMode": "gcc-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4
