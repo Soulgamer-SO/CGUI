@@ -1,5 +1,6 @@
 #include "cg_wsi.h"
 #include "cg_color.h"
+#include "cg_event_loop.h"
 #include "cg_swapchain.h"
 
 bool cg_create_window(cg_var_t *p_var) {
@@ -123,10 +124,10 @@ bool cg_create_window(cg_var_t *p_var) {
 		WS_OVERLAPPEDWINDOW,
 		p_var->wsi_var.window_x, p_var->wsi_var.window_y,
 		p_var->wsi_var.window_width, p_var->wsi_var.window_height,
-		(HWND)nullptr,
-		(HMENU)nullptr,
+		(HWND) nullptr,
+		(HMENU) nullptr,
 		p_var->wsi_var.WinAPI_var.hInstance,
-		(LPVOID)nullptr);
+		(LPVOID) nullptr);
 	if (p_var->wsi_var.win32_surface_create_info.hwnd == nullptr) {
 		PRINT_ERROR("Windows API CreateWindowEx fail!\n");
 		return false;

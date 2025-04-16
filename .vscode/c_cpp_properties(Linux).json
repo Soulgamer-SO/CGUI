@@ -10,8 +10,7 @@
                 "DEBUG",
                 "VK_USE_PLATFORM_XCB_KHR"
             ],
-            "intelliSenseMode": "linux-gcc-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
+            "intelliSenseMode": "linux-gcc-x64"
         }
     ],
     "version": 4
