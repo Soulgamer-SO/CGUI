@@ -18,20 +18,36 @@
             "stopOnEntry": false
         },
         {
-            "type": "vgdb",
+            "type": "cppdbg",
             "request": "launch",
             "preLaunchTask": "make_debug",
             "name": "WinDebugMake",
             "program": "${workspaceFolder}/build/debug/cgui-app.exe",
-            "stopOnEntry": false
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "setupCommands": [
+                {
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         },
         {
-            "type": "vgdb",
+            "type": "cppdbg",
             "request": "launch",
             "preLaunchTask": "make_release",
             "name": "WinReleaseMake",
-            "program": "${workspaceFolder}/build/debug/cgui-app.exe",
-            "stopOnEntry": false
+            "program": "${workspaceFolder}/build/release/cgui-app.exe",
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "setupCommands": [
+                {
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         }
     ]
 }
