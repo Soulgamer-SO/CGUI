@@ -1,5 +1,6 @@
 #include "cg_memory_pool.h"
 #include <src/functions/cg_log.h>
+#include <stdint.h>
 
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 	if (p_var->size <= 0) {
@@ -192,7 +193,7 @@ cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *mem
 		return nullptr;
 	}
 
-	uint32_t i = 0;
+	int32_t i = 0;
 	if (memory_addr != nullptr && memory_end_addr == nullptr) {
 		for (i = 0; i < p_var->memory_node_count; i++) {
 			if (p_var->memory_node_list[i].addr == memory_addr) {
@@ -211,19 +212,20 @@ cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *mem
 }
 
 bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info) {
+#define EXT_NODE_COUNT 8
 	if (p_var->memory_node_count == p_var->memory_node_max_count) {
-		p_var->memory_node_list = realloc(p_var->memory_node_list, sizeof(cg_memory_node_t) * (p_var->memory_node_max_count + 8));
+		p_var->memory_node_list = realloc(p_var->memory_node_list, sizeof(cg_memory_node_t) * (p_var->memory_node_max_count + EXT_NODE_COUNT));
 		if (p_var->memory_node_list == nullptr) {
 			return false;
 		}
-		p_var->memory_node_max_count = p_var->memory_node_max_count + 8;
+		p_var->memory_node_max_count = p_var->memory_node_max_count + EXT_NODE_COUNT;
 	};
 	p_var->memory_node_list[p_var->memory_node_count] = memory_node_info;
 	p_var->memory_node_count++;
 	return true;
 }
 
-void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, uint32_t index) {
+void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index) {
 	if (p_var->memory_node_count == 1) {
 		memset(p_var->memory_node_list, 0, sizeof(cg_memory_node_t));
 		p_var->memory_node_count = 0;

@@ -6,12 +6,12 @@
 #include <src/functions/cg_log.h>
 #include <stdio.h>
 #include <string.h>
-#define MEMORY_POOL_SIZE 1024 * 1024
-#define NODE_LIST_SIZE 4 * 1024
-#define NODE_MAX_COUNT (NODE_LIST_SIZE / sizeof(cg_memory_node_t))
 
 // gdb反汇编调试命令 -exec disassemble /m main
 MAIN {
+#define MEMORY_POOL_SIZE 1024 * 1024
+#define NODE_LIST_SIZE 4 * 1024
+#define NODE_MAX_COUNT (NODE_LIST_SIZE / sizeof(cg_memory_node_t))
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = nullptr,
 		.size = MEMORY_POOL_SIZE,
