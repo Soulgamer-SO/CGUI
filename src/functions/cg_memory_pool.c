@@ -173,7 +173,7 @@ int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr)
 		PRINT_ERROR("this memory address must not be nullptr!\n");
 		return 0;
 	}
-	uint32_t i = 0;
+	int32_t i = 0;
 	for (i = 0; i < p_var->memory_node_count; i++) {
 		if (p_var->memory_node_list[i].addr == memory_addr) {
 			break;
@@ -241,14 +241,14 @@ void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index) {
 		p_var->memory_node_count--;
 		return;
 	}
-	cg_memory_node_t *new_memory_node_list = (cg_memory_node_t *)(p_var->memory_node_list + sizeof(cg_memory_node_t));
-	if (index == p_var->memory_node_count) {
+	if (index == p_var->memory_node_count - 1) {
+		memset(&p_var->memory_node_list[p_var->memory_node_count - 1], 0, sizeof(cg_memory_node_t));
 		p_var->memory_node_count--;
-		memmove(new_memory_node_list, p_var->memory_node_list, p_var->memory_node_count * sizeof(cg_memory_node_t));
 		return;
 	}
-	if (index > 0 && index < p_var->memory_node_count) {
-		memmove(new_memory_node_list, p_var->memory_node_list, index * sizeof(cg_memory_node_t));
+	if (index > 0 && index < p_var->memory_node_count - 1) {
+		memmove(&p_var->memory_node_list[index], &p_var->memory_node_list[index + 1], (p_var->memory_node_count - (index + 1)) * sizeof(cg_memory_node_t));
+		memset(&p_var->memory_node_list[p_var->memory_node_count - 1], 0, sizeof(cg_memory_node_t));
 		p_var->memory_node_count--;
 		return;
 	}
