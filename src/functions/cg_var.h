@@ -2,7 +2,10 @@
 #define CG_VAR_H 1
 #include "cg_memory_pool.h"
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <vulkan/vulkan.h>
+
 #ifdef __linux
 #include <xcb/xcb_icccm.h>
 #endif // __linux
