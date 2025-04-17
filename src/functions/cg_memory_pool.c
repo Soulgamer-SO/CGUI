@@ -1,8 +1,4 @@
 #include "cg_memory_pool.h"
-#include <src/functions/cg_log.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
 
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 	if (p_var->size <= 0) {
@@ -340,7 +336,6 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 	}
 	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_var, memory_addr, nullptr);
 	size_t old_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
-
 	if (size > old_size) {
 		// 如果该内存块排在最后尾
 		if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
