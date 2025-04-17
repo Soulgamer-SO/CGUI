@@ -4,9 +4,7 @@
 #include "../functions/cg_memory_pool.h"
 #include "cg_platform.h"
 #include <src/functions/cg_log.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 // gdb反汇编调试命令 -exec disassemble /m main
 MAIN {
