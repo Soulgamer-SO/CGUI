@@ -66,7 +66,7 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var);
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr);
 
 // 获取内存块信息节点的索引
-uint32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr);
+int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr);
 
 /*
 根据内存首地址或者尾地址来获取内存块信息节点的地址

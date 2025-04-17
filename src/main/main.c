@@ -5,13 +5,13 @@
 #include "cg_platform.h"
 #include <src/functions/cg_log.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // gdb反汇编调试命令 -exec disassemble /m main
 MAIN {
 #define MEMORY_POOL_SIZE 1024 * 1024
-#define NODE_LIST_SIZE 4 * 1024
-#define NODE_MAX_COUNT (NODE_LIST_SIZE / sizeof(cg_memory_node_t))
+#define NODE_MAX_COUNT 128
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = nullptr,
 		.size = MEMORY_POOL_SIZE,
@@ -21,7 +21,7 @@ MAIN {
 		.memory_node_list = nullptr,
 		.memory_node_max_count = NODE_MAX_COUNT};
 	memory_pool_var.memory_pool = malloc(MEMORY_POOL_SIZE);
-	memory_pool_var.memory_node_list = malloc(NODE_LIST_SIZE);
+	memory_pool_var.memory_node_list = calloc(NODE_MAX_COUNT, sizeof(cg_memory_node_t));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {
