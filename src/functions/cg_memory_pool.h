@@ -41,19 +41,17 @@ typedef struct cg_memory_pool_var {
 
 示例代码:
 #define MEMORY_POOL_SIZE 1024 * 1024
-#define NODE_LIST_SIZE 4 * 1024
-cg_memory_node_t *memory_node_list_memory = malloc(NODE_LIST_SIZE);
-	if (memory_node_list_memory == nullptr) {
-		goto exit;
-	}
+#define NODE_MAX_COUNT 128
 	cg_memory_pool_var_t memory_pool_var = {
-		.memory_pool = malloc(MEMORY_POOL_SIZE),
+		.memory_pool = nullptr,
 		.size = MEMORY_POOL_SIZE,
 		.free_size = 0,
 		.last_memory_end_addr = nullptr,
 		.memory_node_count = 0,
-		.memory_node_list = malloc(NODE_LIST_SIZE),
-		.memory_node_max_count = NODE_LIST_SIZE / sizeof(cg_memory_node_t)};
+		.memory_node_list = nullptr,
+		.memory_node_max_count = NODE_MAX_COUNT};
+	memory_pool_var.memory_pool = malloc(MEMORY_POOL_SIZE);
+	memory_pool_var.memory_node_list = calloc(NODE_MAX_COUNT, sizeof(cg_memory_node_t));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {
