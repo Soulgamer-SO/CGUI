@@ -84,7 +84,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 			return p_var->memory_node_list[p_var->memory_node_count - 1].addr;
 		}
 
-		/*如果last_memory_end_addr后面的内存空间不够,而且之前已经释放的内存块的大小足够新内存块的大小,就优先利用这块之前已经被释放的内存块*/
+		/*如果last_memory_end_addr后面的内存空间不够,而且之前已经释放的内存块的大小足够容纳新内存块的大小,就优先利用这块之前已经被释放的内存块*/
 		bool is_free_mem_size_equ = false;
 		bool is_free_mem_size_bigger = false;
 		int32_t i = 0;
