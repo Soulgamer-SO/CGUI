@@ -1,6 +1,7 @@
 #include "cg_memory_pool.h"
 #include <src/functions/cg_log.h>
 #include <stdint.h>
+#include <string.h>
 
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 	if (p_var->size <= 0) {
@@ -232,21 +233,19 @@ void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index) {
 		return;
 	}
 	if (index == 0) {
+		memmove(&p_var->memory_node_list[0], &p_var->memory_node_list[1], (p_var->memory_node_count - 1) * sizeof(cg_memory_node_t));
 		p_var->memory_node_count--;
-		p_var->free_size += sizeof(cg_memory_node_t);
 		return;
 	}
 	cg_memory_node_t *new_memory_node_list = (cg_memory_node_t *)(p_var->memory_node_list + sizeof(cg_memory_node_t));
 	if (index == p_var->memory_node_count) {
 		p_var->memory_node_count--;
 		memmove(new_memory_node_list, p_var->memory_node_list, p_var->memory_node_count * sizeof(cg_memory_node_t));
-		p_var->free_size += sizeof(cg_memory_node_t);
 		return;
 	}
 	if (index > 0 && index < p_var->memory_node_count) {
 		memmove(new_memory_node_list, p_var->memory_node_list, index * sizeof(cg_memory_node_t));
 		p_var->memory_node_count--;
-		p_var->free_size += sizeof(cg_memory_node_t);
 		return;
 	}
 }
