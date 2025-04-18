@@ -19,6 +19,11 @@ typedef struct cg_memory_node {
 	bool is_used;
 } cg_memory_node_t;
 
+// hashmap
+typedef struct hashmap {
+	/* data */
+} hashmap_t;
+
 // 用来记录内存池信息(非侵入式内存池)
 typedef struct cg_memory_pool_var {
 	// 内存池
@@ -33,8 +38,12 @@ typedef struct cg_memory_pool_var {
 	uint32_t memory_node_count;
 	// 记录内存块信息的节点的列表
 	cg_memory_node_t *memory_node_list;
+	// 记录已经被释放的内存块信息的节点的列表
+	cg_memory_node_t *free_memory_node_list;
 	// 内存块信息节点的数量上限
 	uint32_t memory_node_max_count;
+	// hashmap
+	hashmap_t hashmap;
 } cg_memory_pool_var_t;
 
 /*创建内存池(非侵入式内存池)
