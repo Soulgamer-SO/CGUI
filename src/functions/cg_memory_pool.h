@@ -69,6 +69,15 @@ typedef struct cg_memory_pool_var {
 注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池*/
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_var);
 
+// 使用内存池，分配内存块,如果成功该函数会返回新地址，失败就返回nullptr
+void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size);
+
+// 释放指定内存块
+void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr);
+
+// 使用内存池，给指定内存块重新分配内存,如果成功该函数会返回新地址，失败就返回nullptr
+void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t size);
+
 // 如果成功该函数返回内存块占用大小
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr);
 
@@ -89,16 +98,5 @@ bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory
 
 // 删除一个内存块信息节点
 void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index);
-
-// 使用内存池，分配内存块,如果成功该函数会返回新地址，失败就返回nullptr
-void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size);
-
-// 释放指定内存块
-void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr);
-
-#ifdef DEBUG
-// 使用内存池，给指定内存块重新分配内存,如果成功该函数会返回新地址，失败就返回nullptr
-void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t size);
-#endif
 
 #endif // CG_MEMORY_POOL_H 1

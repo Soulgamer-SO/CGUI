@@ -6,7 +6,6 @@
 #include "cg_platform.h"
 #include <stdlib.h>
 
-
 // gdb反汇编调试命令 -exec disassemble /m main
 MAIN {
 #define MEMORY_POOL_SIZE 1024 * 1024

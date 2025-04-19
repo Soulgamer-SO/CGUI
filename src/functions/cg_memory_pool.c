@@ -139,6 +139,119 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 	return nullptr;
 }
 
+void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
+	if (p_var->memory_pool == nullptr) {
+		PRINT_ERROR("memory pool address must not be nullptr!\n");
+		return;
+	}
+	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
+		PRINT_ERROR("this memory is not in the memory pool!\n");
+		return;
+	}
+	if (memory_addr == nullptr) {
+		PRINT_ERROR("this memory address must not be nullptr!\n");
+		return;
+	}
+
+	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_var, memory_addr, nullptr);
+	size_t free_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
+	int32_t memory_node_index = 0;
+	cg_get_memory_node_index(p_var, memory_addr, &memory_node_index);
+
+	// 如果该内存块排在最后尾
+	if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
+		p_var->last_memory_end_addr = p_memory_node->addr;
+		cg_rm_one_memory_node(p_var, memory_node_index);
+		p_var->free_size += free_size;
+		return;
+	}
+
+	// 如果该内存块的前一个内存块已被释放
+	cg_memory_node_t *p_previous_mem_node = cg_get_memory_node_addr(p_var, nullptr, memory_addr);
+	if (p_previous_mem_node->is_used == false) {
+		p_previous_mem_node->end_addr = p_memory_node->end_addr;
+		cg_rm_one_memory_node(p_var, memory_node_index);
+		p_var->free_size += free_size;
+		p_memory_node->is_used = false;
+		return;
+	}
+
+	// 如果该内存块的后一个内存块已被释放
+	cg_memory_node_t *p_next_mem_node = cg_get_memory_node_addr(p_var, p_memory_node->end_addr, nullptr);
+	if (p_next_mem_node->is_used == false) {
+		p_memory_node->end_addr = p_next_mem_node->end_addr;
+		int32_t next_memory_node_index = 0;
+		cg_get_memory_node_index(p_var, p_next_mem_node->addr, &next_memory_node_index);
+		cg_rm_one_memory_node(p_var, next_memory_node_index);
+		p_var->free_size += free_size;
+		p_memory_node->is_used = false;
+		return;
+	}
+
+	// 如果该内存块的前后内存块都没被释放
+	p_var->free_size += free_size;
+	p_memory_node->is_used = false;
+	return;
+}
+
+void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t size) {
+	if (p_var->memory_pool == nullptr) {
+		PRINT_ERROR("memory pool address must not be nullptr!\n");
+		return memory_addr;
+	} else if ((size + sizeof(cg_memory_node_t)) > p_var->free_size) {
+		PRINT_ERROR("fail! the size is too big!\n");
+		return nullptr;
+	}
+	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
+		PRINT_ERROR("this memory is not in the memory pool!\n");
+		return memory_addr;
+	}
+	if (memory_addr == nullptr) {
+		PRINT_ERROR("this memory address must not be nullptr!\n");
+		return memory_addr;
+	}
+	if (size == 0) {
+		cg_free_memory(p_var, memory_addr);
+		return nullptr;
+	}
+	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_var, memory_addr, nullptr);
+	size_t old_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
+	if (size < old_size) {
+		// 如果该内存块排在最后尾
+		if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
+			p_memory_node->end_addr = p_var->last_memory_end_addr - (old_size - size);
+			p_var->last_memory_end_addr = p_memory_node->end_addr;
+			p_var->free_size += (old_size - size);
+			return memory_addr;
+		}
+		cg_add_one_memory_node(
+			p_var,
+			(cg_memory_node_t){
+				.addr = p_memory_node->end_addr - (old_size - size),
+				.end_addr = p_memory_node->end_addr,
+				.is_used = false});
+		p_var->free_size += (old_size - size);
+		return memory_addr;
+	}
+	if (size > old_size) {
+		// 如果该内存块排在最后尾
+		if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
+			p_memory_node->end_addr = p_var->last_memory_end_addr + (size - old_size);
+			p_var->last_memory_end_addr = p_memory_node->end_addr;
+			p_var->free_size -= (size - old_size);
+			return memory_addr;
+		}
+		void *new_memory_addr = cg_alloc_memory(p_var, size);
+		if (new_memory_addr != nullptr) {
+			memmove(new_memory_addr, memory_addr, old_size);
+			cg_free_memory(p_var, memory_addr);
+			return new_memory_addr;
+		}
+	}
+
+	return memory_addr;
+}
+
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	size_t memory_size = 0;
 	if (p_var->memory_pool == nullptr) {
@@ -257,118 +370,3 @@ void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index) {
 		return;
 	}
 }
-
-void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
-	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("memory pool address must not be nullptr!\n");
-		return;
-	}
-	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
-		PRINT_ERROR("this memory is not in the memory pool!\n");
-		return;
-	}
-	if (memory_addr == nullptr) {
-		PRINT_ERROR("this memory address must not be nullptr!\n");
-		return;
-	}
-
-	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_var, memory_addr, nullptr);
-	size_t free_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
-	int32_t memory_node_index = 0;
-	cg_get_memory_node_index(p_var, memory_addr, &memory_node_index);
-
-	// 如果该内存块排在最后尾
-	if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
-		p_var->last_memory_end_addr = p_memory_node->addr;
-		cg_rm_one_memory_node(p_var, memory_node_index);
-		p_var->free_size += free_size;
-		return;
-	}
-
-	// 如果该内存块的前一个内存块已被释放
-	cg_memory_node_t *p_previous_mem_node = cg_get_memory_node_addr(p_var, nullptr, memory_addr);
-	if (p_previous_mem_node->is_used == false) {
-		p_previous_mem_node->end_addr = p_memory_node->end_addr;
-		cg_rm_one_memory_node(p_var, memory_node_index);
-		p_var->free_size += free_size;
-		p_memory_node->is_used = false;
-		return;
-	}
-
-	// 如果该内存块的后一个内存块已被释放
-	cg_memory_node_t *p_next_mem_node = cg_get_memory_node_addr(p_var, p_memory_node->end_addr, nullptr);
-	if (p_next_mem_node->is_used == false) {
-		p_memory_node->end_addr = p_next_mem_node->end_addr;
-		int32_t next_memory_node_index = 0;
-		cg_get_memory_node_index(p_var, p_next_mem_node->addr, &next_memory_node_index);
-		cg_rm_one_memory_node(p_var, next_memory_node_index);
-		p_var->free_size += free_size;
-		p_memory_node->is_used = false;
-		return;
-	}
-
-	// 如果该内存块的前后内存块都没被释放
-	p_var->free_size += free_size;
-	p_memory_node->is_used = false;
-	return;
-}
-
-#ifdef DEBUG
-void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t size) {
-	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("memory pool address must not be nullptr!\n");
-		return memory_addr;
-	} else if ((size + sizeof(cg_memory_node_t)) > p_var->free_size) {
-		PRINT_ERROR("fail! the size is too big!\n");
-		return nullptr;
-	}
-	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
-		PRINT_ERROR("this memory is not in the memory pool!\n");
-		return memory_addr;
-	}
-	if (memory_addr == nullptr) {
-		PRINT_ERROR("this memory address must not be nullptr!\n");
-		return memory_addr;
-	}
-	if (size == 0) {
-		cg_free_memory(p_var, memory_addr);
-		return nullptr;
-	}
-	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_var, memory_addr, nullptr);
-	size_t old_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
-	if (size < old_size) {
-		// 如果该内存块排在最后尾
-		if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
-			p_memory_node->end_addr = p_var->last_memory_end_addr - (old_size - size);
-			p_var->last_memory_end_addr = p_memory_node->end_addr;
-			p_var->free_size += (old_size - size);
-			return memory_addr;
-		}
-		cg_add_one_memory_node(
-			p_var,
-			(cg_memory_node_t){
-				.addr = p_memory_node->end_addr - (old_size - size),
-				.end_addr = p_memory_node->end_addr,
-				.is_used = false});
-		p_var->free_size += (old_size - size);
-		return memory_addr;
-	}
-	if (size > old_size) {
-		// 如果该内存块排在最后尾
-		if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
-			p_memory_node->end_addr = p_var->last_memory_end_addr + (size - old_size);
-			p_var->last_memory_end_addr = p_memory_node->end_addr;
-			p_var->free_size -= (size - old_size);
-			return memory_addr;
-		}
-		void *new_memory_addr = cg_alloc_memory(p_var, size);
-		if (new_memory_addr != nullptr) {
-			memmove(new_memory_addr, memory_addr, old_size);
-			cg_free_memory(p_var, memory_addr);
-			return new_memory_addr;
-		}
-	}
-
-	return memory_addr;
-}
-#endif
