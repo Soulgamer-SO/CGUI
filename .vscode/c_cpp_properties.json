@@ -8,7 +8,10 @@
             "cStandard": "c23",
             "defines": [
                 "DEBUG",
-                "VK_USE_PLATFORM_XCB_KHR"
+                "VK_USE_PLATFORM_XCB_KHR",
+                "nullptr",
+                "true",
+                "false"
             ],
             "intelliSenseMode": "linux-gcc-x64"
         }
