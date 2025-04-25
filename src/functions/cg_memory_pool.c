@@ -155,7 +155,7 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 
 	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_var, memory_addr, nullptr);
 	size_t free_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
-	int32_t memory_node_index = 0;
+	int32_t memory_node_index = -1;
 	cg_get_memory_node_index(p_var, memory_addr, &memory_node_index);
 
 	// 如果该内存块排在最后尾
@@ -180,7 +180,7 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	cg_memory_node_t *p_next_mem_node = cg_get_memory_node_addr(p_var, p_memory_node->end_addr, nullptr);
 	if (p_next_mem_node->is_used == false) {
 		p_memory_node->end_addr = p_next_mem_node->end_addr;
-		int32_t next_memory_node_index = 0;
+		int32_t next_memory_node_index = -1;
 		cg_get_memory_node_index(p_var, p_next_mem_node->addr, &next_memory_node_index);
 		cg_rm_one_memory_node(p_var, next_memory_node_index);
 		p_var->free_size += free_size;

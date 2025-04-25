@@ -20,18 +20,13 @@ typedef struct cg_memory_node {
 } cg_memory_node_t;
 
 typedef enum key {
-	// 内存块的地址
-	KEY_START_ADDR,
-	// 内存块的尾地址
-	KEY_EDD_ADDR
+	START_ADDR_KEY,
+	END_ADDR_KEY
 } key_t;
 
 typedef struct hash {
-	// 地址键,内存块的地址或内存块的尾地址
-	void *key;
-	// 键类型标识
+	void *addr_key;
 	key_t key_type;
-	// 对应的内存节点索引
 	int32_t index;
 	// 是否有效
 	bool is_active;
@@ -51,12 +46,10 @@ typedef struct cg_memory_pool_var {
 	uint32_t memory_node_count;
 	// 记录内存块信息的节点的列表
 	cg_memory_node_t *memory_node_list;
-	// 记录已经被释放的内存块信息的节点的列表
-	cg_memory_node_t *free_memory_node_list;
 	// 内存块信息节点的数量上限
 	uint32_t memory_node_max_count;
-	// hashmap
-	hash_t *hash_table;
+	hash_t *start_addr_hash_table;
+	hash_t *end_addr_hash_table;
 } cg_memory_pool_var_t;
 
 /*创建内存池(非侵入式内存池)
@@ -109,7 +102,7 @@ cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *mem
 // 添加一个内存块信息节点
 bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info);
 
-// 删除一个内存块信息节点
+// 修改一个内存块信息节点
 bool cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index);
 
 #endif // CG_MEMORY_POOL_H 1
