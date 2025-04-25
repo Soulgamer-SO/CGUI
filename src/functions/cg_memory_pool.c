@@ -157,40 +157,50 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	size_t free_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
 	int32_t memory_node_index = -1;
 	cg_get_memory_node_index(p_var, memory_addr, &memory_node_index);
+	cg_memory_node_t *p_previous_mem_node = cg_get_memory_node_addr(p_var, nullptr, memory_addr);
+	cg_memory_node_t *p_next_mem_node = cg_get_memory_node_addr(p_var, p_memory_node->end_addr, nullptr);
 
 	// 如果该内存块排在最后尾
 	if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
-		p_var->last_memory_end_addr = p_memory_node->addr;
-		cg_rm_one_memory_node(p_var, memory_node_index);
-		p_var->free_size += free_size;
-		return;
+		// 而且该内存块的前一个内存块已被释放
+		if (p_previous_mem_node->is_used == false) {
+			int32_t previous_mem_node_index = -1;
+			cg_get_memory_node_index(p_var, p_previous_mem_node->addr, &previous_mem_node_index);
+			p_previous_mem_node->end_addr = p_memory_node->end_addr;
+			cg_rm_one_memory_node(p_var, memory_node_index);
+			cg_rm_one_memory_node(p_var, previous_mem_node_index);
+			p_var->free_size += free_size;
+			return;
+		} else if (p_previous_mem_node->is_used == true) {
+			p_var->last_memory_end_addr = p_memory_node->addr;
+			cg_rm_one_memory_node(p_var, memory_node_index);
+			p_var->free_size += free_size;
+			return;
+		}
 	}
 
 	// 如果该内存块的前一个内存块已被释放
-	cg_memory_node_t *p_previous_mem_node = cg_get_memory_node_addr(p_var, nullptr, memory_addr);
 	if (p_previous_mem_node->is_used == false) {
 		p_previous_mem_node->end_addr = p_memory_node->end_addr;
 		cg_rm_one_memory_node(p_var, memory_node_index);
 		p_var->free_size += free_size;
-		p_memory_node->is_used = false;
 		return;
 	}
 
 	// 如果该内存块的后一个内存块已被释放
-	cg_memory_node_t *p_next_mem_node = cg_get_memory_node_addr(p_var, p_memory_node->end_addr, nullptr);
 	if (p_next_mem_node->is_used == false) {
 		p_memory_node->end_addr = p_next_mem_node->end_addr;
 		int32_t next_memory_node_index = -1;
 		cg_get_memory_node_index(p_var, p_next_mem_node->addr, &next_memory_node_index);
 		cg_rm_one_memory_node(p_var, next_memory_node_index);
-		p_var->free_size += free_size;
 		p_memory_node->is_used = false;
+		p_var->free_size += free_size;
 		return;
 	}
 
 	// 如果该内存块的前后内存块都没被释放
-	p_var->free_size += free_size;
 	p_memory_node->is_used = false;
+	p_var->free_size += free_size;
 	return;
 }
 
