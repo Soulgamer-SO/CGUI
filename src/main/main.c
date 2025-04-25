@@ -9,7 +9,7 @@
 // gdb反汇编调试命令 -exec disassemble /m main
 MAIN {
 #define MEMORY_POOL_SIZE 1024 * 1024
-#define NODE_MAX_COUNT 128
+#define NODE_MAX_COUNT 64
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = nullptr,
 		.size = MEMORY_POOL_SIZE,
@@ -17,7 +17,9 @@ MAIN {
 		.last_memory_end_addr = nullptr,
 		.memory_node_count = 0,
 		.memory_node_list = nullptr,
-		.memory_node_max_count = NODE_MAX_COUNT};
+		.memory_node_max_count = NODE_MAX_COUNT,
+		.start_addr_hash_table = nullptr,
+		.end_addr_hash_table = nullptr};
 	memory_pool_var.memory_pool = malloc(MEMORY_POOL_SIZE);
 	memory_pool_var.memory_node_list = calloc(NODE_MAX_COUNT, sizeof(cg_memory_node_t));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
