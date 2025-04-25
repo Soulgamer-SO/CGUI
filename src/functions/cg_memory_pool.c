@@ -370,6 +370,9 @@ bool cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index) {
 		return true;
 	}
 	if (index < 0) {
+		PRINT_ERROR("index must not be a negative integer!\n");
 		return false;
 	}
+
+	return false;
 }
