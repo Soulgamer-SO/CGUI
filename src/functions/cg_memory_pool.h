@@ -19,10 +19,23 @@ typedef struct cg_memory_node {
 	bool is_used;
 } cg_memory_node_t;
 
-// hashmap
-typedef struct hashmap {
-	/* data */
-} hashmap_t;
+typedef enum key {
+	// 内存块的地址
+	KEY_START_ADDR,
+	// 内存块的尾地址
+	KEY_EDD_ADDR
+} key_t;
+
+typedef struct hash {
+	// 地址键,内存块的地址或内存块的尾地址
+	void *key;
+	// 键类型标识
+	key_t key_type;
+	// 对应的内存节点索引
+	int32_t index;
+	// 是否有效
+	bool is_active;
+} hash_t;
 
 // 用来记录内存池信息(非侵入式内存池)
 typedef struct cg_memory_pool_var {
@@ -43,7 +56,7 @@ typedef struct cg_memory_pool_var {
 	// 内存块信息节点的数量上限
 	uint32_t memory_node_max_count;
 	// hashmap
-	hashmap_t hashmap;
+	hash_t *hash_table;
 } cg_memory_pool_var_t;
 
 /*创建内存池(非侵入式内存池)
@@ -81,7 +94,7 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 // 如果成功该函数返回内存块占用大小
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr);
 
-// 如果成功,内存块信息节点的索引的指针会存储到参数p_index指向的内存
+// 如果成功,参数p_index指向的index会被更新
 bool cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr, int32_t *p_index);
 
 /*
