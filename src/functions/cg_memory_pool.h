@@ -97,6 +97,6 @@ cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *mem
 bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info);
 
 // 删除一个内存块信息节点
-void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index);
+bool cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index);
 
 #endif // CG_MEMORY_POOL_H 1

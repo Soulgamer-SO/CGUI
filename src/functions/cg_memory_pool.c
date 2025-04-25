@@ -346,27 +346,30 @@ bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory
 	return true;
 }
 
-void cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index) {
+bool cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index) {
 	if (p_var->memory_node_count == 1) {
 		memset(p_var->memory_node_list, 0, sizeof(cg_memory_node_t));
 		p_var->memory_node_count = 0;
-		return;
+		return true;
 	}
 	if (index == 0) {
 		memmove(&p_var->memory_node_list[0], &p_var->memory_node_list[1], (p_var->memory_node_count - 1) * sizeof(cg_memory_node_t));
 		memset(&p_var->memory_node_list[p_var->memory_node_count - 1], 0, sizeof(cg_memory_node_t));
 		p_var->memory_node_count--;
-		return;
+		return true;
 	}
 	if (index == p_var->memory_node_count - 1) {
 		memset(&p_var->memory_node_list[p_var->memory_node_count - 1], 0, sizeof(cg_memory_node_t));
 		p_var->memory_node_count--;
-		return;
+		return true;
 	}
 	if (index > 0 && index < p_var->memory_node_count - 1) {
 		memmove(&p_var->memory_node_list[index], &p_var->memory_node_list[index + 1], (p_var->memory_node_count - (index + 1)) * sizeof(cg_memory_node_t));
 		memset(&p_var->memory_node_list[p_var->memory_node_count - 1], 0, sizeof(cg_memory_node_t));
 		p_var->memory_node_count--;
-		return;
+		return true;
+	}
+	if (index < 0) {
+		return false;
 	}
 }
