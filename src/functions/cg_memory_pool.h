@@ -40,18 +40,6 @@ typedef struct cg_memory_node {
 /*创建内存池(侵入式内存池)
 
 示例代码:
-#define MEMORY_POOL_SIZE 1024 * 1024
-	cg_memory_pool_var_t memory_pool_var = {
-		.memory_pool = nullptr,
-		.size = MEMORY_POOL_SIZE,
-		.free_size = 0,
-		.last_memory_end_addr = nullptr};
-	memory_pool_var.memory_pool = malloc(MEMORY_POOL_SIZE);
-	if (cg_create_memory_pool(&memory_pool_var) == false) {
-		goto exit;
-	} else {
-		PRINT_LOG("create memory_pool_var success!\n");
-	}
 注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池*/
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_var);
 
