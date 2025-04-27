@@ -30,7 +30,9 @@ typedef struct cg_memory_node {
 	// 表示内存块是否被使用
 	bool is_used;
 	// 记录上一个内存块信息节点的地址
-	cg_memory_node_t *prev_memory_addr;
+	cg_memory_node_t *prev_memory_node_addr;
+	// 记录下一个内存块信息节点的地址
+	cg_memory_node_t *next_memory_node_addr;
 } cg_memory_node_t;
 
 /*创建内存池(侵入式内存池)
