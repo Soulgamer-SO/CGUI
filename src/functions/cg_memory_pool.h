@@ -9,30 +9,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-// 用来记录内存块的信息的节点
-typedef struct cg_memory_node {
-	// 内存块的地址
-	void *addr;
+// 在内存块头部记录内存块的信息
+typedef struct cg_memory_start_node {
 	// 内存块的尾地址
 	void *end_addr;
 	// 表示内存块是否被使用
 	bool is_used;
+} cg_memory_node_start_t;
+
+// 在内存块尾部记录内存块的信息
+typedef struct cg_memory_end_node {
+	// 内存块的首地址
+	void *start_addr;
+} cg_memory_end_node_t;
+
+// 用来记录内存块的信息的节点
+typedef struct cg_memory_node {
+	cg_memory_node_start_t start_node;
+	cg_memory_end_node_t end_node;
 } cg_memory_node_t;
 
-typedef enum key {
-	START_ADDR_KEY,
-	END_ADDR_KEY
-} key_t;
-
-typedef struct hash {
-	void *addr_key;
-	key_t key_type;
-	int32_t index;
-	// 是否有效
-	bool is_active;
-} hash_t;
-
-// 用来记录内存池信息(非侵入式内存池)
+// 用来记录内存池信息(侵入式内存池),可以根据情况再创建各自独立的多个内存池
 typedef struct cg_memory_pool_var {
 	// 内存池
 	void *memory_pool;
@@ -42,31 +39,18 @@ typedef struct cg_memory_pool_var {
 	size_t free_size;
 	// 保存最后尾的内存块的尾地址
 	void *last_memory_end_addr;
-	// 记录已经使用内存块信息的节点的数量
-	uint32_t memory_node_count;
-	// 记录内存块信息的节点的列表
-	cg_memory_node_t *memory_node_list;
-	// 内存块信息节点的数量上限
-	uint32_t memory_node_max_count;
-	hash_t *start_addr_hash_table;
-	hash_t *end_addr_hash_table;
 } cg_memory_pool_var_t;
 
-/*创建内存池(非侵入式内存池)
+/*创建内存池(侵入式内存池)
 
 示例代码:
 #define MEMORY_POOL_SIZE 1024 * 1024
-#define NODE_MAX_COUNT 128
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = nullptr,
 		.size = MEMORY_POOL_SIZE,
 		.free_size = 0,
-		.last_memory_end_addr = nullptr,
-		.memory_node_count = 0,
-		.memory_node_list = nullptr,
-		.memory_node_max_count = NODE_MAX_COUNT};
+		.last_memory_end_addr = nullptr};
 	memory_pool_var.memory_pool = malloc(MEMORY_POOL_SIZE);
-	memory_pool_var.memory_node_list = calloc(NODE_MAX_COUNT, sizeof(cg_memory_node_t));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {
