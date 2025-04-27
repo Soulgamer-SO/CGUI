@@ -79,10 +79,10 @@ cg_memory_node_t *memory_node = cg_get_memory_node(p_var, nullptr , memory_end_a
 */
 cg_memory_node_t cg_get_memory_node(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr);
 
-// 添加一个内存块信息节点
+// 列表末尾添加一个内存块信息节点
 bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info);
 
-// 修改一个内存块信息节点
+// 列表中删除一个内存块信息节点(末尾交换法)
 bool cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index);
 
 #endif // CG_MEMORY_POOL_H 1
