@@ -38,7 +38,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t alloc_size) {
 	}
 
 	if (p_var->memory_block_count == 0) {
-		p_var->last_memory_end_addr = p_var->memory_pool + alloc_size + sizeof(cg_memory_head_node_t);
+		p_var->last_memory_end_addr = p_var->memory_pool + sizeof(cg_memory_node_t) + alloc_size;
 		p_var->free_size -= size;
 		PRINT_LOG("============================memory pool============================\n");
 		PRINT_LOG("memory_pool = %p;\n", p_var->memory_pool);
