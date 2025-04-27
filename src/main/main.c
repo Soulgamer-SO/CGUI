@@ -9,12 +9,16 @@
 // gdb反汇编调试命令 -exec disassemble /m main
 MAIN {
 #define MEMORY_POOL_SIZE 1024 * 1024
+#define MAX_FREE_MEM_NODE_COUNT 256
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = nullptr,
 		.size = MEMORY_POOL_SIZE,
 		.free_size = 0,
-		.last_memory_end_addr = nullptr};
-	memory_pool_var.memory_pool = malloc(MEMORY_POOL_SIZE);
+		.last_memory_end_addr = nullptr,
+		.free_memory_node_count = MAX_FREE_MEM_NODE_COUNT,
+		.free_memory_node_addr_list = nullptr};
+	memory_pool_var.memory_pool = calloc(1, MEMORY_POOL_SIZE);
+	memory_pool_var.free_memory_node_addr_list = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_pool_var_t *));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {
@@ -40,6 +44,8 @@ destroy_and_exit:
 	cg_destroy_and_exit(&var);
 	free(memory_pool_var.memory_pool);
 	memory_pool_var.memory_pool = nullptr;
+	free(memory_pool_var.free_memory_node_addr_list);
+	memory_pool_var.free_memory_node_addr_list = nullptr;
 exit:
 	PRINT_LOG("Exit success!\n");
 	return EXIT_SUCCESS;

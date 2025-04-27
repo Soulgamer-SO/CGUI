@@ -5,9 +5,7 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 		PRINT_ERROR("memory pool size should more bigger!\n");
 		return false;
 	}
-	p_var->last_memory_end_addr = nullptr;
-	p_var->free_size = 0;
-	if (p_var->memory_pool == nullptr) {
+	if (p_var->memory_pool == nullptr || p_var->free_memory_node_addr_list == nullptr) {
 		PRINT_ERROR("create memory pool fail!\n");
 		return false;
 	}
