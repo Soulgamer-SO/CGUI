@@ -1,8 +1,8 @@
 #include "cg_memory_pool.h"
 
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
-	if (p_var->size <= 0) {
-		PRINT_ERROR("memory pool size should more bigger than 0!\n");
+	if (p_var->size < sizeof(cg_memory_node_t)) {
+		PRINT_ERROR("memory pool size should more bigger!\n");
 		return false;
 	}
 	p_var->last_memory_end_addr = nullptr;
