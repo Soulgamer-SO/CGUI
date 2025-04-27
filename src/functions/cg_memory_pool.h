@@ -17,28 +17,20 @@ typedef struct cg_memory_pool_var {
 	size_t size;
 	// 内存池剩余可用大小
 	size_t free_size;
+	// 内存块数量
+	uint32_t memory_block_count;
 	// 保存最后尾的内存块的尾地址
 	void *last_memory_end_addr;
 } cg_memory_pool_var_t;
 
-// 在内存块头部记录内存块的信息
-typedef struct cg_memory_start_node {
+// 记录内存块的信息的节点
+typedef struct cg_memory_node {
 	// 内存块的尾地址
 	void *end_addr;
 	// 表示内存块是否被使用
 	bool is_used;
-} cg_memory_start_node_t;
-
-// 在内存块尾部记录内存块的信息
-typedef struct cg_memory_end_node {
-	// 内存块的首地址
-	void *start_addr;
-} cg_memory_end_node_t;
-
-// 用来记录内存块的信息的节点
-typedef struct cg_memory_node {
-	cg_memory_start_node_t start_node;
-	cg_memory_end_node_t end_node;
+	// 记录上一个内存块信息节点的地址
+	cg_memory_node_t *prev_memory_addr;
 } cg_memory_node_t;
 
 /*创建内存池(侵入式内存池)
@@ -59,8 +51,8 @@ typedef struct cg_memory_node {
 注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池*/
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_var);
 
-// 使用内存池，分配内存块,如果成功该函数会返回新地址，失败就返回nullptr
-void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size);
+// 使用内存池，分配指定大小的内存块,alloc_size是该内存块大小,如果成功该函数会返回新地址，失败就返回nullptr
+void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t alloc_size);
 
 // 释放指定内存块
 void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr);
@@ -75,13 +67,13 @@ size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr);
 bool cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr, int32_t *p_index);
 
 /*
-根据内存首地址或者尾地址来获取内存块信息节点的地址,如果成功该函数会返回新地址，失败就返回nullptr
+根据内存首地址或者尾地址来获取内存块信息
 示例代码:
-cg_memory_node_t *memory_node_addr = cg_get_memory_node_addr(p_var, memory_addr, nullptr);
+cg_memory_node_t *memory_node = cg_get_memory_node(p_var, memory_addr, nullptr);
 或者
-cg_memory_node_t *memory_node_addr = cg_get_memory_node_addr(p_var, nullptr , memory_end_addr);
+cg_memory_node_t *memory_node = cg_get_memory_node(p_var, nullptr , memory_end_addr);
 */
-cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr);
+cg_memory_node_t cg_get_memory_node(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr);
 
 // 添加一个内存块信息节点
 bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info);

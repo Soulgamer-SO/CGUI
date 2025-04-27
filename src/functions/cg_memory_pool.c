@@ -22,8 +22,9 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 	return true;
 }
 
-void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
-	size_t real_size = size + sizeof(cg_memory_start_node_t) + sizeof(cg_memory_end_node_t);
+void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t alloc_size) {
+	// 内存块+内存块节点合计大小
+	size_t size = alloc_size + sizeof(cg_memory_node_t);
 	if (p_var->memory_pool == nullptr) {
 		PRINT_ERROR("memory pool address must not be nullptr!\n");
 		return nullptr;
@@ -36,26 +37,13 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 		return nullptr;
 	}
 
-	if (p_var->memory_node_count == 0) {
-		if (cg_add_one_memory_node(
-			    p_var,
-			    ((cg_memory_node_t){
-				    .addr = p_var->memory_pool,
-				    .end_addr = p_var->memory_pool + size,
-				    .is_used = true})) == false) {
-			PRINT_ERROR("add_one_memory_node fail!\n");
-			return nullptr;
-		}
-		p_var->last_memory_end_addr = p_var->memory_node_list[0].end_addr;
+	if (p_var->memory_block_count == 0) {
+		p_var->last_memory_end_addr = p_var->memory_pool + alloc_size + sizeof(cg_memory_head_node_t);
 		p_var->free_size -= size;
 		PRINT_LOG("============================memory pool============================\n");
 		PRINT_LOG("memory_pool = %p;\n", p_var->memory_pool);
 		PRINT_LOG("memory_pool_size = %zu;\n", p_var->size);
-		PRINT_LOG("memory_node_count = %d;\n", p_var->memory_node_count);
 		PRINT_LOG("memory block size = %zu;\n", size);
-		PRINT_LOG("memory_node.addr = %p;\n", p_var->memory_node_list[0].addr);
-		PRINT_LOG("memory_node.end_addr = %p;\n", p_var->memory_node_list[0].end_addr);
-		PRINT_LOG("memory_node.is_used = %d;\n", p_var->memory_node_list[0].is_used);
 		PRINT_LOG("free_size = %zu;\n", p_var->free_size);
 		PRINT_LOG("===================================================================\n");
 		return p_var->memory_node_list[0].addr;
@@ -310,18 +298,18 @@ bool cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr, in
 	return true;
 }
 
-cg_memory_node_t *cg_get_memory_node_addr(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr) {
+cg_memory_node_t cg_get_memory_node(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr) {
 	if (p_var->memory_pool == nullptr) {
 		PRINT_ERROR("memory pool address must not be nullptr!\n");
-		return nullptr;
+		return;
 	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
 		PRINT_ERROR("this memory is not in the memory pool!\n");
-		return nullptr;
+		return;
 	}
 	if ((memory_addr == nullptr && memory_end_addr == nullptr) || (!(memory_addr == nullptr || memory_end_addr == nullptr))) {
 		PRINT_ERROR("one of them must be nullptr and the other must not be nullptr!\n");
-		return nullptr;
+		return;
 	}
 
 	int32_t i = 0;
