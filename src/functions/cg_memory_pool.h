@@ -9,26 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// 在内存块头部记录内存块的信息
-typedef struct cg_memory_start_node {
-	// 内存块的尾地址
-	void *end_addr;
-	// 表示内存块是否被使用
-	bool is_used;
-} cg_memory_node_start_t;
-
-// 在内存块尾部记录内存块的信息
-typedef struct cg_memory_end_node {
-	// 内存块的首地址
-	void *start_addr;
-} cg_memory_end_node_t;
-
-// 用来记录内存块的信息的节点
-typedef struct cg_memory_node {
-	cg_memory_node_start_t start_node;
-	cg_memory_end_node_t end_node;
-} cg_memory_node_t;
-
 // 用来记录内存池信息(侵入式内存池),可以根据情况再创建各自独立的多个内存池
 typedef struct cg_memory_pool_var {
 	// 内存池
@@ -40,6 +20,26 @@ typedef struct cg_memory_pool_var {
 	// 保存最后尾的内存块的尾地址
 	void *last_memory_end_addr;
 } cg_memory_pool_var_t;
+
+// 在内存块头部记录内存块的信息
+typedef struct cg_memory_start_node {
+	// 内存块的尾地址
+	void *end_addr;
+	// 表示内存块是否被使用
+	bool is_used;
+} cg_memory_start_node_t;
+
+// 在内存块尾部记录内存块的信息
+typedef struct cg_memory_end_node {
+	// 内存块的首地址
+	void *start_addr;
+} cg_memory_end_node_t;
+
+// 用来记录内存块的信息的节点
+typedef struct cg_memory_node {
+	cg_memory_start_node_t start_node;
+	cg_memory_end_node_t end_node;
+} cg_memory_node_t;
 
 /*创建内存池(侵入式内存池)
 

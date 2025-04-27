@@ -6,9 +6,8 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 		return false;
 	}
 	p_var->last_memory_end_addr = nullptr;
-	p_var->memory_node_count = 0;
 	p_var->free_size = 0;
-	if (p_var->memory_pool == nullptr || p_var->memory_node_list == nullptr) {
+	if (p_var->memory_pool == nullptr) {
 		PRINT_ERROR("create memory pool fail!\n");
 		return false;
 	}
@@ -24,6 +23,7 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 }
 
 void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
+	size_t real_size = size + sizeof(cg_memory_start_node_t) + sizeof(cg_memory_end_node_t);
 	if (p_var->memory_pool == nullptr) {
 		PRINT_ERROR("memory pool address must not be nullptr!\n");
 		return nullptr;
