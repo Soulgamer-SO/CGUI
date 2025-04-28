@@ -40,7 +40,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 		p_var->free_size -= node_and_mem_size;
 		p_var->memory_count = 1;
 		p_var->last_memory_size = size;
-		p_var->last_memory_end_addr = p_var->memory_pool + node_and_mem_size;
+		p_var->last_memory_end_addr = p_new_node->memory_addr + size;
 		PRINT_LOG("============================memory pool============================\n");
 		PRINT_LOG("memory_pool = %p;\n", p_var->memory_pool);
 		PRINT_LOG("memory_pool_size = %zu;\n", p_var->size);
@@ -57,18 +57,20 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 			p_new_node->size = size;
 			p_new_node->is_used = true;
 			p_new_node->prev_memory_node_addr = p_var->last_memory_end_addr - p_var->last_memory_size;
-			p_var->last_memory_end_addr;
+
+			p_var->free_size;
+			p_var->memory_count++;
+			p_var->last_memory_size = size;
+			p_var->last_memory_end_addr = p_new_node->memory_addr + size;
 			PRINT_LOG("============================memory pool============================\n");
 			PRINT_LOG("memory_pool = %p;\n", p_var->memory_pool);
 			PRINT_LOG("memory_pool_size = %zu;\n", p_var->size);
-			PRINT_LOG("memory_node_count = %d;\n", p_var->memory_node_count);
+			PRINT_LOG("memory_node_count = %d;\n", p_var->memory_count);
 			PRINT_LOG("memory block size = %zu;\n", size);
-			PRINT_LOG("memory_node.addr = %p;\n", p_var->memory_node_list[p_var->memory_node_count - 1].addr);
-			PRINT_LOG("memory_node.end_addr = %p;\n", p_var->memory_node_list[p_var->memory_node_count - 1].end_addr);
-			PRINT_LOG("memory_node.is_used = %d;\n", p_var->memory_node_list[p_var->memory_node_count - 1].is_used);
+			PRINT_LOG("memory block addr = %p;\n", p_new_node->memory_addr);
 			PRINT_LOG("free_size = %zu;\n", p_var->free_size);
 			PRINT_LOG("===================================================================\n");
-			return p_var->memory_node_list[p_var->memory_node_count - 1].addr;
+			return p_new_node->memory_addr;
 		}
 
 		/*如果last_memory_end_addr后面的内存空间不够,而且之前已经释放的内存块的大小足够容纳新内存块的大小,就优先利用这块之前已经被释放的内存块*/
