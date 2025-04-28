@@ -48,7 +48,6 @@ typedef struct cg_memory_node {
 
 示例代码:
 #define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024
-#define MAX_FREE_MEM_NODE_COUNT 1024
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = nullptr,
 		.size = MEMORY_POOL_SIZE,
