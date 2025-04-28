@@ -340,26 +340,12 @@ bool cg_rm_one_p_memory_node(cg_memory_pool_var_t *p_var, uint32_t index) {
 		p_var->free_memory_node_count = 0;
 		return true;
 	}
-	if (index + 1 == p_var->free_memory_node_count) {
-		/* code */
+	if (p_var->free_memory_node_count - 1 > index) {
+		p_var->free_memory_node_addr_list[index] = p_var->free_memory_node_addr_list[p_var->free_memory_node_count - 1];
+		p_var->free_memory_node_addr_list[p_var->free_memory_node_count - 1] = nullptr;
 	}
-
-	p_var->free_memory_node_addr_list[p_var->free_memory_node_count - 1];
-
-	if (index == p_var->memory_node_count - 1) {
-		memset(&p_var->memory_node_list[p_var->memory_node_count - 1], 0, sizeof(cg_memory_node_t));
-		p_var->memory_node_count--;
-		return true;
-	}
-	if (index > 0 && index < p_var->memory_node_count - 1) {
-		memmove(&p_var->memory_node_list[index], &p_var->memory_node_list[index + 1], (p_var->memory_node_count - (index + 1)) * sizeof(cg_memory_node_t));
-		memset(&p_var->memory_node_list[p_var->memory_node_count - 1], 0, sizeof(cg_memory_node_t));
-		p_var->memory_node_count--;
-		return true;
-	}
-	if (index < 0) {
-		PRINT_ERROR("index must not be a negative integer!\n");
-		return false;
+	if (p_var->free_memory_node_count - 1 == index) {
+		p_var->free_memory_node_addr_list[index] = nullptr;
 	}
 
 	return false;
