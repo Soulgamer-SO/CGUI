@@ -105,6 +105,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 			p_new_free_mem_node->size = p_new_node->size - size;
 			p_new_free_mem_node->is_used = false;
 			p_new_free_mem_node->prev_memory_node_addr = p_new_node;
+			cg_add_one_p_memory_node(p_var, p_new_free_mem_node);
 			p_new_node->size = size;
 			p_new_node->is_used = true;
 			p_var->free_size -= node_and_mem_size;
@@ -292,44 +293,12 @@ int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr)
 	return index;
 }
 
-cg_memory_node_t cg_get_memory_node(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr) {
-	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("memory pool address must not be nullptr!\n");
-		return;
-	}
-	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
-		PRINT_ERROR("this memory is not in the memory pool!\n");
-		return;
-	}
-	if ((memory_addr == nullptr && memory_end_addr == nullptr) || (!(memory_addr == nullptr || memory_end_addr == nullptr))) {
-		PRINT_ERROR("one of them must be nullptr and the other must not be nullptr!\n");
-		return;
-	}
-
-	int32_t i = 0;
-	if (memory_addr != nullptr && memory_end_addr == nullptr) {
-		for (i = 0; i < p_var->memory_node_count; i++) {
-			if (p_var->memory_node_list[i].addr == memory_addr) {
-				break;
-			}
-		}
-	} else if (memory_addr == nullptr && memory_end_addr != nullptr) {
-		for (i = 0; i < p_var->memory_node_count; i++) {
-			if (p_var->memory_node_list[i].end_addr == memory_end_addr) {
-				break;
-			}
-		}
-	}
-
-	return &p_var->memory_node_list[i];
-}
-
 bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t *p_memory_node) {
 	if (p_var->free_memory_node_count == MAX_FREE_MEM_NODE_COUNT) {
 		PRINT_ERROR("p_var->free_memory_node_count == MAX_FREE_MEM_NODE_COUNT!\n");
 		return false;
 	}
-
+	p_var->free_memory_node_addr_list[p_var->free_memory_node_count - 1] = p_memory_node;
 	p_var->free_memory_node_count++;
 	return true;
 }

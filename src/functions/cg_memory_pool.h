@@ -80,15 +80,6 @@ size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr);
 // 如果成功,参数返回信息节点的索引,失败就返回-1
 int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr, int32_t index);
 
-/*
-根据内存首地址或者尾地址来获取内存块信息
-示例代码:
-cg_memory_node_t *memory_node = cg_get_memory_node(p_var, memory_addr, nullptr);
-或者
-cg_memory_node_t *memory_node = cg_get_memory_node(p_var, nullptr , memory_end_addr);
-*/
-cg_memory_node_t cg_get_memory_node(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr);
-
 // 信息节点地址的列表末尾添加一个元素
 bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t *p_memory_node);
 
