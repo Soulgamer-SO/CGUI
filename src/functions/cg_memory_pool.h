@@ -10,7 +10,7 @@
 #include <string.h>
 
 #define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024
-#define MAX_FREE_MEM_NODE_COUNT 1024
+#define MAX_FREE_MEM_NODE_COUNT 1024 * 1024 * 1024
 
 // 用来记录内存池信息(侵入式内存池),可以根据情况再创建各自独立的多个内存池
 typedef struct cg_memory_pool_var {
@@ -89,10 +89,10 @@ cg_memory_node_t *memory_node = cg_get_memory_node(p_var, nullptr , memory_end_a
 */
 cg_memory_node_t cg_get_memory_node(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr);
 
-// 列表末尾添加一个内存块信息节点
-bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info);
+// 信息节点地址的列表末尾添加一个元素
+bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t *p_memory_node);
 
-// 列表中删除一个内存块信息节点(末尾交换法)
-bool cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index);
+// 删除信息节点地址的列表中一个元素(末尾交换法)
+bool cg_rm_one_p_memory_node(cg_memory_pool_var_t *p_var, int32_t index);
 
 #endif // CG_MEMORY_POOL_H 1

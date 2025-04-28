@@ -76,31 +76,29 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 		/*如果last_memory_end_addr后面的内存空间不够,而且之前已经释放的内存块的大小足够容纳新内存块的大小,就优先利用这块之前已经被释放的内存块*/
 		bool is_free_mem_size_equ = false;
 		bool is_free_mem_size_bigger = false;
-		int32_t i = 0;
-		for (i = 0; i < p_var->memory_node_count; i++) {
-			size_t memory_size = (size_t)(p_var->memory_node_list[i].end_addr - p_var->memory_node_list[i].addr);
-			if (p_var->memory_node_list[i].is_used == false && memory_size == size) {
+		uint32_t i = 0;
+		for (i = 0; i < p_var->free_memory_node_count; i++) {
+			if (p_var->free_memory_node_addr_list[i]->size == size) {
 				is_free_mem_size_equ = true;
 				break;
-			} else if (p_var->memory_node_list[i].is_used == false && memory_size > size) {
+			} else if (p_var->free_memory_node_addr_list[i]->size > size) {
 				is_free_mem_size_bigger = true;
 				break;
 			}
 		}
 		if (is_free_mem_size_equ == true) {
-			p_var->memory_node_list[i].is_used = true;
-			p_var->free_size -= size;
+			p_new_node = p_var->free_memory_node_addr_list[i];
+			p_var->free_memory_node_addr_list[i]->is_used = true;
+			p_var->free_size -= p_new_node->size;
+			cg_rm_one_p_memory_node(p_var, i);
 			PRINT_LOG("============================memory pool============================\n");
 			PRINT_LOG("memory_pool = %p;\n", p_var->memory_pool);
 			PRINT_LOG("memory_pool_size = %zu;\n", p_var->size);
-			PRINT_LOG("memory_node_count = %d;\n", p_var->memory_node_count);
 			PRINT_LOG("memory block size = %zu;\n", size);
-			PRINT_LOG("memory_node.addr = %p;\n", p_var->memory_node_list[i].addr);
-			PRINT_LOG("memory_node.end_addr = %p;\n", p_var->memory_node_list[i].end_addr);
-			PRINT_LOG("memory_node.is_used = %d;\n", p_var->memory_node_list[i].is_used);
+			PRINT_LOG("memory block addr = %p;\n", p_new_node->memory_addr);
 			PRINT_LOG("free_size = %zu;\n", p_var->free_size);
 			PRINT_LOG("===================================================================\n");
-			return p_var->memory_node_list[i].addr;
+			return p_new_node->memory_addr;
 		} else if (is_free_mem_size_bigger == true) {
 			if (cg_add_one_memory_node(
 				    p_var,
@@ -331,21 +329,17 @@ cg_memory_node_t cg_get_memory_node(cg_memory_pool_var_t *p_var, void *memory_ad
 	return &p_var->memory_node_list[i];
 }
 
-bool cg_add_one_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t memory_node_info) {
-#define EXT_NODE_COUNT 8
-	if (p_var->memory_node_count == p_var->memory_node_max_count) {
-		p_var->memory_node_list = realloc(p_var->memory_node_list, sizeof(cg_memory_node_t) * (p_var->memory_node_max_count + EXT_NODE_COUNT));
-		if (p_var->memory_node_list == nullptr) {
-			return false;
-		}
-		p_var->memory_node_max_count = p_var->memory_node_max_count + EXT_NODE_COUNT;
-	};
-	p_var->memory_node_list[p_var->memory_node_count] = memory_node_info;
-	p_var->memory_node_count++;
+bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t *p_memory_node) {
+	if (p_var->free_memory_node_count == MAX_FREE_MEM_NODE_COUNT) {
+		PRINT_ERROR("p_var->free_memory_node_count == MAX_FREE_MEM_NODE_COUNT!\n");
+		return false;
+	}
+
+	p_var->free_memory_node_count++;
 	return true;
 }
 
-bool cg_rm_one_memory_node(cg_memory_pool_var_t *p_var, int32_t index) {
+bool cg_rm_one_p_memory_node(cg_memory_pool_var_t *p_var, int32_t index) {
 	if (p_var->memory_node_count == 1) {
 		memset(p_var->memory_node_list, 0, sizeof(cg_memory_node_t));
 		p_var->memory_node_count = 0;
