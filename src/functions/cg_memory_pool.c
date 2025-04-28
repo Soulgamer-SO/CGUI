@@ -35,7 +35,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t alloc_size) {
 		return nullptr;
 	}
 
-	if (p_var->memory_block_count == 0) {
+	if (p_var->used_memory_count == 0) {
 		p_var->last_memory_end_addr = p_var->memory_pool + sizeof(cg_memory_node_t) + alloc_size;
 		p_var->free_size -= size;
 		PRINT_LOG("============================memory pool============================\n");

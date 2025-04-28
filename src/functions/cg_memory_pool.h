@@ -17,6 +17,8 @@ typedef struct cg_memory_pool_var {
 	size_t size;
 	// 内存池剩余可用大小
 	size_t free_size;
+	// 已经在使用的内存块数量
+	uint32_t used_memory_count;
 	// 保存排在最后的内存块的尾地址
 	void *last_memory_end_addr;
 	// 空闲内存块信息节点数量
@@ -46,6 +48,7 @@ typedef struct cg_memory_node {
 		.memory_pool = nullptr,
 		.size = MEMORY_POOL_SIZE,
 		.free_size = 0,
+		.used_memory_count = 0,
 		.last_memory_end_addr = nullptr,
 		.free_memory_node_count = MAX_FREE_MEM_NODE_COUNT,
 		.free_memory_node_addr_list = nullptr};
