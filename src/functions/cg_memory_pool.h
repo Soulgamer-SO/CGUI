@@ -77,8 +77,8 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 // 如果成功该函数返回内存块占用大小
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr);
 
-// 如果成功,参数p_index指向的index会被更新
-bool cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr, int32_t *p_index);
+// 如果成功,参数返回信息节点的索引,失败就返回-1
+int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr, int32_t index);
 
 /*
 根据内存首地址或者尾地址来获取内存块信息
@@ -93,6 +93,6 @@ cg_memory_node_t cg_get_memory_node(cg_memory_pool_var_t *p_var, void *memory_ad
 bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t *p_memory_node);
 
 // 删除信息节点地址的列表中一个元素(末尾交换法)
-bool cg_rm_one_p_memory_node(cg_memory_pool_var_t *p_var, int32_t index);
+bool cg_rm_one_p_memory_node(cg_memory_pool_var_t *p_var, uint32_t index);
 
 #endif // CG_MEMORY_POOL_H 1

@@ -86,8 +86,8 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 				break;
 			}
 		}
+		p_new_node = p_var->free_memory_node_addr_list[i];
 		if (is_free_mem_size_equ == true) {
-			p_new_node = p_var->free_memory_node_addr_list[i];
 			p_var->free_memory_node_addr_list[i]->is_used = true;
 			p_var->free_size -= p_new_node->size;
 			cg_rm_one_p_memory_node(p_var, i);
@@ -100,14 +100,15 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 			PRINT_LOG("===================================================================\n");
 			return p_new_node->memory_addr;
 		} else if (is_free_mem_size_bigger == true) {
-			if (cg_add_one_memory_node(
-				    p_var,
-				    ((cg_memory_node_t){
-					    .addr = p_var->memory_node_list[i].addr,
-					    .end_addr = p_var->memory_node_list[i].addr + size,
-					    .is_used = true})) == false) {
-				return nullptr;
-			}
+			cg_memory_node_t new_free_mem_node = {
+				.memory_addr = nullptr,
+				.size = 0,
+				.is_used = false,
+				.prev_memory_node_addr = nullptr};
+			new_free_mem_node.memory_addr;
+			p_new_node->size = size;
+			p_new_node->is_used = true;
+
 			p_var->free_size -= size;
 			PRINT_LOG("============================memory pool============================\n");
 			PRINT_LOG("memory_pool = %p;\n", p_var->memory_pool);
@@ -273,28 +274,27 @@ size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	return memory_size;
 }
 
-bool cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr, int32_t *p_index) {
+int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	if (p_var->memory_pool == nullptr) {
 		PRINT_ERROR("memory pool address must not be nullptr!\n");
-		return false;
+		return -1;
 	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
 		PRINT_ERROR("this memory is not in the memory pool!\n");
-		return false;
+		return -1;
 	}
 	if (memory_addr == nullptr) {
 		PRINT_ERROR("this memory address must not be nullptr!\n");
-		return false;
+		return -1;
 	}
 	int32_t index = 0;
-	for (index = 0; index < p_var->memory_node_count; index++) {
-		if (p_var->memory_node_list[index].addr == memory_addr) {
+	for (index = 0; index < p_var->free_memory_node_count; index++) {
+		if (p_var->free_memory_node_addr_list[index]->memory_addr == memory_addr) {
 			break;
 		}
 	}
 
-	*p_index = index;
-	return true;
+	return index;
 }
 
 cg_memory_node_t cg_get_memory_node(cg_memory_pool_var_t *p_var, void *memory_addr, void *memory_end_addr) {
@@ -339,18 +339,18 @@ bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t *p_m
 	return true;
 }
 
-bool cg_rm_one_p_memory_node(cg_memory_pool_var_t *p_var, int32_t index) {
-	if (p_var->memory_node_count == 1) {
-		memset(p_var->memory_node_list, 0, sizeof(cg_memory_node_t));
-		p_var->memory_node_count = 0;
+bool cg_rm_one_p_memory_node(cg_memory_pool_var_t *p_var, uint32_t index) {
+	if (p_var->free_memory_node_count == 1) {
+		p_var->free_memory_node_addr_list[0] = nullptr;
+		p_var->free_memory_node_count = 0;
 		return true;
 	}
-	if (index == 0) {
-		memmove(&p_var->memory_node_list[0], &p_var->memory_node_list[1], (p_var->memory_node_count - 1) * sizeof(cg_memory_node_t));
-		memset(&p_var->memory_node_list[p_var->memory_node_count - 1], 0, sizeof(cg_memory_node_t));
-		p_var->memory_node_count--;
-		return true;
+	if (index + 1 == p_var->free_memory_node_count) {
+		/* code */
 	}
+
+	p_var->free_memory_node_addr_list[p_var->free_memory_node_count - 1];
+
 	if (index == p_var->memory_node_count - 1) {
 		memset(&p_var->memory_node_list[p_var->memory_node_count - 1], 0, sizeof(cg_memory_node_t));
 		p_var->memory_node_count--;
