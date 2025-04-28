@@ -247,40 +247,17 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 }
 
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr) {
-	size_t memory_size = 0;
-	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("memory pool address must not be nullptr!\n");
-		return 0;
-	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
 		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return 0;
 	}
-	if (memory_addr == nullptr) {
-		PRINT_ERROR("this memory address must not be nullptr!\n");
-		return 0;
-	}
-	for (uint32_t i = 0; i < p_var->memory_node_count; i++) {
-		if (p_var->memory_node_list[i].addr == memory_addr) {
-			memory_size = (size_t)(p_var->memory_node_list[i].end_addr - p_var->memory_node_list[i].addr);
-			break;
-		}
-	}
-
-	return memory_size;
+	cg_memory_node_t *p_memory_node = (cg_memory_node_t *)(memory_addr - sizeof(cg_memory_node_t));
+	return p_memory_node->size;
 }
 
 int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr) {
-	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("memory pool address must not be nullptr!\n");
-		return -1;
-	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
 		PRINT_ERROR("this memory is not in the memory pool!\n");
-		return -1;
-	}
-	if (memory_addr == nullptr) {
-		PRINT_ERROR("this memory address must not be nullptr!\n");
 		return -1;
 	}
 	int32_t index = 0;

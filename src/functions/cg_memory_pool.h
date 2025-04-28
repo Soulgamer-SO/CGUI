@@ -78,7 +78,7 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_var, void *memory_addr);
 
 // 如果成功,参数返回信息节点的索引,失败就返回-1
-int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr, int32_t index);
+int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_var, void *memory_addr);
 
 // 信息节点地址的列表末尾添加一个元素
 bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_var, cg_memory_node_t *p_memory_node);
