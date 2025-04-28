@@ -8,8 +8,6 @@
 
 // gdb反汇编调试命令 -exec disassemble /m main
 MAIN {
-#define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024
-#define MAX_FREE_MEM_NODE_COUNT 1024
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = nullptr,
 		.size = MEMORY_POOL_SIZE,
@@ -19,8 +17,6 @@ MAIN {
 		.last_memory_end_addr = nullptr,
 		.free_memory_node_count = 0,
 		.free_memory_node_addr_list = nullptr};
-	memory_pool_var.memory_pool = calloc(1, MEMORY_POOL_SIZE);
-	memory_pool_var.free_memory_node_addr_list = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {

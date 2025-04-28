@@ -5,6 +5,8 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 		PRINT_ERROR("memory pool size should more bigger!\n");
 		return false;
 	}
+	p_var->memory_pool = calloc(1, p_var->size);
+	p_var->free_memory_node_addr_list = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
 	if (p_var->memory_pool == nullptr || p_var->free_memory_node_addr_list == nullptr) {
 		PRINT_ERROR("create memory pool fail!\n");
 		return false;
@@ -64,7 +66,6 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 			PRINT_LOG("============================memory pool============================\n");
 			PRINT_LOG("memory_pool = %p;\n", p_var->memory_pool);
 			PRINT_LOG("memory_pool_size = %zu;\n", p_var->size);
-			PRINT_LOG("memory_node_count = %d;\n", p_var->memory_count);
 			PRINT_LOG("memory block size = %zu;\n", size);
 			PRINT_LOG("memory block addr = %p;\n", p_new_node->memory_addr);
 			PRINT_LOG("free_size = %zu;\n", p_var->free_size);

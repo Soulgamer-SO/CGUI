@@ -9,6 +9,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024
+#define MAX_FREE_MEM_NODE_COUNT 1024
+
 // 用来记录内存池信息(侵入式内存池),可以根据情况再创建各自独立的多个内存池
 typedef struct cg_memory_pool_var {
 	// 内存池
@@ -55,8 +58,6 @@ typedef struct cg_memory_node {
 		.last_memory_end_addr = nullptr,
 		.free_memory_node_count = 0,
 		.free_memory_node_addr_list = nullptr};
-	memory_pool_var.memory_pool = calloc(1, MEMORY_POOL_SIZE);
-	memory_pool_var.free_memory_node_addr_list = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {
