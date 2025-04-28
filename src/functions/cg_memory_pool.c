@@ -26,7 +26,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 	size_t node_and_mem_size = sizeof(cg_memory_node_t) + size;
 	cg_memory_node_t *p_new_node = nullptr;
 	if (node_and_mem_size > p_var->free_size) {
-		PRINT_ERROR("the size is too big!\n");
+		PRINT_ERROR("fail! the size is too large!\n");
 		return nullptr;
 	}
 	if (size == 0) {
@@ -198,7 +198,7 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t s
 		PRINT_ERROR("memory pool address must not be nullptr!\n");
 		return memory_addr;
 	} else if ((size + sizeof(cg_memory_node_t)) > p_var->free_size) {
-		PRINT_ERROR("fail! the size is too big!\n");
+		PRINT_ERROR("fail! the size is too large!\n");
 		return nullptr;
 	}
 	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
