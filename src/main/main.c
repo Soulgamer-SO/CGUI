@@ -15,6 +15,7 @@ MAIN {
 		.size = MEMORY_POOL_SIZE,
 		.free_size = 0,
 		.memory_count = 0,
+		.last_memory_size = 0,
 		.last_memory_end_addr = nullptr,
 		.free_memory_node_count = 0,
 		.free_memory_node_addr_list = nullptr};
