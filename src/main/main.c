@@ -8,18 +8,18 @@
 
 // gdb反汇编调试命令 -exec disassemble /m main
 MAIN {
-#define MEMORY_POOL_SIZE 1024 * 1024
-#define MAX_FREE_MEM_NODE_COUNT 256
+#define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024
+#define MAX_FREE_MEM_NODE_COUNT 1024
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = nullptr,
 		.size = MEMORY_POOL_SIZE,
 		.free_size = 0,
-		.used_memory_count = 0,
+		.memory_count = 0,
 		.last_memory_end_addr = nullptr,
-		.free_memory_node_count = MAX_FREE_MEM_NODE_COUNT,
+		.free_memory_node_count = 0,
 		.free_memory_node_addr_list = nullptr};
 	memory_pool_var.memory_pool = calloc(1, MEMORY_POOL_SIZE);
-	memory_pool_var.free_memory_node_addr_list = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_pool_var_t *));
+	memory_pool_var.free_memory_node_addr_list = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {
@@ -34,9 +34,27 @@ MAIN {
 	var.wsi_var.WinAPI_var.pCmdLine = pCmdLine;
 	var.wsi_var.WinAPI_var.nCmdShow = nCmdShow;
 #endif // _WIN32
-	if (cg_initialize_var(&var) == false) {
+	bool is_init = false;
+	is_init = cg_initialize_var(&var);
+	if (is_init == false) {
 		PRINT_ERROR("initialize fail!\n");
 		goto destroy_and_exit;
+	}
+
+	cg_memory_pool_var_t gpu_memory_pool_var = {
+		.memory_pool = nullptr,
+		.size = MEMORY_POOL_SIZE,
+		.free_size = 0,
+		.used_memory_count = 0,
+		.last_memory_end_addr = nullptr,
+		.free_memory_node_count = MAX_FREE_MEM_NODE_COUNT,
+		.free_memory_node_addr_list = nullptr};
+	gpu_memory_pool_var.memory_pool = calloc(1, MEMORY_POOL_SIZE);
+	gpu_memory_pool_var.free_memory_node_addr_list = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_pool_var_t *));
+	if (cg_create_memory_pool(&gpu_memory_pool_var) == false) {
+		goto exit;
+	} else {
+		PRINT_LOG("create gpu_memory_pool_var success!\n");
 	}
 
 	cg_event_loop(&var);

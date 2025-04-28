@@ -17,8 +17,8 @@ typedef struct cg_memory_pool_var {
 	size_t size;
 	// 内存池剩余可用大小
 	size_t free_size;
-	// 已经在使用的内存块数量
-	uint32_t used_memory_count;
+	// 内存块数量,可能包括空闲内存块
+	uint32_t memory_count;
 	// 保存排在最后的内存块的尾地址
 	void *last_memory_end_addr;
 	// 空闲内存块信息节点数量
@@ -29,6 +29,8 @@ typedef struct cg_memory_pool_var {
 
 // 记录内存块的信息的节点,节点本身位置在内存块的前面
 typedef struct cg_memory_node {
+	// 内存块地址
+	void *memory_addr;
 	// 内存块大小(不包含内存信息节点本身)
 	size_t size;
 	// 表示内存块是否被使用
@@ -42,18 +44,18 @@ typedef struct cg_memory_node {
 /*创建内存池(侵入式内存池)
 
 示例代码:
-#define MEMORY_POOL_SIZE 1024 * 1024
-#define MAX_FREE_MEM_NODE_COUNT 256
+#define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024
+#define MAX_FREE_MEM_NODE_COUNT 1024
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = nullptr,
 		.size = MEMORY_POOL_SIZE,
 		.free_size = 0,
-		.used_memory_count = 0,
+		.memory_count = 0,
 		.last_memory_end_addr = nullptr,
-		.free_memory_node_count = MAX_FREE_MEM_NODE_COUNT,
+		.free_memory_node_count = 0,
 		.free_memory_node_addr_list = nullptr};
 	memory_pool_var.memory_pool = calloc(1, MEMORY_POOL_SIZE);
-	memory_pool_var.free_memory_node_addr_list = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_pool_var_t *));
+	memory_pool_var.free_memory_node_addr_list = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {
@@ -63,7 +65,7 @@ typedef struct cg_memory_node {
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_var);
 
 // 使用内存池，分配指定大小的内存块,alloc_size是该内存块大小,如果成功该函数会返回新地址，失败就返回nullptr
-void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t alloc_size);
+void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size);
 
 // 释放指定内存块
 void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr);

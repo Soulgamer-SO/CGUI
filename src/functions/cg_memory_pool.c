@@ -9,7 +9,7 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 		PRINT_ERROR("create memory pool fail!\n");
 		return false;
 	}
-	p_var->last_memory_end_addr = p_var->memory_pool;
+	p_var->used_memory_count = 0;
 	p_var->free_size = p_var->size;
 	PRINT_LOG("============================memory pool============================\n");
 	PRINT_LOG("create memory_pool success!\n");
@@ -20,42 +20,66 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 	return true;
 }
 
-void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t alloc_size) {
-	// 内存块+内存块节点合计大小
-	size_t size = alloc_size + sizeof(cg_memory_node_t);
-	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("memory pool address must not be nullptr!\n");
-		return nullptr;
-	} else if (size > p_var->free_size) {
+void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
+	size_t node_and_mem_size = sizeof(cg_memory_node_t) + size;
+	cg_memory_node_t *p_new_node = nullptr;
+	if (node_and_mem_size > p_var->free_size) {
 		PRINT_ERROR("the size is too big!\n");
 		return nullptr;
 	}
 	if (size == 0) {
-		PRINT_ERROR("size can must not be 0!\n");
+		PRINT_ERROR("size must not be 0!\n");
 		return nullptr;
 	}
-
 	if (p_var->used_memory_count == 0) {
-		p_var->last_memory_end_addr = p_var->memory_pool + sizeof(cg_memory_node_t) + alloc_size;
-		p_var->free_size -= size;
+		p_new_node = (cg_memory_node_t *)p_var->memory_pool;
+		p_new_node->memory_addr = p_var->memory_pool + sizeof(cg_memory_node_t);
+		p_new_node->size = size;
+		p_new_node->is_used = true;
+		p_new_node->prev_memory_node_addr = nullptr;
+		p_new_node->next_memory_node_addr = nullptr;
+		p_var->free_size -= node_and_mem_size;
+		p_var->used_memory_count = 1;
+		p_var->last_memory_end_addr = p_var->memory_pool + node_and_mem_size;
 		PRINT_LOG("============================memory pool============================\n");
 		PRINT_LOG("memory_pool = %p;\n", p_var->memory_pool);
 		PRINT_LOG("memory_pool_size = %zu;\n", p_var->size);
+		PRINT_LOG("memory block addr = %p;\n", p_new_node->memory_addr);
 		PRINT_LOG("memory block size = %zu;\n", size);
 		PRINT_LOG("free_size = %zu;\n", p_var->free_size);
 		PRINT_LOG("===================================================================\n");
-		return p_var->memory_node_list[0].addr;
-	} else if (p_var->memory_node_count >= 1) {
+		return p_new_node->memory_addr;
+	} else if (p_var->memory_count == 1) {
 		// 优先把last_memory_end_addr后面的内存空间分配给新内存块
-		if ((p_var->memory_pool + p_var->size - p_var->last_memory_end_addr) >= size) {
-			if (cg_add_one_memory_node(
-				    p_var,
-				    ((cg_memory_node_t){
-					    .addr = p_var->last_memory_end_addr,
-					    .end_addr = p_var->last_memory_end_addr + size,
-					    .is_used = true})) == false) {
-				return nullptr;
-			}
+		if ((p_var->memory_pool + p_var->size - p_var->last_memory_end_addr) >= node_and_mem_size) {
+			p_new_node = (cg_memory_node_t *)p_var->last_memory_end_addr;
+			p_new_node->memory_addr = p_var->last_memory_end_addr + sizeof(cg_memory_node_t);
+			p_new_node->size = size;
+			p_new_node->is_used = true;
+			p_new_node->prev_memory_node_addr;
+			p_new_node->next_memory_node_addr;
+			p_var->last_memory_end_addr = p_var->memory_node_list[p_var->memory_node_count - 1].end_addr;
+			PRINT_LOG("============================memory pool============================\n");
+			PRINT_LOG("memory_pool = %p;\n", p_var->memory_pool);
+			PRINT_LOG("memory_pool_size = %zu;\n", p_var->size);
+			PRINT_LOG("memory_node_count = %d;\n", p_var->memory_node_count);
+			PRINT_LOG("memory block size = %zu;\n", size);
+			PRINT_LOG("memory_node.addr = %p;\n", p_var->memory_node_list[p_var->memory_node_count - 1].addr);
+			PRINT_LOG("memory_node.end_addr = %p;\n", p_var->memory_node_list[p_var->memory_node_count - 1].end_addr);
+			PRINT_LOG("memory_node.is_used = %d;\n", p_var->memory_node_list[p_var->memory_node_count - 1].is_used);
+			PRINT_LOG("free_size = %zu;\n", p_var->free_size);
+			PRINT_LOG("===================================================================\n");
+			return p_var->memory_node_list[p_var->memory_node_count - 1].addr;
+		}
+	} else if (p_var->used_memory_count > 1) {
+		// 优先把last_memory_end_addr后面的内存空间分配给新内存块
+		if ((p_var->memory_pool + p_var->size - p_var->last_memory_end_addr) >= node_and_mem_size) {
+			p_new_node = (cg_memory_node_t *)p_var->last_memory_end_addr;
+			p_new_node->memory_addr = p_var->last_memory_end_addr + sizeof(cg_memory_node_t);
+			p_new_node->size = size;
+			p_new_node->is_used = true;
+			p_new_node->prev_memory_node_addr;
+			p_new_node->next_memory_node_addr;
 			p_var->last_memory_end_addr = p_var->memory_node_list[p_var->memory_node_count - 1].end_addr;
 			PRINT_LOG("============================memory pool============================\n");
 			PRINT_LOG("memory_pool = %p;\n", p_var->memory_pool);
