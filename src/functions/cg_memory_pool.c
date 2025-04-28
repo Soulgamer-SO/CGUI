@@ -57,8 +57,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 			p_new_node->size = size;
 			p_new_node->is_used = true;
 			p_new_node->prev_memory_node_addr = p_var->last_memory_end_addr - p_var->last_memory_size;
-
-			p_var->free_size;
+			p_var->free_size -= node_and_mem_size;
 			p_var->memory_count++;
 			p_var->last_memory_size = size;
 			p_var->last_memory_end_addr = p_new_node->memory_addr + size;
