@@ -128,12 +128,11 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return;
 	}
-	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_var, memory_addr, nullptr);
-	size_t free_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
-	int32_t memory_node_index = -1;
-	cg_get_memory_node_index(p_var, memory_addr, &memory_node_index);
-	cg_memory_node_t *p_previous_mem_node = cg_get_memory_node_addr(p_var, nullptr, memory_addr);
-	cg_memory_node_t *p_next_mem_node = cg_get_memory_node_addr(p_var, p_memory_node->end_addr, nullptr);
+	cg_memory_node_t *p_memory_node = (cg_memory_node_t *)(memory_addr - sizeof(cg_memory_node_t));
+	cg_memory_node_t *p_prev_memory_node = p_memory_node->prev_memory_node_addr;
+	cg_memory_node_t *p_next_memory_node = (cg_memory_node_t *)(memory_addr + p_memory_node->size);
+	size_t free_size = p_memory_node->size;
+	int32_t memory_node_index = cg_get_memory_node_index(p_var, memory_addr);
 
 	// 如果该内存块排在最后尾
 	if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
