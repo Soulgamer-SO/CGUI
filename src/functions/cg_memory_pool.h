@@ -29,7 +29,7 @@ typedef struct cg_memory_pool_var {
 	// 空闲内存块信息节点数量
 	uint32_t free_memory_node_count;
 	// 空闲内存块信息节点地址的列表
-	cg_memory_node_t **free_memory_node_addr_list;
+	cg_memory_node_t **free_memory_node_addr_arry;
 } cg_memory_pool_var_t;
 
 // 记录内存块的信息的节点,节点本身位置在内存块的前面
@@ -56,7 +56,7 @@ typedef struct cg_memory_node {
 		.last_memory_size = 0,
 		.last_memory_end_addr = nullptr,
 		.free_memory_node_count = 0,
-		.free_memory_node_addr_list = nullptr};
+		.free_memory_node_addr_arry = nullptr};
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {

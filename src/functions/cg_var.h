@@ -36,11 +36,11 @@ typedef struct vk_instance_var {
 	// 获得Vulkan实例扩展数量
 	uint32_t instance_extension_count;
 	// 获得所有可用实例扩展的名单
-	VkExtensionProperties *instance_extension_list;
+	VkExtensionProperties *instance_extension_arry;
 	// 已启用的实例扩展数量
 	uint32_t enabled_instance_extension_count;
 	// 已启用的实例扩展的名单
-	char **enabled_extension_name_list;
+	char **enabled_extension_name_arry;
 } vk_instance_var_t;
 
 // physical device
@@ -50,7 +50,7 @@ typedef struct vk_physical_device_var_t {
 	// 获取可用的物理设备的数量
 	uint32_t physical_device_count;
 	// 获取可用的物理设备的句柄名单
-	VkPhysicalDevice *available_physical_device_list;
+	VkPhysicalDevice *available_physical_device_arry;
 	// 被选择的显卡的索引
 	uint32_t physical_device_index;
 	// 其他显卡的索引
@@ -61,13 +61,13 @@ typedef struct vk_physical_device_var_t {
 	uint32_t physical_device_extensions_count;
 	// 检查物理设备功能和属性,选择想要的物理设备
 	bool is_physical_device_supported;
-	VkPhysicalDeviceFeatures device_feature_list;
+	VkPhysicalDeviceFeatures device_feature_arry;
 	VkPhysicalDeviceProperties device_properties;
 	// 可用的物理设备扩展列表
-	VkExtensionProperties *available_physcial_device_extension_list;
+	VkExtensionProperties *available_physcial_device_extension_arry;
 	// 启用的物理设备扩展的数量
 	uint32_t enabled_physical_device_extensions_count;
-	char **enabled_physcial_device_extension_list;
+	char **enabled_physcial_device_extension_arry;
 	// 获取物理设备内存属性
 	VkPhysicalDeviceMemoryProperties physical_device_memory_properties;
 } vk_physical_device_var_t;
@@ -76,8 +76,8 @@ typedef struct vk_physical_device_var_t {
 typedef struct vk_logic_device_var {
 	// 获取队列家族和它们的属性,选择想要的队列家族
 	uint32_t queue_family_count;
-	VkQueueFamilyProperties *queue_family_list;
-	VkQueueFamilyProperties *queue_family_property_list;
+	VkQueueFamilyProperties *queue_family_arry;
+	VkQueueFamilyProperties *queue_family_property_arry;
 
 	// 选择想要的队列家族并返回其索引
 	uint32_t queue_family_index;
@@ -86,9 +86,9 @@ typedef struct vk_logic_device_var {
 	// 队列的句柄
 	VkQueue queue_family_handle;
 	// 优先级列表
-	uint32_t queue_priority_list_count;
-	uint32_t queue_priority_list_index;
-	float *queue_priority_list;
+	uint32_t queue_priority_arry_count;
+	uint32_t queue_priority_arry_index;
+	float *queue_priority_arry;
 
 	// 创建Vulkan逻辑设备
 	VkDevice vk_logic_device;
@@ -100,7 +100,7 @@ typedef struct vk_command_pool_var {
 	VkCommandPool command_pool;
 	// 命令缓存列表
 	uint32_t command_buffer_count;
-	VkCommandBuffer *command_buffer_list;
+	VkCommandBuffer *command_buffer_arry;
 } vk_command_pool_var_t;
 
 // sync var
@@ -108,17 +108,17 @@ typedef struct sync_var {
 	// 信号量数量
 	uint32_t semaphore_count;
 	// 信号列表
-	VkSemaphore *semaphore_list;
+	VkSemaphore *semaphore_arry;
 	// 信号名单列表
-	char **semaphore_name_list;
+	char **semaphore_name_arry;
 
 	// 等待的信号量数量
 	uint32_t wait_semaphore_count;
 	// 等待的信号量列表
-	VkSemaphore *wait_semaphore_list;
+	VkSemaphore *wait_semaphore_arry;
 
 	// 围栏列表
-	VkFence *fence_list;
+	VkFence *fence_arry;
 	// 围栏的数量
 	uint32_t fence_count;
 
@@ -130,7 +130,7 @@ typedef struct sync_var {
 	// pipeline阶段的位掩码数量
 	uint32_t semaphore_pipeline_stage_count;
 	// pipeline阶段的位掩码列表
-	VkPipelineStageFlags *semaphore_pipeline_stage_list;
+	VkPipelineStageFlags *semaphore_pipeline_stage_arry;
 } sync_var_t;
 
 // window var
@@ -175,7 +175,7 @@ typedef struct wsi_var {
 	// Vulkan显示模式的数量
 	uint32_t present_mode_count;
 	// Vulkan显示模式的列表
-	VkPresentModeKHR *present_mode_list;
+	VkPresentModeKHR *present_mode_arry;
 	// 启用的显示模式
 	VkPresentModeKHR enabled_present_mode;
 	// 支持的显示功能
@@ -192,18 +192,18 @@ typedef struct wsi_var {
 	VkSurfaceFormatKHR enabled_surface_format;
 	// 支持的交换链图像格式列表
 	uint32_t surface_format_count;
-	VkSurfaceFormatKHR *surface_format_list;
+	VkSurfaceFormatKHR *surface_format_arry;
 	// 创建交换链 create swapchain
 	VkSwapchainKHR swapchain;
 	VkSwapchainKHR old_swapchain;
 	// 交换链图像数量
 	uint32_t swapchain_image_count;
 	// 交换链图像的句柄列表
-	VkImage *swapchain_image_list;
+	VkImage *swapchain_image_arry;
 	// 获得交换链图像
 	uint32_t image_index;
 	// 图像视图
-	VkImageView *swapchain_image_view_list;
+	VkImageView *swapchain_image_view_arry;
 } wsi_var_t;
 
 // event loop var

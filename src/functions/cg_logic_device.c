@@ -17,34 +17,34 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		return false;
 	}
 
-	p_var->logic_device_var.queue_family_list = (VkQueueFamilyProperties *)cg_alloc_memory(
+	p_var->logic_device_var.queue_family_arry = (VkQueueFamilyProperties *)cg_alloc_memory(
 		p_var->p_memory_pool_var,
 		p_var->logic_device_var.queue_family_count * sizeof(VkQueueFamilyProperties));
-	if (p_var->logic_device_var.queue_family_list == nullptr) {
-		PRINT_ERROR("get queue_familiy_list fail!\n");
+	if (p_var->logic_device_var.queue_family_arry == nullptr) {
+		PRINT_ERROR("get queue_familiy_arry fail!\n");
 		return false;
 	} else {
 		PRINT_LOG("alloc memory success!\n");
 	}
 
 	get_physical_device_queue_family_properties(
-		p_var->physical_device_var.physical_device, &p_var->logic_device_var.queue_family_count, p_var->logic_device_var.queue_family_list);
+		p_var->physical_device_var.physical_device, &p_var->logic_device_var.queue_family_count, p_var->logic_device_var.queue_family_arry);
 	if (p_var->logic_device_var.queue_family_count == 0) {
-		PRINT_ERROR("get queue_familiy_list fail!\n");
+		PRINT_ERROR("get queue_familiy_arry fail!\n");
 		return false;
 	}
 
 	p_var->logic_device_var.queue_family_index = 0;
-	p_var->logic_device_var.queue_priority_list_count = 16;
-	p_var->logic_device_var.queue_priority_list_index = 0;
-	p_var->logic_device_var.queue_priority_list = (float *)cg_alloc_memory(
+	p_var->logic_device_var.queue_priority_arry_count = 16;
+	p_var->logic_device_var.queue_priority_arry_index = 0;
+	p_var->logic_device_var.queue_priority_arry = (float *)cg_alloc_memory(
 		p_var->p_memory_pool_var,
-		p_var->logic_device_var.queue_priority_list_count * sizeof(float));
-	if (p_var->logic_device_var.queue_priority_list != nullptr) {
+		p_var->logic_device_var.queue_priority_arry_count * sizeof(float));
+	if (p_var->logic_device_var.queue_priority_arry != nullptr) {
 		PRINT_LOG("alloc memory success!\n");
-		for (uint32_t i = 0; i < p_var->logic_device_var.queue_priority_list_count; i++) {
-			p_var->logic_device_var.queue_priority_list[i] = 0.001f * (i + 1);
-			PRINT_LOG("queue_priority_list[%d] = %f;\n", i, p_var->logic_device_var.queue_priority_list[i]);
+		for (uint32_t i = 0; i < p_var->logic_device_var.queue_priority_arry_count; i++) {
+			p_var->logic_device_var.queue_priority_arry[i] = 0.001f * (i + 1);
+			PRINT_LOG("queue_priority_arry[%d] = %f;\n", i, p_var->logic_device_var.queue_priority_arry[i]);
 		}
 	}
 
@@ -60,29 +60,29 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 	for (p_var->logic_device_var.queue_family_index = 0;
 	     p_var->logic_device_var.queue_family_index < p_var->logic_device_var.queue_family_count;
 	     p_var->logic_device_var.queue_family_index++) {
-		PRINT_LOG("============================== queue_familiy_list[%d] ==================================\n", p_var->logic_device_var.queue_family_index);
-		if (p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].queueCount > 0) {
-			if (p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+		PRINT_LOG("============================== queue_familiy_arry[%d] ==================================\n", p_var->logic_device_var.queue_family_index);
+		if (p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].queueCount > 0) {
+			if (p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
 				queue_info[0] = " VK_QUEUE_GRAPHICS_BIT ";
 			} else {
 				queue_info[0] = "";
 			}
-			if (p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_COMPUTE_BIT) {
+			if (p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_COMPUTE_BIT) {
 				queue_info[1] = " VK_QUEUE_COMPUTE_BIT";
 			} else {
 				queue_info[1] = "";
 			}
-			if (p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_TRANSFER_BIT) {
+			if (p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_TRANSFER_BIT) {
 				queue_info[2] = " VK_QUEUE_TRANSFER_BIT";
 			} else {
 				queue_info[2] = "";
 			}
-			if (p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_SPARSE_BINDING_BIT) {
+			if (p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_SPARSE_BINDING_BIT) {
 				queue_info[3] = " VK_QUEUE_SPARSE_BINDING_BIT";
 			} else {
 				queue_info[3] = "";
 			}
-			if (p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_PROTECTED_BIT) {
+			if (p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_PROTECTED_BIT) {
 				queue_info[4] = " VK_QUEUE_PROTECTED_BIT";
 			} else {
 				queue_info[4] = "";
@@ -91,13 +91,13 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		} else {
 			PRINT_LOG("queueFlags = none;\n");
 		}
-		PRINT_LOG("queueCount = %d;\n", p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].queueCount);
-		PRINT_LOG("timestampValidBits = %d;\n", p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].timestampValidBits);
+		PRINT_LOG("queueCount = %d;\n", p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].queueCount);
+		PRINT_LOG("timestampValidBits = %d;\n", p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].timestampValidBits);
 		PRINT_LOG(
 			"minImageTransferGranularity = { width:%d, height:%d, depth:%d };\n",
-			p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].minImageTransferGranularity.width,
-			p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].minImageTransferGranularity.height,
-			p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].minImageTransferGranularity.depth);
+			p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].minImageTransferGranularity.width,
+			p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].minImageTransferGranularity.height,
+			p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].minImageTransferGranularity.depth);
 		PRINT_LOG("=======================================================================================\n");
 	}
 #endif
@@ -112,8 +112,8 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 	for (p_var->logic_device_var.queue_family_index = 0;
 	     p_var->logic_device_var.queue_family_index < p_var->logic_device_var.queue_family_count;
 	     p_var->logic_device_var.queue_family_index++) {
-		if (p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].queueCount > 0 &&
-		    (p_var->logic_device_var.queue_family_list[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_GRAPHICS_BIT)) {
+		if (p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].queueCount > 0 &&
+		    (p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.queue_family_index].queueFlags & VK_QUEUE_GRAPHICS_BIT)) {
 			p_var->logic_device_var.graphic_queue_family_index = p_var->logic_device_var.queue_family_index;
 			break;
 		}
@@ -124,8 +124,8 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		.pNext = nullptr,
 		.flags = 0,
 		.queueFamilyIndex = p_var->logic_device_var.graphic_queue_family_index,
-		.queueCount = p_var->logic_device_var.queue_family_list[p_var->logic_device_var.graphic_queue_family_index].queueCount,
-		.pQueuePriorities = &p_var->logic_device_var.queue_priority_list[p_var->logic_device_var.queue_priority_list_index]};
+		.queueCount = p_var->logic_device_var.queue_family_arry[p_var->logic_device_var.graphic_queue_family_index].queueCount,
+		.pQueuePriorities = &p_var->logic_device_var.queue_priority_arry[p_var->logic_device_var.queue_priority_arry_index]};
 
 	VkDeviceCreateInfo device_create_info = {
 		.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
@@ -136,8 +136,8 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		.enabledLayerCount = 0,
 		.ppEnabledLayerNames = nullptr,
 		.enabledExtensionCount = p_var->physical_device_var.enabled_physical_device_extensions_count,
-		.ppEnabledExtensionNames = (const char *const *)&p_var->physical_device_var.enabled_physcial_device_extension_list[0],
-		.pEnabledFeatures = &p_var->physical_device_var.device_feature_list};
+		.ppEnabledExtensionNames = (const char *const *)&p_var->physical_device_var.enabled_physcial_device_extension_arry[0],
+		.pEnabledFeatures = &p_var->physical_device_var.device_feature_arry};
 
 	// create logic device
 	PFN_vkCreateDevice create_device = nullptr;
@@ -158,10 +158,10 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 
 #ifdef DEBUG
 	for (uint32_t i = 0; i < p_var->physical_device_var.enabled_physical_device_extensions_count; i++) {
-		PRINT_LOG("enabled_physcial_device_extension_list[%d] = %s;\n", i, p_var->physical_device_var.enabled_physcial_device_extension_list[i]);
+		PRINT_LOG("enabled_physcial_device_extension_arry[%d] = %s;\n", i, p_var->physical_device_var.enabled_physcial_device_extension_arry[i]);
 	}
 	PRINT_LOG("%d个物理设备扩展已经全部启用!\n", p_var->physical_device_var.enabled_physical_device_extensions_count);
-	PRINT_LOG("enabled queue familiy = queue_familiy_list[%d];\n", queue_create_info.queueFamilyIndex);
+	PRINT_LOG("enabled queue familiy = queue_familiy_arry[%d];\n", queue_create_info.queueFamilyIndex);
 	PRINT_LOG("create vulkan logic device success!\n");
 #endif // DEBUG
 

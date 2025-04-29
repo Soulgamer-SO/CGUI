@@ -6,7 +6,7 @@
 bool cg_create_command_pool(cg_var_t *p_var, VkCommandPool *p_command_pool);
 
 // 分配命令缓冲区
-void cg_create_command_buffer_list(cg_var_t *p_var, VkCommandPool command_pool, VkCommandBuffer *command_buffer_list, uint32_t command_buffer_count);
+void cg_create_command_buffer_arry(cg_var_t *p_var, VkCommandPool command_pool, VkCommandBuffer *command_buffer_arry, uint32_t command_buffer_count);
 
 // 开始命令缓冲区记录操作
 void cg_begin_record_command_buffer(cg_var_t *p_var, VkCommandBuffer command_buffer, VkCommandBufferUsageFlags command_buffer_usage);

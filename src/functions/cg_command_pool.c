@@ -26,8 +26,8 @@ bool cg_create_command_pool(cg_var_t *p_var, VkCommandPool *p_command_pool) {
 	return true;
 }
 
-void cg_create_command_buffer_list(cg_var_t *p_var, VkCommandPool command_pool, VkCommandBuffer *command_buffer_list, uint32_t command_buffer_count) {
-	if (command_buffer_list == nullptr) {
+void cg_create_command_buffer_arry(cg_var_t *p_var, VkCommandPool command_pool, VkCommandBuffer *command_buffer_arry, uint32_t command_buffer_count) {
+	if (command_buffer_arry == nullptr) {
 		PRINT_ERROR("create_command_buffer fail!\n");
 		return;
 	}
@@ -45,7 +45,7 @@ void cg_create_command_buffer_list(cg_var_t *p_var, VkCommandPool command_pool, 
 		return;
 	}
 
-	p_var->library_var.vk_result = allocate_command_buffers(p_var->logic_device_var.vk_logic_device, &command_buffer_allocate_info, command_buffer_list);
+	p_var->library_var.vk_result = allocate_command_buffers(p_var->logic_device_var.vk_logic_device, &command_buffer_allocate_info, command_buffer_arry);
 	if (p_var->library_var.vk_result != VK_SUCCESS) {
 		PRINT_ERROR("vkAllocateCommandBuffers fail!\n");
 		return;
