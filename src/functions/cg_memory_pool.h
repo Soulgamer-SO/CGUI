@@ -8,13 +8,14 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <vulkan/vulkan.h>
 #define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024
 #define MAX_FREE_MEM_NODE_COUNT 4 * 1024
+#define VK_DEVICE_ADDR_NULL 0
 
 // 用来记录内存池信息(侵入式内存池),可以根据情况再创建各自独立的多个内存池
 typedef struct cg_memory_pool_var {
-	// 内存池
+	// 内存池,内存池开始地址
 	void *memory_pool;
 	// 内存池总大小
 	size_t size;
@@ -28,9 +29,30 @@ typedef struct cg_memory_pool_var {
 	void *last_memory_end_addr;
 	// 空闲内存块信息节点数量
 	uint32_t free_memory_node_count;
-	// 空闲内存块信息节点地址的列表
+	// 空闲内存块信息节点指针的列表
 	cg_memory_node_t **free_memory_node_addr_arry;
 } cg_memory_pool_var_t;
+
+typedef struct cg_gpu_memory_pool_var {
+	// 内存池,内存池开始地址
+	VkDeviceAddress memory_pool;
+	// 内存池总大小
+	VkDeviceSize size;
+	// 内存池剩余可用大小
+	VkDeviceSize free_size;
+	// 内存块数量,可能包括空闲内存块
+	uint32_t memory_count;
+	// 保存排在最后的内存块的大小
+	VkDeviceSize last_memory_size;
+	// 保存排在最后的内存块的尾地址
+	VkDeviceAddress last_memory_end_addr;
+	// 空闲内存块信息节点数量
+	uint32_t free_memory_node_count;
+	// 空闲内存块信息节点指针的列表
+	cg_memory_node_t **free_memory_node_addr_arry;
+	// Vulkan 显存句柄
+	VkDeviceMemory vk_device_memory;
+} cg_gpu_memory_pool_var_t;
 
 // 记录内存块的信息的节点,节点本身位置在内存块的前面
 typedef struct cg_memory_node {
@@ -64,6 +86,7 @@ typedef struct cg_memory_node {
 	}
 注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池*/
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_var);
+bool cg_create_gpu_memory_pool(cg_memory_pool_var_t *p_var);
 
 // 使用内存池，分配指定大小的内存块,alloc_size是该内存块大小,如果成功该函数会返回新地址，失败就返回nullptr
 void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size);

@@ -22,6 +22,28 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_var) {
 	return true;
 }
 
+bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_var) {
+	if (p_var->size < sizeof(cg_memory_node_t)) {
+		PRINT_ERROR("memory pool size should more bigger!\n");
+		return false;
+	}
+	p_var->memory_pool = calloc(1, p_var->size);
+	p_var->free_memory_node_addr_arry = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
+	if (p_var->memory_pool == nullptr || p_var->free_memory_node_addr_arry == nullptr) {
+		PRINT_ERROR("create memory pool fail!\n");
+		return false;
+	}
+	p_var->free_size = p_var->size;
+	p_var->memory_count = 0;
+	PRINT_LOG("============================memory pool============================\n");
+	PRINT_LOG("create memory_pool success!\n");
+	PRINT_LOG("memory_pool = %d;\n", p_var->memory_pool);
+	PRINT_LOG("memory_pool_size = %zu;\n", p_var->size);
+	PRINT_LOG("free_size = %d;\n", p_var->free_size);
+	PRINT_LOG("===================================================================\n");
+	return true;
+}
+
 void *cg_alloc_memory(cg_memory_pool_var_t *p_var, size_t size) {
 	size_t node_and_mem_size = sizeof(cg_memory_node_t) + size;
 	cg_memory_node_t *p_memory_node = nullptr;
