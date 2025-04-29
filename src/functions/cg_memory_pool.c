@@ -179,19 +179,12 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 }
 
 void *cg_realloc_memory(cg_memory_pool_var_t *p_var, void *memory_addr, size_t size) {
-	if (p_var->memory_pool == nullptr) {
-		PRINT_ERROR("memory pool address must not be nullptr!\n");
-		return memory_addr;
-	} else if ((size + sizeof(cg_memory_node_t)) > p_var->free_size) {
+	if ((size + sizeof(cg_memory_node_t)) > p_var->free_size) {
 		PRINT_ERROR("fail! the size is too large!\n");
-		return nullptr;
-	}
-	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size) {
-		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return memory_addr;
 	}
-	if (memory_addr == nullptr) {
-		PRINT_ERROR("this memory address must not be nullptr!\n");
+	if (memory_addr < p_var->memory_pool || memory_addr >= p_var->memory_pool + p_var->size || memory_addr == nullptr) {
+		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return memory_addr;
 	}
 	if (size == 0) {
