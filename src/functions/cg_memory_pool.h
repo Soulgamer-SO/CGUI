@@ -10,7 +10,7 @@
 #include <string.h>
 
 #define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024
-#define MAX_FREE_MEM_NODE_COUNT 1024 * 1024 * 1024
+#define MAX_FREE_MEM_NODE_COUNT 4 * 1024
 
 // 用来记录内存池信息(侵入式内存池),可以根据情况再创建各自独立的多个内存池
 typedef struct cg_memory_pool_var {

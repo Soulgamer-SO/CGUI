@@ -16,7 +16,7 @@ MAIN {
 		.last_memory_size = 0,
 		.last_memory_end_addr = nullptr,
 		.free_memory_node_count = 0,
-		.free_memory_node_addr_list = nullptr};
+		.free_memory_node_addr_arry = nullptr};
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {
@@ -46,9 +46,9 @@ MAIN {
 		.last_memory_size = 0,
 		.last_memory_end_addr = nullptr,
 		.free_memory_node_count = MAX_FREE_MEM_NODE_COUNT,
-		.free_memory_node_addr_list = nullptr};
+		.free_memory_node_addr_arry = nullptr};
 	gpu_memory_pool_var.memory_pool = calloc(1, MEMORY_POOL_SIZE);
-	gpu_memory_pool_var.free_memory_node_addr_list = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_pool_var_t *));
+	gpu_memory_pool_var.free_memory_node_addr_arry = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_pool_var_t *));
 	if (cg_create_memory_pool(&gpu_memory_pool_var) == false) {
 		goto exit;
 	} else {
@@ -61,8 +61,8 @@ destroy_and_exit:
 	cg_destroy_and_exit(&var);
 	free(memory_pool_var.memory_pool);
 	memory_pool_var.memory_pool = nullptr;
-	free(memory_pool_var.free_memory_node_addr_list);
-	memory_pool_var.free_memory_node_addr_list = nullptr;
+	free(memory_pool_var.free_memory_node_addr_arry);
+	memory_pool_var.free_memory_node_addr_arry = nullptr;
 exit:
 	PRINT_LOG("Exit success!\n");
 	return EXIT_SUCCESS;

@@ -1,6 +1,6 @@
 #include "cg_physical_device.h"
 
-bool cg_enumerate_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_count, VkPhysicalDevice *available_physical_device_list) {
+bool cg_enumerate_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_count, VkPhysicalDevice *available_physical_device_arry) {
 	// 确认可用物理设备句柄名单之前，先加载实例级函数 PFN_vkEnumeratePhysicalDevices()
 	PFN_vkEnumeratePhysicalDevices enumerate_physical_devices = nullptr;
 	enumerate_physical_devices = (PFN_vkEnumeratePhysicalDevices)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkEnumeratePhysicalDevices");
@@ -8,22 +8,22 @@ bool cg_enumerate_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_c
 		PRINT_ERROR("load vkEnumeratePhysicalDevices fail!\n");
 		return false;
 	}
-	p_var->library_var.vk_result = enumerate_physical_devices(p_var->instance_var.vk_instance, p_physical_device_count, available_physical_device_list);
+	p_var->library_var.vk_result = enumerate_physical_devices(p_var->instance_var.vk_instance, p_physical_device_count, available_physical_device_arry);
 	if (p_var->library_var.vk_result != VK_SUCCESS || *p_physical_device_count == 0) {
-		PRINT_ERROR("get available_handle_device_list fail!\n");
+		PRINT_ERROR("get available_handle_device_arry fail!\n");
 		return false;
 	}
 
 	return true;
 }
 
-bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_count, VkPhysicalDevice *available_physical_device_list, VkPhysicalDevice *p_physical_device) {
+bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_count, VkPhysicalDevice *available_physical_device_arry, VkPhysicalDevice *p_physical_device) {
 
 	// 初始化物理设备(选择默认显卡并初始)
 	p_var->physical_device_var.physical_device_index = 0;
-	p_var->physical_device_var.physical_device = p_var->physical_device_var.available_physical_device_list[p_var->physical_device_var.physical_device_index];
+	p_var->physical_device_var.physical_device = p_var->physical_device_var.available_physical_device_arry[p_var->physical_device_var.physical_device_index];
 	p_var->physical_device_var.other_physical_device_index = 0;
-	p_var->physical_device_var.other_physical_device = p_var->physical_device_var.available_physical_device_list[p_var->physical_device_var.other_physical_device_index];
+	p_var->physical_device_var.other_physical_device = p_var->physical_device_var.available_physical_device_arry[p_var->physical_device_var.other_physical_device_index];
 
 	// 获取物理设备扩展列表
 	p_var->physical_device_var.physical_device_extensions_count = 0;
@@ -58,7 +58,7 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 #ifdef DEBUG
 	// 统计有几个物理设备
 	for (uint32_t i = 0; i < p_var->physical_device_var.physical_device_count; i++) {
-		PRINT_LOG("第%d个物理设备句柄 physical_device[%d] %p\n", (i + 1), i, available_physical_device_list[i]);
+		PRINT_LOG("第%d个物理设备句柄 physical_device[%d] %p\n", (i + 1), i, available_physical_device_arry[i]);
 	}
 #endif // DEBUG
 
@@ -66,14 +66,14 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 	for (p_var->physical_device_var.physical_device_index = 0;
 	     p_var->physical_device_var.physical_device_index < *p_physical_device_count;
 	     p_var->physical_device_var.physical_device_index++) {
-		p_var->physical_device_var.physical_device = available_physical_device_list[p_var->physical_device_var.physical_device_index];
-		get_physical_device_features(p_var->physical_device_var.physical_device, &p_var->physical_device_var.device_feature_list);
+		p_var->physical_device_var.physical_device = available_physical_device_arry[p_var->physical_device_var.physical_device_index];
+		get_physical_device_features(p_var->physical_device_var.physical_device, &p_var->physical_device_var.device_feature_arry);
 		get_physical_device_properties(p_var->physical_device_var.physical_device, &p_var->physical_device_var.device_properties);
 		PRINT_LOG("当前的 physical_device = physical_handle_device[%d], deviceName = %s;\n", p_var->physical_device_var.physical_device_index, p_var->physical_device_var.device_properties.deviceName);
 		if (p_var->physical_device_var.device_properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
-			if (((p_var->physical_device_var.device_feature_list.geometryShader && p_var->physical_device_var.device_feature_list.textureCompressionBC) && (p_var->physical_device_var.device_feature_list.shaderFloat64 && p_var->physical_device_var.device_feature_list.multiViewport)) == true) {
-				PRINT_LOG("device_properties.deviceType = VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;\ndevice_feature_list.geometryShader = 1;\n");
-				PRINT_LOG("device_feature_list.textureCompressionBC = %d;\ndevice_feature_list.shaderFloat64 = %d;\ndevice_feature_list.multiViewport = %d;\n", p_var->physical_device_var.device_feature_list.textureCompressionBC, p_var->physical_device_var.device_feature_list.shaderFloat64, p_var->physical_device_var.device_feature_list.multiViewport);
+			if (((p_var->physical_device_var.device_feature_arry.geometryShader && p_var->physical_device_var.device_feature_arry.textureCompressionBC) && (p_var->physical_device_var.device_feature_arry.shaderFloat64 && p_var->physical_device_var.device_feature_arry.multiViewport)) == true) {
+				PRINT_LOG("device_properties.deviceType = VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;\ndevice_feature_arry.geometryShader = 1;\n");
+				PRINT_LOG("device_feature_arry.textureCompressionBC = %d;\ndevice_feature_arry.shaderFloat64 = %d;\ndevice_feature_arry.multiViewport = %d;\n", p_var->physical_device_var.device_feature_arry.textureCompressionBC, p_var->physical_device_var.device_feature_arry.shaderFloat64, p_var->physical_device_var.device_feature_arry.multiViewport);
 				p_var->physical_device_var.is_physical_device_supported = true;
 			}
 		}
@@ -95,20 +95,20 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 		PRINT_ERROR("get extensions_device_count fail!\n");
 		return false;
 	}
-	p_var->physical_device_var.available_physcial_device_extension_list = (VkExtensionProperties *)cg_alloc_memory(
+	p_var->physical_device_var.available_physcial_device_extension_arry = (VkExtensionProperties *)cg_alloc_memory(
 		p_var->p_memory_pool_var,
 		p_var->physical_device_var.physical_device_extensions_count * sizeof(VkExtensionProperties));
-	if (p_var->physical_device_var.available_physcial_device_extension_list == nullptr) {
-		PRINT_ERROR("create available_physcial_device_extension_list fail!\n");
+	if (p_var->physical_device_var.available_physcial_device_extension_arry == nullptr) {
+		PRINT_ERROR("create available_physcial_device_extension_arry fail!\n");
 		return false;
-	} else if (p_var->physical_device_var.available_physcial_device_extension_list != nullptr) {
+	} else if (p_var->physical_device_var.available_physcial_device_extension_arry != nullptr) {
 		PRINT_LOG("alloc memory success!\n");
 		p_var->library_var.vk_result = enumerate_device_extension_properties(
 			p_var->physical_device_var.physical_device, nullptr,
 			&p_var->physical_device_var.physical_device_extensions_count,
-			&p_var->physical_device_var.available_physcial_device_extension_list[0]);
+			&p_var->physical_device_var.available_physcial_device_extension_arry[0]);
 		if (p_var->physical_device_var.physical_device_extensions_count == 0) {
-			PRINT_ERROR("get available_physcial_device_extension_list fail!\n");
+			PRINT_ERROR("get available_physcial_device_extension_arrt fail!\n");
 			return false;
 		}
 	}
@@ -116,7 +116,7 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 	// 打印可用的物理设备扩展的列表
 	/* #ifdef DEBUG
 		for (uint32_t i = 0; i < p_var->physical_device_var.physical_device_extensions_count; i++) {
-			PRINT_LOG("available_physcial_device_extension_list[%d] %s 版本%d;\n", i, (p_var->physical_device_var.available_physcial_device_extension_list[i].extensionName), (p_var->physical_device_var.available_physcial_device_extension_list[i]).specVersion);
+			PRINT_LOG("available_physcial_device_extension_arry[%d] %s 版本%d;\n", i, (p_var->physical_device_var.available_physcial_device_extension_arry[i].extensionName), (p_var->physical_device_var.available_physcial_device_extension_arry[i]).specVersion);
 		}
 	#endif */
 

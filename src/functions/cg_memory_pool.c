@@ -135,14 +135,14 @@ void cg_free_memory(cg_memory_pool_var_t *p_var, void *memory_addr) {
 	int32_t memory_node_index = cg_get_memory_node_index(p_var, memory_addr);
 
 	// 如果该内存块排在最后尾
-	if (p_memory_node->end_addr == p_var->last_memory_end_addr) {
+	if (p_memory_node->memory_addr == p_var->last_memory_end_addr) {
 		// 而且该内存块的前一个内存块已被释放
-		if (p_previous_mem_node->is_used == false) {
-			int32_t previous_mem_node_index = -1;
-			cg_get_memory_node_index(p_var, p_previous_mem_node->addr, &previous_mem_node_index);
+		if (p_prev_memory_node->is_used == false) {
+			size_t new_size = p_prev_memory_node->size + sizeof(cg_memory_node_t) + p_memory_node->size;
+			int32_t previous_mem_node_index = cg_get_memory_node_index(p_var, p_prev_memory_node->memory_addr);
 			p_previous_mem_node->end_addr = p_memory_node->end_addr;
-			cg_rm_one_memory_node(p_var, memory_node_index);
-			cg_rm_one_memory_node(p_var, previous_mem_node_index);
+			cg_rm_one_p_memory_node(p_var, memory_node_index);
+			cg_rm_one_p_memory_node(p_var, previous_mem_node_index);
 			p_var->free_size += free_size;
 			return;
 		} else if (p_previous_mem_node->is_used == true) {
