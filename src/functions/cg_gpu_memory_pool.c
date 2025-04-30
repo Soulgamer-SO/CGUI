@@ -11,7 +11,7 @@ bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp, cg_var_t *p_var) 
 	VkBufferCreateInfo vk_buff_create_info = {
 		.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
 		.pNext = VK_NULL_HANDLE,
-		.size = MEMORY_POOL_SIZE,
+		.size = p_mp->size,
 		.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 		.sharingMode = VK_SHARING_MODE_EXCLUSIVE,
 		.queueFamilyIndexCount = 0,

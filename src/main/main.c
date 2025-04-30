@@ -37,6 +37,7 @@ MAIN {
 		PRINT_ERROR("initialize fail!\n");
 		goto destroy_memory_pool;
 	}
+#if 0
 	cg_gpu_memory_pool_var_t gpu_memory_pool_var = {
 		.memory_pool = VK_DEVICE_ADDR_NULL,
 		.size = MEMORY_POOL_SIZE,
@@ -54,6 +55,7 @@ MAIN {
 		var.p_gpu_memory_pool_var = &gpu_memory_pool_var;
 		PRINT_LOG("create gpu_memory_pool_var success!\n");
 	}
+#endif
 	cg_event_loop(&var);
 destroy_gpu_memory_pool:
 destroy_var:

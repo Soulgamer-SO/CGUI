@@ -22,7 +22,6 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_mp) {
 	return true;
 }
 
-
 void *cg_alloc_memory(cg_memory_pool_var_t *p_mp, size_t size) {
 	size_t node_and_mem_size = sizeof(cg_memory_node_t) + size;
 	cg_memory_node_t *p_memory_node = nullptr;
