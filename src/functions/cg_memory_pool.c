@@ -73,15 +73,15 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_mp, size_t size) {
 			return p_memory_node->memory_addr;
 		}
 
-		/*如果last_memory_end_addr后面的内存空间不够,而且之前已经释放的内存块的大小足够容纳新内存块的大小,就优先利用这块之前已经被释放的内存块*/
+		/*如果last_memory_end_addr后面的内存空间不够,而且之前已经释放的内存块的大小足够容纳新内存块的大小,就优先利用之前已经被释放的内存块*/
 		bool is_free_mem_size_equ = false;
 		bool is_free_mem_size_bigger = false;
 		uint32_t i = 0;
 		for (i = 0; i < p_mp->free_memory_node_count; i++) {
-			if (p_mp->free_memory_node_addr_arry[i]->size == size) {
+			if (p_mp->free_memory_node_addr_arry[i] != nullptr && p_mp->free_memory_node_addr_arry[i]->size == size) {
 				is_free_mem_size_equ = true;
 				break;
-			} else if (p_mp->free_memory_node_addr_arry[i]->size > size) {
+			} else if (p_mp->free_memory_node_addr_arry[i] != nullptr && p_mp->free_memory_node_addr_arry[i]->size > size) {
 				is_free_mem_size_bigger = true;
 				break;
 			}
@@ -138,34 +138,38 @@ void cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr) {
 	if (p_memory_node->memory_addr == p_mp->last_memory_end_addr) {
 		// 而且该内存块的前一个内存块已被释放
 		if (p_prev_memory_node->is_used == false) {
-			size_t new_size = p_prev_memory_node->size + sizeof(cg_memory_node_t) + p_memory_node->size;
-			int32_t previous_mem_node_index = cg_get_memory_node_index(p_mp, p_prev_memory_node->memory_addr);
-			p_previous_mem_node->end_addr = p_memory_node->end_addr;
+			free_size = p_prev_memory_node->size + 2 * sizeof(cg_memory_node_t) + p_memory_node->size;
+			p_mp->last_memory_end_addr = p_prev_memory_node;
+			p_prev_memory_node = memset(p_prev_memory_node, 0, free_size);
+			int32_t prev_memory_node_index = cg_get_memory_node_index(p_mp, p_prev_memory_node->memory_addr);
+			cg_rm_one_p_memory_node(p_mp, prev_memory_node_index);
 			cg_rm_one_p_memory_node(p_mp, memory_node_index);
-			cg_rm_one_p_memory_node(p_mp, previous_mem_node_index);
+			p_mp->free_memory_node_count--;
 			p_mp->free_size += free_size;
 			return;
-		} else if (p_previous_mem_node->is_used == true) {
-			p_mp->last_memory_end_addr = p_memory_node->addr;
-			cg_rm_one_memory_node(p_mp, memory_node_index);
+		} else {
+			free_size = sizeof(cg_memory_node_t) + p_memory_node->size;
+			p_mp->last_memory_end_addr = p_memory_node;
+			p_memory_node = memset(p_memory_node, 0, free_size);
 			p_mp->free_size += free_size;
 			return;
 		}
 	}
 
-	// 如果该内存块的前一个内存块已被释放
-	if (p_previous_mem_node->is_used == false) {
-		p_previous_mem_node->end_addr = p_memory_node->end_addr;
-		cg_rm_one_memory_node(p_mp, memory_node_index);
+	// 如果该内存块的前一个内存块是空闲块,后一个不是
+	if (p_prev_memory_node->is_used == false && p_next_memory_node->is_used == true) {
+		free_size = sizeof(cg_memory_node_t) + p_memory_node->size;
+		size_t prev_memory_new_size = p_prev_memory_node->size + sizeof(cg_memory_node_t) + p_memory_node->size;
+		p_prev_memory_node->size = prev_memory_new_size;
 		p_mp->free_size += free_size;
 		return;
 	}
 
-	// 如果该内存块的后一个内存块已被释放
-	if (p_next_mem_node->is_used == false) {
-		p_memory_node->end_addr = p_next_mem_node->end_addr;
-		int32_t next_memory_node_index = -1;
-		cg_get_memory_node_index(p_mp, p_next_mem_node->addr, &next_memory_node_index);
+	// 如果该内存块的后一个内存块是空闲块,前一个不是
+	if (p_next_memory_node->is_used == false && p_prev_memory_node->is_used == true) {
+		free_size = p_memory_node->size + sizeof(cg_memory_node_t);
+		size_t memory_node_new_size = p_memory_node->size + sizeof(cg_memory_node_t) + p_next_memory_node->size;
+		int32_t next_memory_node_index = cg_get_memory_node_index(p_mp, next_memory_node_index);
 		cg_rm_one_memory_node(p_mp, next_memory_node_index);
 		p_memory_node->is_used = false;
 		p_mp->free_size += free_size;
@@ -173,8 +177,13 @@ void cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr) {
 	}
 
 	// 如果该内存块的前后内存块都没被释放
-	p_memory_node->is_used = false;
-	p_mp->free_size += free_size;
+	if (p_next_memory_node->is_used == true && p_prev_memory_node->is_used == true) {
+		p_memory_node->is_used = false;
+		cg_add_one_p_memory_node(p_mp, p_memory_node);
+		p_mp->free_memory_node_count++;
+		p_mp->free_size += free_size;
+	}
+
 	return;
 }
 
