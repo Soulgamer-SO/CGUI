@@ -3,7 +3,7 @@
 bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 	p_var->logic_device_var.queue_family_count = 0;
 	PFN_vkGetPhysicalDeviceQueueFamilyProperties get_physical_device_queue_family_properties = nullptr;
-	get_physical_device_queue_family_properties = (PFN_vkGetPhysicalDeviceQueueFamilyProperties)p_var->library_var.get_instance_proc_addr(
+	get_physical_device_queue_family_properties = (PFN_vkGetPhysicalDeviceQueueFamilyProperties)p_var->library_var.vk_get_instance_proc_addr(
 		p_var->instance_var.vk_instance, "vkGetPhysicalDeviceQueueFamilyProperties");
 	if (get_physical_device_queue_family_properties == nullptr) {
 		PRINT_ERROR("load vkGetPhysicalDeviceQueueFamilyProperties fail");

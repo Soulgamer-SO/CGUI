@@ -24,9 +24,9 @@ typedef struct library_var {
 #endif // _WIN32
 
 	// 加载实例函数的函数 PFN_vkGetInstanceProcAddr
-	PFN_vkGetInstanceProcAddr get_instance_proc_addr;
+	PFN_vkGetInstanceProcAddr vk_get_instance_proc_addr;
 	// 加载逻辑设备函数的函数 PFN_vkGetDeviceProcAddr
-	PFN_vkGetDeviceProcAddr get_device_proc_addr;
+	PFN_vkGetDeviceProcAddr vk_get_device_proc_addr;
 } library_var_t;
 
 // instance
