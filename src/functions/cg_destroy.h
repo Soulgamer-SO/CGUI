@@ -14,7 +14,7 @@ void cg_destroy_swapchain(cg_var_t *p_var, VkSwapchainKHR swapchain);
 // 销毁命令池
 void cg_destroy_command_pool(cg_var_t *p_var, VkCommandPool command_pool);
 
-// 销毁和退出
-void cg_destroy_and_exit(cg_var_t *p_var);
+// 销毁
+void cg_destroy(cg_var_t *p_var);
 
 #endif // CG_DESTROY_H 1

@@ -49,15 +49,15 @@ MAIN {
 		.vk_device_memory = VK_NULL_HANDLE};
 	if (cg_create_gpu_memory_pool(&gpu_memory_pool_var, &var) == false) {
 		PRINT_ERROR("create gpu_memory_pool_var fail!\n");
-		goto destroy_and_exit;
+		goto destroy_var;
 	} else {
 		var.p_gpu_memory_pool_var = &gpu_memory_pool_var;
 		PRINT_LOG("create gpu_memory_pool_var success!\n");
 	}
 	cg_event_loop(&var);
-destroy_and_exit:
-	cg_destroy_and_exit(&var);
 destroy_gpu_memory_pool:
+destroy_var:
+	cg_destroy(&var);
 destroy_memory_pool:
 	free(memory_pool_var.memory_pool);
 	memory_pool_var.memory_pool = nullptr;

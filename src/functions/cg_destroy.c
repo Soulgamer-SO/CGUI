@@ -38,7 +38,7 @@ void cg_destroy_command_pool(cg_var_t *p_var, VkCommandPool command_pool) {
 	return;
 }
 
-void cg_destroy_and_exit(cg_var_t *p_var) {
+void cg_destroy(cg_var_t *p_var) {
 #ifdef VK_USE_PLATFORM_XCB_KHR
 	xcb_disconnect(p_var->wsi_var.xcb_surface_create_info.connection);
 #endif // VK_USE_PLATFORM_XCB_KHR
