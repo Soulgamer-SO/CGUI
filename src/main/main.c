@@ -35,7 +35,7 @@ MAIN {
 	is_init = cg_initialize_var(&var);
 	if (is_init == false) {
 		PRINT_ERROR("initialize fail!\n");
-		goto destroy_gpu_memory_pool;
+		goto destroy_memory_pool;
 	}
 	cg_gpu_memory_pool_var_t gpu_memory_pool_var = {
 		.memory_pool = VK_DEVICE_ADDR_NULL,
