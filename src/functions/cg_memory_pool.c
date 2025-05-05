@@ -187,6 +187,7 @@ void cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr) {
 	return;
 }
 
+#if DEBUG
 void *cg_realloc_memory(cg_memory_pool_var_t *p_mp, void *memory_addr, size_t size) {
 	if ((size + sizeof(cg_memory_node_t)) > p_mp->free_size) {
 		PRINT_ERROR("fail! the size is too large!\n");
@@ -200,7 +201,9 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_mp, void *memory_addr, size_t si
 		cg_free_memory(p_mp, memory_addr);
 		return nullptr;
 	}
-	cg_memory_node_t *p_memory_node = cg_get_memory_node_addr(p_mp, memory_addr, nullptr);
+	cg_memory_node_t *p_memory_node = (cg_memory_node_t *)(memory_addr - sizeof(cg_memory_node_t));
+	cg_memory_node_t *p_prev_memory_node = p_memory_node->prev_memory_node_addr;
+	cg_memory_node_t *p_next_memory_node = (cg_memory_node_t *)(memory_addr + p_memory_node->size);
 	size_t old_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
 	if (size < old_size) {
 		// 如果该内存块排在最后尾
@@ -237,6 +240,7 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_mp, void *memory_addr, size_t si
 
 	return memory_addr;
 }
+#endif
 
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_mp, void *memory_addr) {
 	if (memory_addr < p_mp->memory_pool || memory_addr >= p_mp->memory_pool + p_mp->size) {
