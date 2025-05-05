@@ -1,6 +1,6 @@
 #include "cg_gpu_memory_pool.h"
 
-bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp, cg_var_t *p_var) {
+bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp) {
 	if (p_mp->size < sizeof(cg_memory_node_t)) {
 		PRINT_ERROR("memory pool size should more bigger!\n");
 		return false;
@@ -39,6 +39,6 @@ bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp, cg_var_t *p_var) 
 	}
 }
 
-void *cg_alloc_gpu_memory(cg_gpu_memory_pool_var_t *p_mp, cg_var_t *p_var, size_t size) {
+void *cg_alloc_gpu_memory(cg_gpu_memory_pool_var_t *p_mp, size_t size) {
 	;
 }
