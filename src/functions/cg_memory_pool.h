@@ -34,12 +34,12 @@ typedef struct cg_memory_pool_var {
 
 // 记录内存块的信息的节点,节点本身位置在内存块的前面
 typedef struct cg_memory_node {
+	// 表示内存块是否被使用
+	bool is_used;
 	// 内存块地址
 	void *memory_addr;
 	// 内存块大小(不包含内存信息节点本身)
 	size_t size;
-	// 表示内存块是否被使用
-	bool is_used;
 	// 记录上一个内存块信息节点的地址
 	cg_memory_node_t *prev_memory_node_addr;
 } cg_memory_node_t;
