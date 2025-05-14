@@ -18,8 +18,9 @@ MAIN {
 		.last_memory_end_addr = nullptr,
 		.free_memory_node_count = 0,
 		.free_memory_node_addr_arry = nullptr};
+	memory_pool_var.memory_pool = calloc(1, memory_pool_var.size);
+	memory_pool_var.free_memory_node_addr_arry = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
-		PRINT_ERROR("create memory_pool_var fail!\n");
 		goto exit;
 	} else {
 		var.p_memory_pool_var = &memory_pool_var;
