@@ -1,5 +1,6 @@
 #ifndef CG_VAR_H
 #define CG_VAR_H 1
+#include "cg_gpu_memory_pool.h"
 #include "cg_memory_pool.h"
 #include <stdint.h>
 #include <stdio.h>

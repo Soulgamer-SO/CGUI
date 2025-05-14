@@ -202,10 +202,10 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_mp, void *memory_addr, size_t si
 	cg_memory_node_t *p_memory_node = (cg_memory_node_t *)(memory_addr - sizeof(cg_memory_node_t));
 	cg_memory_node_t *p_prev_memory_node = p_memory_node->prev_memory_node_addr;
 	cg_memory_node_t *p_next_memory_node = (cg_memory_node_t *)(memory_addr + p_memory_node->size);
-	size_t old_size = (size_t)(p_memory_node->end_addr - p_memory_node->addr);
+	size_t old_size = p_memory_node->size;
 	if (size < old_size) {
 		// 如果该内存块排在最后尾
-		if (p_memory_node->end_addr == p_mp->last_memory_end_addr) {
+		if (memory_addr + p_memory_node->size == p_mp->last_memory_end_addr) {
 			p_memory_node->end_addr = p_mp->last_memory_end_addr - (old_size - size);
 			p_mp->last_memory_end_addr = p_memory_node->end_addr;
 			p_mp->free_size += (old_size - size);
