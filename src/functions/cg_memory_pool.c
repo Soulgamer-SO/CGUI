@@ -85,6 +85,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_mp, size_t size) {
 			}
 		}
 		p_memory_node = p_mp->free_memory_node_addr_arry[i];
+		// 如果大小和即将申请的内存块大小一样
 		if (is_free_mem_size_equ == true) {
 			p_mp->free_memory_node_addr_arry[i]->is_used = true;
 			p_mp->free_size -= p_memory_node->size;
@@ -98,12 +99,27 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_mp, size_t size) {
 			PRINT_LOG("===================================================================\n");
 			return p_memory_node->memory_addr;
 		} else if (is_free_mem_size_bigger == true) {
+			// 如果大小比即将申请的内存块只小一点点,且内存块被分割后剩余容量不够放内存信息节点和空闲内存块
+			if (p_memory_node->size - size <= sizeof(cg_memory_node_t)) {
+				p_memory_node->is_used = true;
+				p_mp->free_size -= p_memory_node->size;
+				cg_rm_one_p_memory_node(p_mp, i);
+				PRINT_LOG("============================memory pool============================\n");
+				PRINT_LOG("memory_pool = %p;\n", p_mp->memory_pool);
+				PRINT_LOG("memory_pool_size = %zu;\n", p_mp->size);
+				PRINT_LOG("memory block size = %zu;\n", size);
+				PRINT_LOG("memory block addr = %p;\n", p_memory_node->memory_addr);
+				PRINT_LOG("free_size = %zu;\n", p_mp->free_size);
+				PRINT_LOG("===================================================================\n");
+				return p_memory_node->memory_addr;
+			}
 			cg_memory_node_t *p_new_free_mem_node = (cg_memory_node_t *)(p_memory_node->memory_addr + size);
 			p_new_free_mem_node->memory_addr = p_memory_node->memory_addr + size + sizeof(cg_memory_node_t);
 			p_new_free_mem_node->size = p_memory_node->size - size;
 			p_new_free_mem_node->is_used = false;
 			p_new_free_mem_node->prev_memory_node_addr = p_memory_node;
 			cg_add_one_p_memory_node(p_mp, p_new_free_mem_node);
+			cg_rm_one_p_memory_node(p_mp, i);
 			p_memory_node->size = size;
 			p_memory_node->is_used = true;
 			p_mp->free_size -= node_and_mem_size;
@@ -206,23 +222,16 @@ void *cg_realloc_memory(cg_memory_pool_var_t *p_mp, void *memory_addr, size_t si
 	if (size < old_size) {
 		// 如果该内存块排在最后尾
 		if (memory_addr + p_memory_node->size == p_mp->last_memory_end_addr) {
-			p_memory_node->end_addr = p_mp->last_memory_end_addr - (old_size - size);
-			p_mp->last_memory_end_addr = p_memory_node->end_addr;
+			p_memory_node->size = size;
+			p_mp->last_memory_end_addr = memory_addr + p_memory_node->size;
 			p_mp->free_size += (old_size - size);
 			return memory_addr;
 		}
-		cg_add_one_memory_node(
-			p_mp,
-			(cg_memory_node_t){
-				.addr = p_memory_node->end_addr - (old_size - size),
-				.end_addr = p_memory_node->end_addr,
-				.is_used = false});
 		p_mp->free_size += (old_size - size);
 		return memory_addr;
-	}
-	if (size > old_size) {
+	} else if (size > old_size) {
 		// 如果该内存块排在最后尾
-		if (p_memory_node->end_addr == p_mp->last_memory_end_addr) {
+		if (memory_addr + p_memory_node->size == p_mp->last_memory_end_addr) {
 			p_memory_node->end_addr = p_mp->last_memory_end_addr + (size - old_size);
 			p_mp->last_memory_end_addr = p_memory_node->end_addr;
 			p_mp->free_size -= (size - old_size);
