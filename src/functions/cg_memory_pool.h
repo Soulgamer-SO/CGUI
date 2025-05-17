@@ -54,11 +54,6 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_mp, size_t size);
 // 释放指定内存块
 void cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr);
 
-#if DEBUG
-// 使用内存池，给指定内存块重新分配内存,如果成功该函数会返回新地址，失败就返回nullptr
-void *cg_realloc_memory(cg_memory_pool_var_t *p_mp, void *memory_addr, size_t size);
-#endif
-
 // 如果成功该函数返回内存块占用大小
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_mp, void *memory_addr);
 

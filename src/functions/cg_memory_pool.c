@@ -201,54 +201,6 @@ void cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr) {
 	return;
 }
 
-#if DEBUG
-void *cg_realloc_memory(cg_memory_pool_var_t *p_mp, void *memory_addr, size_t size) {
-	if ((size + sizeof(cg_memory_node_t)) > p_mp->free_size) {
-		PRINT_ERROR("fail! the size is too large!\n");
-		return memory_addr;
-	}
-	if (memory_addr < p_mp->memory_pool || memory_addr >= p_mp->memory_pool + p_mp->size || memory_addr == nullptr) {
-		PRINT_ERROR("this memory is not in the memory pool!\n");
-		return memory_addr;
-	}
-	if (size == 0) {
-		cg_free_memory(p_mp, memory_addr);
-		return nullptr;
-	}
-	cg_memory_node_t *p_memory_node = (cg_memory_node_t *)(memory_addr - sizeof(cg_memory_node_t));
-	cg_memory_node_t *p_prev_memory_node = p_memory_node->prev_memory_node_addr;
-	cg_memory_node_t *p_next_memory_node = (cg_memory_node_t *)(memory_addr + p_memory_node->size);
-	size_t old_size = p_memory_node->size;
-	if (size < old_size) {
-		// 如果该内存块排在最后尾
-		if (memory_addr + p_memory_node->size == p_mp->last_memory_end_addr) {
-			p_memory_node->size = size;
-			p_mp->last_memory_end_addr = memory_addr + p_memory_node->size;
-			p_mp->free_size += (old_size - size);
-			return memory_addr;
-		}
-		p_mp->free_size += (old_size - size);
-		return memory_addr;
-	} else if (size > old_size) {
-		// 如果该内存块排在最后尾
-		if (memory_addr + p_memory_node->size == p_mp->last_memory_end_addr) {
-			p_memory_node->end_addr = p_mp->last_memory_end_addr + (size - old_size);
-			p_mp->last_memory_end_addr = p_memory_node->end_addr;
-			p_mp->free_size -= (size - old_size);
-			return memory_addr;
-		}
-		void *new_memory_addr = cg_alloc_memory(p_mp, size);
-		if (new_memory_addr != nullptr) {
-			memmove(new_memory_addr, memory_addr, old_size);
-			cg_free_memory(p_mp, memory_addr);
-			return new_memory_addr;
-		}
-	}
-
-	return memory_addr;
-}
-#endif
-
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_mp, void *memory_addr) {
 	if (memory_addr < p_mp->memory_pool || memory_addr >= p_mp->memory_pool + p_mp->size) {
 		PRINT_ERROR("this memory is not in the memory pool!\n");
