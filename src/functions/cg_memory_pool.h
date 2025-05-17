@@ -8,9 +8,22 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024
+#define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024UL
 #define MAX_FREE_MEM_NODE_COUNT 4 * 1024
 #define VK_DEVICE_ADDR_NULL 0
+
+// 记录内存块的信息的节点,节点本身位置在内存块的前面
+struct cg_memory_node {
+	// 表示内存块是否被使用
+	bool is_used;
+	// 内存块地址
+	void *memory_addr;
+	// 内存块大小(不包含内存信息节点本身)
+	size_t size;
+	// 记录上一个内存块信息节点的地址
+	struct cg_memory_node *prev_memory_node_addr;
+};
+typedef struct cg_memory_node cg_memory_node_t;
 
 // 用来记录内存池信息(侵入式内存池),可以根据情况再创建各自独立的多个内存池
 typedef struct cg_memory_pool_var {
@@ -32,18 +45,6 @@ typedef struct cg_memory_pool_var {
 	cg_memory_node_t **free_memory_node_addr_arry;
 } cg_memory_pool_var_t;
 
-// 记录内存块的信息的节点,节点本身位置在内存块的前面
-typedef struct cg_memory_node {
-	// 表示内存块是否被使用
-	bool is_used;
-	// 内存块地址
-	void *memory_addr;
-	// 内存块大小(不包含内存信息节点本身)
-	size_t size;
-	// 记录上一个内存块信息节点的地址
-	cg_memory_node_t *prev_memory_node_addr;
-} cg_memory_node_t;
-
 /*创建内存池(侵入式内存池)
 注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池*/
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_mp);
@@ -54,7 +55,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_mp, size_t size);
 // 释放指定内存块
 void cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr);
 
-// 如果成功该函数返回内存块占用大小
+// 如果成功该函数返回内存块占用大小,失败就返回0
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_mp, void *memory_addr);
 
 // 如果成功,参数返回信息节点列表元素的索引,失败就返回-1

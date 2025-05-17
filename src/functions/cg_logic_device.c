@@ -141,7 +141,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 
 	// create logic device
 	PFN_vkCreateDevice create_device = nullptr;
-	create_device = (PFN_vkCreateDevice)p_var->library_var.get_instance_proc_addr(
+	create_device = (PFN_vkCreateDevice)p_var->library_var.vk_get_instance_proc_addr(
 		p_var->instance_var.vk_instance, "vkCreateDevice");
 	if (create_device == nullptr) {
 		PRINT_ERROR("load vkCreateDevice device fail!\n");
@@ -167,7 +167,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 
 	// 获取队列的句柄
 	PFN_vkGetDeviceQueue get_device_queue = nullptr;
-	get_device_queue = (PFN_vkGetDeviceQueue)p_var->library_var.get_device_proc_addr(
+	get_device_queue = (PFN_vkGetDeviceQueue)p_var->library_var.vk_get_device_proc_addr(
 		*p_vk_logic_device, "vkGetDeviceQueue");
 	if (get_device_queue == nullptr) {
 		PRINT_ERROR("load vkGetDeviceQueue fail!\n");

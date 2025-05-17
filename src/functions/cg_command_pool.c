@@ -8,7 +8,7 @@ bool cg_create_command_pool(cg_var_t *p_var, VkCommandPool *p_command_pool) {
 		.queueFamilyIndex = p_var->logic_device_var.graphic_queue_family_index};
 
 	PFN_vkCreateCommandPool create_command_pool = nullptr;
-	create_command_pool = (PFN_vkCreateCommandPool)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateCommandPool");
+	create_command_pool = (PFN_vkCreateCommandPool)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateCommandPool");
 	if (create_command_pool == nullptr) {
 		PRINT_ERROR("load vkCreateCommandPool fail!\n");
 		return false;
@@ -39,7 +39,7 @@ void cg_create_command_buffer_arry(cg_var_t *p_var, VkCommandPool command_pool, 
 		.commandBufferCount = command_buffer_count};
 
 	PFN_vkAllocateCommandBuffers allocate_command_buffers = nullptr;
-	allocate_command_buffers = (PFN_vkAllocateCommandBuffers)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkAllocateCommandBuffers");
+	allocate_command_buffers = (PFN_vkAllocateCommandBuffers)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkAllocateCommandBuffers");
 	if (allocate_command_buffers == nullptr) {
 		PRINT_ERROR("load vkAllocateCommandBuffers fail!\n");
 		return;
@@ -64,7 +64,7 @@ void cg_begin_record_command_buffer(cg_var_t *p_var, VkCommandBuffer command_buf
 		.pInheritanceInfo = nullptr};
 
 	PFN_vkBeginCommandBuffer vkBeginCommandBuffer = nullptr;
-	vkBeginCommandBuffer = (PFN_vkBeginCommandBuffer)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkBeginCommandBuffer");
+	vkBeginCommandBuffer = (PFN_vkBeginCommandBuffer)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkBeginCommandBuffer");
 	if (vkBeginCommandBuffer == nullptr) {
 		PRINT_ERROR("load vkBeginCommandBuffer fail!\n");
 		return;
@@ -81,7 +81,7 @@ void cg_begin_record_command_buffer(cg_var_t *p_var, VkCommandBuffer command_buf
 
 void cg_end_record_command_buffer(cg_var_t *p_var, VkCommandBuffer command_buffer) {
 	PFN_vkEndCommandBuffer vkEndCommandBuffer = nullptr;
-	vkEndCommandBuffer = (PFN_vkEndCommandBuffer)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkEndCommandBuffer");
+	vkEndCommandBuffer = (PFN_vkEndCommandBuffer)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkEndCommandBuffer");
 	if (vkEndCommandBuffer == nullptr) {
 		PRINT_ERROR("load vkEndCommandBuffer fail!\n");
 		return;
@@ -98,7 +98,7 @@ void cg_end_record_command_buffer(cg_var_t *p_var, VkCommandBuffer command_buffe
 
 void cg_reset_command_buffer(cg_var_t *p_var, VkCommandBuffer command_buffer, VkCommandBufferResetFlags command_buffer_reset_flag) {
 	PFN_vkResetCommandBuffer vkResetCommandBuffer = nullptr;
-	vkResetCommandBuffer = (PFN_vkResetCommandBuffer)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkResetCommandBuffer");
+	vkResetCommandBuffer = (PFN_vkResetCommandBuffer)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkResetCommandBuffer");
 	if (vkResetCommandBuffer == nullptr) {
 		PRINT_ERROR("load vkResetCommandBuffer fail!\n");
 		return;
@@ -115,7 +115,7 @@ void cg_reset_command_buffer(cg_var_t *p_var, VkCommandBuffer command_buffer, Vk
 
 void cg_reset_command_pool(cg_var_t *p_var, VkCommandPool command_pool, VkCommandBufferResetFlags command_buffer_reset_flag) {
 	PFN_vkResetCommandPool vkResetCommandPool = nullptr;
-	vkResetCommandPool = (PFN_vkResetCommandPool)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkResetCommandPool");
+	vkResetCommandPool = (PFN_vkResetCommandPool)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkResetCommandPool");
 	if (vkResetCommandPool == nullptr) {
 		PRINT_ERROR("load vkResetCommandPool fail!\n");
 		return;

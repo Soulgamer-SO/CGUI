@@ -39,7 +39,7 @@ bool cg_select_swapchain(cg_var_t *p_var) {
 
 	// 获得支持的交换链图像的格式的列表
 	PFN_vkGetPhysicalDeviceSurfaceFormatsKHR get_physical_device_surface_formats = nullptr;
-	get_physical_device_surface_formats = (PFN_vkGetPhysicalDeviceSurfaceFormatsKHR)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceSurfaceFormatsKHR");
+	get_physical_device_surface_formats = (PFN_vkGetPhysicalDeviceSurfaceFormatsKHR)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceSurfaceFormatsKHR");
 	if (get_physical_device_surface_formats == nullptr) {
 		PRINT_ERROR("load vkGetPhysicalDeviceSurfaceFormatsKHR fail!\n");
 		return false;
@@ -98,7 +98,7 @@ bool cg_select_swapchain(cg_var_t *p_var) {
 
 bool cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain) {
 	PFN_vkCreateSwapchainKHR create_swapchain = nullptr;
-	create_swapchain = (PFN_vkCreateSwapchainKHR)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateSwapchainKHR");
+	create_swapchain = (PFN_vkCreateSwapchainKHR)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateSwapchainKHR");
 	if (create_swapchain == nullptr) {
 		PRINT_ERROR("load vkCreateSwapchainKHR fail!\n");
 		return false;
@@ -137,7 +137,7 @@ bool cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain) {
 
 	// 获得交换链图像的列表
 	PFN_vkGetSwapchainImagesKHR get_swapchain_image_arry = nullptr;
-	get_swapchain_image_arry = (PFN_vkGetSwapchainImagesKHR)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkGetSwapchainImagesKHR");
+	get_swapchain_image_arry = (PFN_vkGetSwapchainImagesKHR)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkGetSwapchainImagesKHR");
 	if (get_swapchain_image_arry == nullptr) {
 		PRINT_ERROR("load vkGetSwapchainImagesKHR fail!\n");
 		return false;
@@ -172,7 +172,7 @@ bool cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain) {
 
 	// 获得下个用于显示的图像的索引
 	PFN_vkAcquireNextImageKHR acquire_next_image = nullptr;
-	acquire_next_image = (PFN_vkAcquireNextImageKHR)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkAcquireNextImageKHR");
+	acquire_next_image = (PFN_vkAcquireNextImageKHR)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkAcquireNextImageKHR");
 	if (acquire_next_image == nullptr) {
 		PRINT_ERROR("load vkAcquireNextImageKHR fail!\n");
 		return false;
@@ -199,7 +199,7 @@ bool cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain) {
 bool cg_select_present_mode(cg_var_t *p_var) {
 	p_var->wsi_var.present_mode_count = 0;
 	PFN_vkGetPhysicalDeviceSurfacePresentModesKHR get_physical_device_surface_present_modes = nullptr;
-	get_physical_device_surface_present_modes = (PFN_vkGetPhysicalDeviceSurfacePresentModesKHR)p_var->library_var.get_instance_proc_addr(
+	get_physical_device_surface_present_modes = (PFN_vkGetPhysicalDeviceSurfacePresentModesKHR)p_var->library_var.vk_get_instance_proc_addr(
 		p_var->instance_var.vk_instance, "vkGetPhysicalDeviceSurfacePresentModesKHR");
 	if (get_physical_device_surface_present_modes == nullptr) {
 		PRINT_ERROR("load vkGetPhysicalDeviceSurfacePresentModesKHR fail!\n");
@@ -275,7 +275,7 @@ bool cg_select_present_mode(cg_var_t *p_var) {
 
 	// 获得支持的显示功能
 	PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR get_physical_device_surface_capabilities = nullptr;
-	get_physical_device_surface_capabilities = (PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
+	get_physical_device_surface_capabilities = (PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
 	if (get_physical_device_surface_capabilities == nullptr) {
 		PRINT_ERROR("load vkGetPhysicalDeviceSurfaceCapabilitiesKHR fail!\n");
 		return false;

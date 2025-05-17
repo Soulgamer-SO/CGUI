@@ -46,7 +46,7 @@ bool cg_create_window(cg_var_t *p_var) {
 			.background_pixel = cg_change_RGB_color(255, 0, 0),
 			.event_mask = XCB_EVENT_MASK_EXPOSURE});
 	PFN_vkCreateXcbSurfaceKHR create_xcb_surface = nullptr;
-	create_xcb_surface = (PFN_vkCreateXcbSurfaceKHR)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkCreateXcbSurfaceKHR");
+	create_xcb_surface = (PFN_vkCreateXcbSurfaceKHR)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkCreateXcbSurfaceKHR");
 	if (create_xcb_surface == nullptr) {
 		PRINT_ERROR("load vkCreateXcbSurfaceKHR fail!\n");
 		return false;

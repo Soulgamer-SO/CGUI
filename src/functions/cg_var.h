@@ -1,6 +1,5 @@
 #ifndef CG_VAR_H
 #define CG_VAR_H 1
-#include "cg_gpu_memory_pool.h"
 #include "cg_memory_pool.h"
 #include <stdint.h>
 #include <stdio.h>
@@ -222,7 +221,6 @@ typedef struct event_loop_var {
 // var of project
 typedef struct cg_var {
 	cg_memory_pool_var_t *p_memory_pool_var;
-	cg_gpu_memory_pool_var_t *p_gpu_memory_pool_var;
 	library_var_t library_var;
 	vk_instance_var_t instance_var;
 	vk_physical_device_var_t physical_device_var;

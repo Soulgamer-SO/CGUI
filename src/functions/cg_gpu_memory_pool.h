@@ -2,16 +2,12 @@
 #define CG_GPU_MEMORY_POOL_H 1
 #include "cg_log.h"
 #include "cg_var.h"
-#include <stdint.h>
-#ifdef __linux
-#include <alloca.h>
-#endif // __linux
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <vulkan/vulkan.h>
-#define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024
-#define MAX_FREE_MEM_NODE_COUNT 4 * 1024
+#define GPU_MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024UL
 #define VK_DEVICE_ADDR_NULL 0
 
 // 用来记录GPU内存池信息(侵入式内存池,依赖VulkanAPI),可以根据情况再创建各自独立的多个内存池
@@ -34,7 +30,6 @@ typedef struct cg_gpu_memory_pool_var {
 	VkDeviceAddress *free_memory_node_addr_arry;
 	// Vulkan 显存句柄
 	VkDeviceMemory vk_device_memory;
-	cg_var_t *p_var;
 } cg_gpu_memory_pool_var_t;
 
 // 记录GPU内存块的信息的节点,节点本身位置在内存块的前面
@@ -51,10 +46,10 @@ typedef struct cg_gpu_memory_node {
 
 /*创建内存池(侵入式内存池)
 注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池*/
-bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp);
+bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp, cg_var_t *vk_var);
 
 // 使用内存池，分配指定大小的内存块
-void *cg_alloc_gpu_memory(cg_gpu_memory_pool_var_t *p_mp, size_t size);
+VkDeviceAddress cg_alloc_gpu_memory(cg_gpu_memory_pool_var_t *p_mp, size_t size);
 
 // 释放指定内存块
 void cg_free_gpu_memory(cg_gpu_memory_pool_var_t *p_mp, void *memory_addr);
@@ -66,7 +61,7 @@ size_t cg_get_gpu_memory_size(cg_gpu_memory_pool_var_t *p_mp, void *memory_addr)
 int32_t cg_get_gpu_memory_node_index(cg_gpu_memory_pool_var_t *p_mp, void *memory_addr);
 
 // 信息节点地址的列表末尾添加一个元素
-bool cg_add_one_p_gpu_memory_node(cg_gpu_memory_pool_var_t *p_mp, cg_memory_node_t *p_memory_node);
+bool cg_add_one_p_gpu_memory_node(cg_gpu_memory_pool_var_t *p_mp, cg_gpu_memory_node_t *p_memory_node);
 
 // 删除信息节点地址的列表中一个元素(末尾交换法)
 bool cg_rm_one_p_gpu_memory_node(cg_gpu_memory_pool_var_t *p_mp, uint32_t index);

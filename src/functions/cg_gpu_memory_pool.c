@@ -1,7 +1,7 @@
 #include "cg_gpu_memory_pool.h"
 
-bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp) {
-	if (p_mp->size < sizeof(cg_memory_node_t)) {
+bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp, cg_var_t *p_var) {
+	if (p_mp->size < sizeof(cg_gpu_memory_node_t)) {
 		PRINT_ERROR("memory pool size should more bigger!\n");
 		return false;
 	}
@@ -21,8 +21,8 @@ bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp) {
 		if (p_var->library_var.vk_result != VK_SUCCESS) {
 			PRINT_ERROR("create vk_create_buffer fail!\n");
 		}
-		p_mp->memory_pool = calloc(1, p_mp->size);
-		p_mp->free_memory_node_addr_arry = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
+		// p_mp->memory_pool = calloc(1, p_mp->size);
+		// p_mp->free_memory_node_addr_arry = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
 		if (p_mp->memory_pool == VK_DEVICE_ADDR_NULL || p_mp->free_memory_node_addr_arry == VK_DEVICE_ADDR_NULL) {
 			PRINT_ERROR("create memory pool fail!\n");
 			return false;
@@ -31,14 +31,16 @@ bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp) {
 		p_mp->memory_count = 0;
 		PRINT_LOG("============================memory pool============================\n");
 		PRINT_LOG("create memory_pool success!\n");
-		PRINT_LOG("memory_pool = %d;\n", p_mp->memory_pool);
+		PRINT_LOG("memory_pool = %ld;\n", p_mp->memory_pool);
 		PRINT_LOG("memory_pool_size = %zu;\n", p_mp->size);
-		PRINT_LOG("free_size = %d;\n", p_mp->free_size);
+		PRINT_LOG("free_size = %ld;\n", p_mp->free_size);
 		PRINT_LOG("===================================================================\n");
 		return true;
 	}
+
+	return false;
 }
 
-void *cg_alloc_gpu_memory(cg_gpu_memory_pool_var_t *p_mp, size_t size) {
-	;
+VkDeviceAddress cg_alloc_gpu_memory(cg_gpu_memory_pool_var_t *p_mp, size_t size) {
+	return 0;
 }

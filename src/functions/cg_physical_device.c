@@ -3,7 +3,7 @@
 bool cg_enumerate_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_count, VkPhysicalDevice *available_physical_device_arry) {
 	// 确认可用物理设备句柄名单之前，先加载实例级函数 PFN_vkEnumeratePhysicalDevices()
 	PFN_vkEnumeratePhysicalDevices enumerate_physical_devices = nullptr;
-	enumerate_physical_devices = (PFN_vkEnumeratePhysicalDevices)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkEnumeratePhysicalDevices");
+	enumerate_physical_devices = (PFN_vkEnumeratePhysicalDevices)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkEnumeratePhysicalDevices");
 	if (enumerate_physical_devices == nullptr) {
 		PRINT_ERROR("load vkEnumeratePhysicalDevices fail!\n");
 		return false;
@@ -28,7 +28,7 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 	// 获取物理设备扩展列表
 	p_var->physical_device_var.physical_device_extensions_count = 0;
 	PFN_vkEnumerateDeviceExtensionProperties enumerate_device_extension_properties = nullptr;
-	enumerate_device_extension_properties = (PFN_vkEnumerateDeviceExtensionProperties)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkEnumerateDeviceExtensionProperties");
+	enumerate_device_extension_properties = (PFN_vkEnumerateDeviceExtensionProperties)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkEnumerateDeviceExtensionProperties");
 	if (enumerate_device_extension_properties == nullptr) {
 		PRINT_ERROR("load vkEnumerateDeviceExtensionProperties fail!\n");
 		return false;
@@ -41,7 +41,7 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 	}
 
 	PFN_vkGetPhysicalDeviceFeatures get_physical_device_features = nullptr;
-	get_physical_device_features = (PFN_vkGetPhysicalDeviceFeatures)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceFeatures");
+	get_physical_device_features = (PFN_vkGetPhysicalDeviceFeatures)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceFeatures");
 	if (get_physical_device_features == nullptr) {
 		PRINT_ERROR("load vkGetPhysicalDeviceFeatures fail!\n");
 		return false;
@@ -49,7 +49,7 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 
 	// 获取物理设备属性
 	PFN_vkGetPhysicalDeviceProperties get_physical_device_properties = nullptr;
-	get_physical_device_properties = (PFN_vkGetPhysicalDeviceProperties)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceProperties");
+	get_physical_device_properties = (PFN_vkGetPhysicalDeviceProperties)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceProperties");
 	if (get_physical_device_properties == nullptr) {
 		PRINT_ERROR("load vkGetPhysicalDeviceProperties fail!\n");
 		return false;
@@ -124,7 +124,7 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 
 	// 获取物理设备内存属性
 	PFN_vkGetPhysicalDeviceMemoryProperties get_physical_device_memory_properties = nullptr;
-	get_physical_device_memory_properties = (PFN_vkGetPhysicalDeviceMemoryProperties)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceMemoryProperties");
+	get_physical_device_memory_properties = (PFN_vkGetPhysicalDeviceMemoryProperties)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkGetPhysicalDeviceMemoryProperties");
 	if (get_physical_device_memory_properties != nullptr) {
 		get_physical_device_memory_properties(
 			p_var->physical_device_var.physical_device, &p_var->physical_device_var.physical_device_memory_properties);

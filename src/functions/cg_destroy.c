@@ -3,7 +3,7 @@
 void cg_destroy_instance(cg_var_t *p_var, VkInstance vk_instance) {
 	if (vk_instance != VK_NULL_HANDLE && p_var->instance_var.vk_instance != VK_NULL_HANDLE) {
 		PFN_vkDestroyInstance destroy_instance = nullptr;
-		destroy_instance = (PFN_vkDestroyInstance)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkDestroyInstance");
+		destroy_instance = (PFN_vkDestroyInstance)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkDestroyInstance");
 		if (destroy_instance != nullptr) {
 			destroy_instance(vk_instance, nullptr);
 		}
@@ -15,7 +15,7 @@ void cg_destroy_instance(cg_var_t *p_var, VkInstance vk_instance) {
 void cg_destroy_swapchain(cg_var_t *p_var, VkSwapchainKHR swapchain) {
 	if (swapchain != VK_NULL_HANDLE && p_var->logic_device_var.vk_logic_device != VK_NULL_HANDLE) {
 		PFN_vkDestroySwapchainKHR destroy_swapchain = nullptr;
-		destroy_swapchain = (PFN_vkDestroySwapchainKHR)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkDestroySwapchainKHR");
+		destroy_swapchain = (PFN_vkDestroySwapchainKHR)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkDestroySwapchainKHR");
 		if (destroy_swapchain != nullptr) {
 			destroy_swapchain(p_var->logic_device_var.vk_logic_device, swapchain, nullptr);
 		}
@@ -27,7 +27,7 @@ void cg_destroy_swapchain(cg_var_t *p_var, VkSwapchainKHR swapchain) {
 void cg_destroy_command_pool(cg_var_t *p_var, VkCommandPool command_pool) {
 	if (command_pool != VK_NULL_HANDLE && p_var->logic_device_var.vk_logic_device != VK_NULL_HANDLE) {
 		PFN_vkDestroyCommandPool destroy_command_pool = nullptr;
-		destroy_command_pool = (PFN_vkDestroyCommandPool)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkDestroyCommandPool");
+		destroy_command_pool = (PFN_vkDestroyCommandPool)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkDestroyCommandPool");
 		if (destroy_command_pool != nullptr) {
 			if (p_var->command_pool_var.command_pool != VK_NULL_HANDLE) {
 				destroy_command_pool(p_var->logic_device_var.vk_logic_device, p_var->command_pool_var.command_pool, nullptr);
@@ -71,14 +71,14 @@ destroy_command_pool:
 	p_var->command_pool_var.command_pool = VK_NULL_HANDLE;
 
 destroy_surface:
-	destroy_surface = (PFN_vkDestroySurfaceKHR)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkDestroySurfaceKHR");
+	destroy_surface = (PFN_vkDestroySurfaceKHR)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkDestroySurfaceKHR");
 	if (destroy_surface != nullptr) {
 		destroy_surface(p_var->instance_var.vk_instance, p_var->wsi_var.surface, nullptr);
 		p_var->wsi_var.surface = VK_NULL_HANDLE;
 	}
 
 destroy_device:
-	destroy_device = (PFN_vkDestroyDevice)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkDestroyDevice");
+	destroy_device = (PFN_vkDestroyDevice)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkDestroyDevice");
 	if (destroy_device != nullptr) {
 		if (p_var->logic_device_var.vk_logic_device != VK_NULL_HANDLE) {
 			destroy_device(p_var->logic_device_var.vk_logic_device, nullptr);

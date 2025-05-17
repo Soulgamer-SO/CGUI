@@ -5,21 +5,21 @@ bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
 
 	// 加载Vulkan全局函数 Vulkan只有三个全局函数 PFN_vkEnumerateInstanceExtensionProperties,PFN_vkEnumerateInstanceLayerProperties,PFN_vkCreateInstance
 	PFN_vkEnumerateInstanceExtensionProperties enumerate_instance_extension_properties = nullptr;
-	enumerate_instance_extension_properties = (PFN_vkEnumerateInstanceExtensionProperties)p_var->library_var.get_instance_proc_addr(nullptr, "vkEnumerateInstanceExtensionProperties");
+	enumerate_instance_extension_properties = (PFN_vkEnumerateInstanceExtensionProperties)p_var->library_var.vk_get_instance_proc_addr(nullptr, "vkEnumerateInstanceExtensionProperties");
 	if (enumerate_instance_extension_properties == nullptr) {
 		PRINT_ERROR("load vkEnumerateInstanceExtensionProperties fail!\n");
 		return false;
 	}
 
 	PFN_vkEnumerateInstanceLayerProperties enumerate_instance_layer_properties = nullptr;
-	enumerate_instance_layer_properties = (PFN_vkEnumerateInstanceLayerProperties)p_var->library_var.get_instance_proc_addr(nullptr, "vkEnumerateInstanceLayerProperties");
+	enumerate_instance_layer_properties = (PFN_vkEnumerateInstanceLayerProperties)p_var->library_var.vk_get_instance_proc_addr(nullptr, "vkEnumerateInstanceLayerProperties");
 	if (enumerate_instance_layer_properties == nullptr) {
 		PRINT_ERROR("load vkEnumerateInstanceLayerProperties fail!\n");
 		return false;
 	}
 
 	PFN_vkCreateInstance create_instance = nullptr;
-	create_instance = (PFN_vkCreateInstance)p_var->library_var.get_instance_proc_addr(nullptr, "vkCreateInstance");
+	create_instance = (PFN_vkCreateInstance)p_var->library_var.vk_get_instance_proc_addr(nullptr, "vkCreateInstance");
 	if (create_instance == nullptr) {
 		PRINT_ERROR("load vkCreateInstance fail!\n");
 		return false;

@@ -1,5 +1,6 @@
 #include "../functions/cg_destroy.h"
 #include "../functions/cg_event_loop.h"
+#include "../functions/cg_gpu_memory_pool.h"
 #include "../functions/cg_initialize.h"
 #include "../functions/cg_log.h"
 #include "../functions/cg_memory_pool.h"

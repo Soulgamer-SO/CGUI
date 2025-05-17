@@ -2,7 +2,7 @@
 
 void cg_create_semaphore(cg_var_t *p_var) {
 	PFN_vkCreateSemaphore create_semaphore = nullptr;
-	create_semaphore = (PFN_vkCreateSemaphore)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateSemaphore");
+	create_semaphore = (PFN_vkCreateSemaphore)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateSemaphore");
 	if (create_semaphore == nullptr) {
 		PRINT_ERROR("load vkCreateSemaphore fail!\n");
 		return;
@@ -25,7 +25,7 @@ void cg_create_semaphore(cg_var_t *p_var) {
 
 void cg_create_fence(cg_var_t *p_var) {
 	PFN_vkCreateFence vkCreateFence = nullptr;
-	vkCreateFence = (PFN_vkCreateFence)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateFence");
+	vkCreateFence = (PFN_vkCreateFence)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateFence");
 	if (vkCreateFence == nullptr) {
 		PRINT_ERROR("load vkCreateFence fail!\n");
 		return;
@@ -50,7 +50,7 @@ void cg_create_fence(cg_var_t *p_var) {
 
 void cg_wait_for_fences(cg_var_t *p_var) {
 	PFN_vkWaitForFences vkWaitForFences = nullptr;
-	vkWaitForFences = (PFN_vkWaitForFences)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkWaitForFences");
+	vkWaitForFences = (PFN_vkWaitForFences)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkWaitForFences");
 	if (vkWaitForFences == nullptr) {
 		PRINT_ERROR("load vkWaitForFences fail!\n");
 		return;
@@ -72,7 +72,7 @@ void cg_wait_for_fences(cg_var_t *p_var) {
 
 void cg_reset_for_fences(cg_var_t *p_var) {
 	PFN_vkResetFences vkResetFences = nullptr;
-	vkResetFences = (PFN_vkResetFences)p_var->library_var.get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkResetFences");
+	vkResetFences = (PFN_vkResetFences)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkResetFences");
 	if (nullptr == vkResetFences) {
 		PRINT_ERROR("load vkResetFences fail!\n");
 		return;
@@ -102,7 +102,7 @@ void cg_submit_command_buff_to_queue(cg_var_t *p_var) {
 		.pSignalSemaphores = nullptr //&p_var->sync_var.semaphore_arry[0]
 	};
 	PFN_vkQueueSubmit vkQueueSubmit = nullptr;
-	vkQueueSubmit = (PFN_vkQueueSubmit)p_var->library_var.get_device_proc_addr(
+	vkQueueSubmit = (PFN_vkQueueSubmit)p_var->library_var.vk_get_device_proc_addr(
 		p_var->logic_device_var.vk_logic_device, "vkQueueSubmit");
 	if (vkQueueSubmit == nullptr) {
 		PRINT_ERROR("load vkQueueSubmit fail!\n");
