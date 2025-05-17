@@ -177,6 +177,14 @@ void cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr) {
 		}
 	}
 
+	// 如果该内存块不排在最后尾,且该内存块的前后内存块都没被释放
+	if (p_next_memory_node->is_used == true && p_prev_memory_node->is_used == true) {
+		p_memory_node->is_used = false;
+		cg_add_one_p_memory_node(p_mp, p_memory_node);
+		p_mp->free_memory_node_count++;
+		p_mp->free_size += free_size;
+	}
+
 	// 如果该内存块不排在最后尾,且该内存块的前一个内存块是空闲块,后一个不是
 	if (p_prev_memory_node->is_used == false && p_next_memory_node->is_used == true) {
 		free_size = sizeof(cg_memory_node_t) + p_memory_node->size;
@@ -206,14 +214,6 @@ void cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr) {
 		p_memory_node->is_used = false;
 		p_mp->free_size += free_size;
 		return;
-	}
-
-	// 如果该内存块不排在最后尾,且该内存块的前后内存块都没被释放
-	if (p_next_memory_node->is_used == true && p_prev_memory_node->is_used == true) {
-		p_memory_node->is_used = false;
-		cg_add_one_p_memory_node(p_mp, p_memory_node);
-		p_mp->free_memory_node_count++;
-		p_mp->free_size += free_size;
 	}
 
 	return;
