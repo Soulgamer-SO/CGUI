@@ -57,18 +57,18 @@ bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp);
 void *cg_alloc_gpu_memory(cg_gpu_memory_pool_var_t *p_mp, size_t size);
 
 // 释放指定内存块
-void cg_free_gpu_memory(cg_memory_pool_var_t *p_mp, void *memory_addr);
+void cg_free_gpu_memory(cg_gpu_memory_pool_var_t *p_mp, void *memory_addr);
 
 // 如果成功该函数返回内存块占用大小
-size_t cg_get_gpu_memory_size(cg_memory_pool_var_t *p_mp, void *memory_addr);
+size_t cg_get_gpu_memory_size(cg_gpu_memory_pool_var_t *p_mp, void *memory_addr);
 
 // 如果成功,参数返回信息节点的索引,失败就返回-1
-int32_t cg_get_gpu_memory_node_index(cg_memory_pool_var_t *p_mp, void *memory_addr);
+int32_t cg_get_gpu_memory_node_index(cg_gpu_memory_pool_var_t *p_mp, void *memory_addr);
 
 // 信息节点地址的列表末尾添加一个元素
-bool cg_add_one_p_gpu_memory_node(cg_memory_pool_var_t *p_mp, cg_memory_node_t *p_memory_node);
+bool cg_add_one_p_gpu_memory_node(cg_gpu_memory_pool_var_t *p_mp, cg_memory_node_t *p_memory_node);
 
 // 删除信息节点地址的列表中一个元素(末尾交换法)
-bool cg_rm_one_p_gpu_memory_node(cg_memory_pool_var_t *p_mp, uint32_t index);
+bool cg_rm_one_p_gpu_memory_node(cg_gpu_memory_pool_var_t *p_mp, uint32_t index);
 
 #endif // CG_GPU_MEMORY_POOL_H 1
