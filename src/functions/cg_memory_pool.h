@@ -10,7 +10,6 @@
 #include <string.h>
 #define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024UL
 #define MAX_FREE_MEM_NODE_COUNT 4 * 1024
-#define VK_DEVICE_ADDR_NULL 0
 
 // 记录内存块的信息的节点,节点本身位置在内存块的前面
 struct cg_memory_node {
