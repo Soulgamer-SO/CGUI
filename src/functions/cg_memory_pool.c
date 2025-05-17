@@ -99,7 +99,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_mp, size_t size) {
 			PRINT_LOG("===================================================================\n");
 			return p_memory_node->memory_addr;
 		} else if (is_free_mem_size_bigger == true) {
-			// 如果大小比即将申请的内存块只小一点点,且内存块被分割后剩余容量不够放内存信息节点和空闲内存块
+			// 如果大小比即将申请的内存块只大一点点,且内存块被分割后剩余容量不够放内存信息节点和空闲内存块
 			if (p_memory_node->size - size <= sizeof(cg_memory_node_t)) {
 				p_memory_node->is_used = true;
 				p_mp->free_size -= p_memory_node->size;
