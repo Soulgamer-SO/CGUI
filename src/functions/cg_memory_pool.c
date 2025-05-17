@@ -119,6 +119,9 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_mp, size_t size) {
 			p_new_free_mem_node->is_used = false;
 			p_new_free_mem_node->prev_memory_node_addr = p_memory_node;
 			cg_add_one_p_memory_node(p_mp, p_new_free_mem_node);
+			// 更新这个新空闲块的下一个内存块的节点信息
+			cg_memory_node_t *p_new_free_mem_node_next_node = (cg_memory_node_t *)(p_new_free_mem_node->memory_addr + p_new_free_mem_node->size);
+			p_new_free_mem_node_next_node->prev_memory_node_addr = p_new_free_mem_node;
 			cg_rm_one_p_memory_node(p_mp, i);
 			p_memory_node->size = size;
 			p_memory_node->is_used = true;
