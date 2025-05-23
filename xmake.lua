@@ -20,9 +20,7 @@ if is_mode("debug") then
 end
 target("cgui-app")
     set_kind("binary")
-    if is_plat("linux") then
-        set_filename("cgui-app")
-    end
+    set_filename("cgui-app")
     if is_plat("windows") then
         set_filename("cgui-app.exe")
     end
