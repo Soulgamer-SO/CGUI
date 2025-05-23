@@ -37,7 +37,7 @@
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
-			"command": "xmake f -m debug && xmake",
+			"command": "xmake f --toolchain=gcc -m debug && xmake",
 			"group": "build",
 			"detail": "xmake debug"
 		},
@@ -47,7 +47,7 @@
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
-			"command": "xmake f -m release && xmake",
+			"command": "xmake f --toolchain=gcc -m release && xmake",
 			"group": "build",
 			"detail": "xmake release"
 		}
