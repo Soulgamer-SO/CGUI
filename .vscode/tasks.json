@@ -30,6 +30,26 @@
 			"command": "make clean",
 			"group": "none",
 			"detail": "make clean"
+		},
+		{
+			"type": "shell",
+			"label": "xmake_debug",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"command": "xmake f -m debug && xmake",
+			"group": "build",
+			"detail": "xmake debug"
+		},
+		{
+			"type": "shell",
+			"label": "xmake_release",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"command": "xmake f -m release && xmake",
+			"group": "build",
+			"detail": "xmake release"
 		}
 	]
 }
