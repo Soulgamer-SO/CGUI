@@ -1,5 +1,6 @@
 # DIR
 build/
+.xmake/
 
 #Clangd
 .cache/

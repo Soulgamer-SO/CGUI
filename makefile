@@ -39,6 +39,7 @@ functions_h := $(patsubst %.c,%.h,$(functions_src))
 functions_o := $(patsubst %.c,%.o,$(functions_src))
 target_o := $(main_o) $(functions_o)
 target_src := $(main_src) $(functions_src) $(functions_h)
+.PHONY:debug release install clean
 
 # make
 all:$(target_src)
@@ -51,7 +52,6 @@ main_build_obj: $(main_src)
 functions_build_obj: $(functions_src) $(functions_h)
 	$(CC) $(CFLAGS) $(functions_src) -c -o $(functions_o)
 
-.PHONY:debug release install clean
 debug:$(target_o) $(target_src)
 	mkdir -p build/debug/
 	$(CC) $(main_o) $(functions_o) -O0 -o $(target_path_debug)$(target_bin) $(LD_LIBRARY_FLAGS)
