@@ -1,5 +1,6 @@
 set_rules("mode.debug","mode.release")
 set_languages("c23")
+set_toolchains("gcc")
 if is_plat("linux") then
     add_defines("VK_USE_PLATFORM_XCB_KHR")
     add_ldflags("-ldl -lxcb -lxcb-icccm")
