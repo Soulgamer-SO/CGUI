@@ -1,6 +1,7 @@
 set_rules("mode.debug","mode.release")
 set_languages("c23")
 set_toolchains("gcc")
+add_cflags("-Wall -m64 -std=c23 -O0")
 if is_plat("linux") then
     add_defines("VK_USE_PLATFORM_XCB_KHR")
     add_ldflags("-ldl -lxcb -lxcb-icccm")
@@ -11,12 +12,11 @@ if is_plat("windows") then
 end
 if is_mode("release") then
     set_targetdir("build/release/")
-    add_cflags("-m64 -std=c23 -O0")
 end
 if is_mode("debug") then
     set_targetdir("build/debug/")
     add_defines("DEBUG")
-    add_cflags("-m64 -std=c23 -O0 -g")
+    add_cflags("-g")
 end
 target("cgui-app")
     set_kind("binary")
