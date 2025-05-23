@@ -87,11 +87,45 @@
             ]
         },
         {
+            "name": "LinuxReleaseXmake",
+            "type": "cppdbg",
+            "request": "launch",
+            "preLaunchTask": "xmake_release",
+            "program": "${workspaceFolder}/build/release/cgui-app",
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
             "name": "WinDebugXmake",
             "type": "cppdbg",
             "request": "launch",
             "preLaunchTask": "xmake_debug",
             "program": "${workspaceFolder}/build/debug/cgui-app.exe",
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "WinReleaseXmake",
+            "type": "cppdbg",
+            "request": "launch",
+            "preLaunchTask": "xmake_release",
+            "program": "${workspaceFolder}/build/release/cgui-app.exe",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "externalConsole": false,

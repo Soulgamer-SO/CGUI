@@ -11,12 +11,12 @@ if is_plat("windows") then
 end
 if is_mode("release") then
     set_targetdir("build/release/")
-    add_cflags("-m64 -std=c23")
+    add_cflags("-m64 -std=c23 -O0")
 end
 if is_mode("debug") then
     set_targetdir("build/debug/")
     add_defines("DEBUG")
-    add_cflags("-m64 -std=c23 -g")
+    add_cflags("-m64 -std=c23 -O0 -g")
 end
 target("cgui-app")
     set_kind("binary")
