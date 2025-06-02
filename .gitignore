@@ -1,8 +1,10 @@
 # DIR
 build/
+
+# Xmake
 .xmake/
 
-#Clangd
+# Clangd
 .cache/
 compile_commands.json
 
