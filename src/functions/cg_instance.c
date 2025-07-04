@@ -32,12 +32,12 @@ bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
 		return false;
 	}
 
-	p_var->instance_var.instance_extension_arry = (VkExtensionProperties *)cg_alloc_memory(p_var->p_memory_pool_var, p_var->instance_var.instance_extension_count * sizeof(VkExtensionProperties));
-	if (p_var->instance_var.instance_extension_arry != nullptr) {
+	p_var->instance_var.instance_extension_array = (VkExtensionProperties *)cg_alloc_memory(p_var->p_memory_pool_var, p_var->instance_var.instance_extension_count * sizeof(VkExtensionProperties));
+	if (p_var->instance_var.instance_extension_array != nullptr) {
 		PRINT_LOG("alloc memory success!\n");
-		p_var->library_var.vk_result = enumerate_instance_extension_properties(nullptr, &p_var->instance_var.instance_extension_count, &p_var->instance_var.instance_extension_arry[0]);
+		p_var->library_var.vk_result = enumerate_instance_extension_properties(nullptr, &p_var->instance_var.instance_extension_count, &p_var->instance_var.instance_extension_array[0]);
 		if (p_var->library_var.vk_result != VK_SUCCESS || p_var->instance_var.instance_extension_count == 0) {
-			PRINT_ERROR("get available_extension_arry fail!\n");
+			PRINT_ERROR("get available_extension_array fail!\n");
 			return false;
 		}
 	}
@@ -45,34 +45,34 @@ bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
 #ifdef DEBUG
 	else {
 		for (uint32_t i = 0; i < p_var->instance_var.instance_extension_count; i++) {
-			PRINT_LOG("available_extension_arry[%d] %s 版本%d;\n", i, p_var->instance_var.instance_extension_arry[i].extensionName, p_var->instance_var.instance_extension_arry[i].specVersion);
+			PRINT_LOG("available_extension_array[%d] %s 版本%d;\n", i, p_var->instance_var.instance_extension_array[i].extensionName, p_var->instance_var.instance_extension_array[i].specVersion);
 		}
 	}
 #endif // DEBUG
 
 	p_var->instance_var.enabled_instance_extension_count = 2;
-	char *enabled_extension_name_arry[p_var->instance_var.enabled_instance_extension_count];
-	enabled_extension_name_arry[0] = VK_KHR_SURFACE_EXTENSION_NAME;
+	char *enabled_extension_name_array[p_var->instance_var.enabled_instance_extension_count];
+	enabled_extension_name_array[0] = VK_KHR_SURFACE_EXTENSION_NAME;
 #ifdef __linux
-	enabled_extension_name_arry[1] = VK_KHR_XCB_SURFACE_EXTENSION_NAME;
+	enabled_extension_name_array[1] = VK_KHR_XCB_SURFACE_EXTENSION_NAME;
 #endif // __linux
 #ifdef _WIN32
-	enabled_extension_name_arry[1] = VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
+	enabled_extension_name_array[1] = VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
 #endif // _WIN32
 
-	/* p_var->instance_var.enabled_extension_name_arry = (char***)malloc(p_var->instance_var.enabled_instance_extension_count * sizeof(char *));
-	    if (p_var->instance_var.enabled_extension_name_arry == nullptr)
+	/* p_var->instance_var.enabled_extension_name_array = (char***)malloc(p_var->instance_var.enabled_instance_extension_count * sizeof(char *));
+	    if (p_var->instance_var.enabled_extension_name_array == nullptr)
 	    {
 		return false;
 	    }
-	    p_var->instance_var.enabled_extension_name_arry[0] = VK_KHR_SURFACE_EXTENSION_NAME;
+	    p_var->instance_var.enabled_extension_name_array[0] = VK_KHR_SURFACE_EXTENSION_NAME;
 	#ifdef __linux
-	    p_var->instance_var.enabled_extension_name_arry[1] = VK_KHR_XCB_SURFACE_EXTENSION_NAME;
+	    p_var->instance_var.enabled_extension_name_array[1] = VK_KHR_XCB_SURFACE_EXTENSION_NAME;
 	#endif // __linux
 	#ifdef _WIN32
-	    p_var->instance_var.enabled_extension_name_arry[1] = VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
+	    p_var->instance_var.enabled_extension_name_array[1] = VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
 	#endif // _WIN32
-	 p_var->instance_var.enabled_extension_name_arry = enabled_extension_name_arry; */
+	 p_var->instance_var.enabled_extension_name_array = enabled_extension_name_array; */
 
 	VkApplicationInfo application_info = {
 		.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
@@ -91,7 +91,7 @@ bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
 		.enabledLayerCount = 0,
 		.ppEnabledLayerNames = nullptr,
 		.enabledExtensionCount = p_var->instance_var.enabled_instance_extension_count,
-		.ppEnabledExtensionNames = (const char *const *)enabled_extension_name_arry};
+		.ppEnabledExtensionNames = (const char *const *)enabled_extension_name_array};
 
 	p_var->library_var.vk_result = create_instance(&instance_create_info, nullptr, p_vk_instance);
 	if (p_var->library_var.vk_result != VK_SUCCESS || p_vk_instance == VK_NULL_HANDLE) {
@@ -101,7 +101,7 @@ bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance) {
 #ifdef DEBUG
 		// 打印已启用的实例扩展列表
 		for (uint32_t i = 0; i < p_var->instance_var.enabled_instance_extension_count; i++) {
-			PRINT_LOG("enabled_extension_name_arry[%d] %s;\n", i, enabled_extension_name_arry[i]);
+			PRINT_LOG("enabled_extension_name_array[%d] %s;\n", i, enabled_extension_name_array[i]);
 		}
 		PRINT_LOG("%d个实例扩展已经全部启用!\n", p_var->instance_var.enabled_instance_extension_count);
 		PRINT_LOG("create instance success!\n");

@@ -28,7 +28,7 @@ typedef struct cg_gpu_memory_pool_var {
 	// 空闲内存块信息节点数量
 	uint32_t free_memory_node_count;
 	// 空闲内存块信息节点指针的列表
-	VkDeviceAddress *free_memory_node_addr_arry;
+	VkDeviceAddress *free_memory_node_addr_array;
 	// Vulkan 显存句柄
 	VkDeviceMemory vk_device_memory;
 } cg_gpu_memory_pool_var_t;

@@ -41,7 +41,7 @@ typedef struct cg_memory_pool_var {
 	// 空闲内存块信息节点数量
 	uint32_t free_memory_node_count;
 	// 空闲内存块信息节点地址的列表
-	cg_memory_node_t **free_memory_node_addr_arry;
+	cg_memory_node_t **free_memory_node_addr_array;
 } cg_memory_pool_var_t;
 
 /*创建内存池(侵入式内存池)
