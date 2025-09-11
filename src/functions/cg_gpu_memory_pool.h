@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <string.h>
 #include <vulkan/vulkan.h>
-#define GPU_MEMORY_POOL_SIZE 4ULL * 1024 * 1024 * 1024UL
+#define GPU_MEMORY_POOL_SIZE 4ULL * 1024 * 1024 * 1024
 #define MAX_FREE_GPU_MEM_NODE_COUNT 4UL * 1024
 #define VK_DEVICE_ADDR_NULL 0ULL
 
