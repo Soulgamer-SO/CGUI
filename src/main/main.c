@@ -1,3 +1,22 @@
+/*
+Copyright (C) 2025  Soulgamer <SOsoulgamer@outlook.com>.
+
+This file is part of CGUI.
+
+CGUI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CGUI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "../functions/cg_destroy.h"
 #include "../functions/cg_event_loop.h"
 #include "../functions/cg_gpu_memory_pool.h"
@@ -12,7 +31,7 @@ MAIN {
 	cg_var_t var;
 	cg_memory_pool_var_t memory_pool_var = {
 		.memory_pool = nullptr,
-		.size = MEMORY_POOL_SIZE,
+		.size = CG_MEMORY_POOL_SIZE,
 		.free_size = 0,
 		.memory_count = 0,
 		.last_memory_size = 0,
@@ -20,7 +39,7 @@ MAIN {
 		.free_memory_node_count = 0,
 		.free_memory_node_addr_array = nullptr};
 	memory_pool_var.memory_pool = calloc(1, memory_pool_var.size);
-	memory_pool_var.free_memory_node_addr_array = calloc(MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
+	memory_pool_var.free_memory_node_addr_array = calloc(CG_MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
 		goto exit;
 	} else {

@@ -1,3 +1,22 @@
+/*
+Copyright (C) 2025  Soulgamer <SOsoulgamer@outlook.com>.
+
+This file is part of CGUI.
+
+CGUI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CGUI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #ifndef CG_MEMORY_POOL_H
 #define CG_MEMORY_POOL_H 1
 #include "cg_log.h"
@@ -8,10 +27,11 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#define MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024UL
-#define MAX_FREE_MEM_NODE_COUNT 4 * 1024
+#define CG_MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024UL
+#define CG_MAX_FREE_MEM_NODE_COUNT 4 * 1024
 
 // 记录内存块的信息的节点,节点本身位置在内存块的前面
+typedef struct cg_memory_node cg_memory_node_t;
 struct cg_memory_node {
 	// 表示内存块是否被使用
 	bool is_used;
@@ -22,7 +42,6 @@ struct cg_memory_node {
 	// 记录上一个内存块信息节点的地址
 	struct cg_memory_node *prev_memory_node_addr;
 };
-typedef struct cg_memory_node cg_memory_node_t;
 
 // 用来记录内存池信息(侵入式内存池),可以根据情况再创建各自独立的多个内存池
 typedef struct cg_memory_pool_var {

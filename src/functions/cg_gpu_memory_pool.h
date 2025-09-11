@@ -1,3 +1,22 @@
+/*
+Copyright (C) 2025  Soulgamer <SOsoulgamer@outlook.com>.
+
+This file is part of CGUI.
+
+CGUI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CGUI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #ifndef CG_GPU_MEMORY_POOL_H
 #define CG_GPU_MEMORY_POOL_H 1
 #include "cg_log.h"
@@ -66,5 +85,12 @@ bool cg_add_one_p_gpu_memory_node(cg_gpu_memory_pool_var_t *p_mp, cg_gpu_memory_
 
 // 删除信息节点地址的列表中一个元素(末尾交换法)
 bool cg_rm_one_p_gpu_memory_node(cg_gpu_memory_pool_var_t *p_mp, uint32_t index);
+
+typedef struct cg_gpu_var {
+	VkBufferCreateInfo buffer_create_info;
+	PFN_vkCreateBuffer ceate_buffer;
+} cg_gpu_var_t;
+
+bool cg_gpu_create_vk_buffer(cg_var_t *p_var, cg_gpu_var_t *p_cg_gpu_var_t);
 
 #endif // CG_GPU_MEMORY_POOL_H 1

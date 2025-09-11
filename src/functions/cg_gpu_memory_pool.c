@@ -1,3 +1,22 @@
+/*
+Copyright (C) 2025  Soulgamer <SOsoulgamer@outlook.com>.
+
+This file is part of CGUI.
+
+CGUI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CGUI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "cg_gpu_memory_pool.h"
 
 bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp, cg_var_t *p_var) {
@@ -43,4 +62,9 @@ bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp, cg_var_t *p_var) 
 
 VkDeviceAddress cg_alloc_gpu_memory(cg_gpu_memory_pool_var_t *p_mp, size_t size) {
 	return 0;
+}
+
+bool cg_gpu_create_vk_buffer(cg_var_t *p_var, cg_gpu_var_t *p_cg_gpu_var_t) {
+
+	return false;
 }

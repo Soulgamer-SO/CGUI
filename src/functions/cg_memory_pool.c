@@ -1,3 +1,22 @@
+/*
+Copyright (C) 2025  Soulgamer <SOsoulgamer@outlook.com>.
+
+This file is part of CGUI.
+
+CGUI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CGUI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "cg_memory_pool.h"
 
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_mp) {
@@ -244,7 +263,7 @@ int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_mp, void *memory_addr) 
 }
 
 bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_mp, cg_memory_node_t *p_memory_node) {
-	if (p_mp->free_memory_node_count == MAX_FREE_MEM_NODE_COUNT) {
+	if (p_mp->free_memory_node_count == CG_MAX_FREE_MEM_NODE_COUNT) {
 		PRINT_ERROR("p_mp->free_memory_node_count == MAX_FREE_MEM_NODE_COUNT!\n");
 		return false;
 	}
