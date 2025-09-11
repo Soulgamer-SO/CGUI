@@ -26,9 +26,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <string.h>
 #include <vulkan/vulkan.h>
-#define GPU_MEMORY_POOL_SIZE 4 * 1024 * 1024 * 1024UL
-#define MAX_FREE_GPU_MEM_NODE_COUNT 4 * 1024
-#define VK_DEVICE_ADDR_NULL 0
+#define GPU_MEMORY_POOL_SIZE 4ULL * 1024 * 1024 * 1024UL
+#define MAX_FREE_GPU_MEM_NODE_COUNT 4UL * 1024
+#define VK_DEVICE_ADDR_NULL 0ULL
 
 // 用来记录GPU内存池信息(侵入式内存池,依赖VulkanAPI),可以根据情况再创建各自独立的多个内存池
 typedef struct cg_gpu_memory_pool_var {
