@@ -27,8 +27,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#define CG_MEMORY_POOL_SIZE 1024 * 1024 * 1024UL
-#define CG_MAX_FREE_MEM_NODE_COUNT 4 * 1024
+#define CG_MEMORY_POOL_SIZE 4ULL * 1024 * 1024 * 1024
+#define CG_MAX_FREE_MEM_NODE_COUNT 4UL * 1024
 
 // 记录内存块的信息的节点,节点本身位置在内存块的前面
 typedef struct cg_memory_node cg_memory_node_t;
