@@ -152,7 +152,7 @@ bool cg_create_window(cg_var_t *p_var) {
 		return false;
 	}
 	PFN_vkCreateWin32SurfaceKHR create_win32_surface = nullptr;
-	create_win32_surface = (PFN_vkCreateWin32SurfaceKHR)p_var->library_var.get_instance_proc_addr(p_var->instance_var.vk_instance, "vkCreateWin32SurfaceKHR");
+	create_win32_surface = (PFN_vkCreateWin32SurfaceKHR)p_var->library_var.vk_get_instance_proc_addr(p_var->instance_var.vk_instance, "vkCreateWin32SurfaceKHR");
 	if (create_win32_surface == nullptr) {
 		PRINT_ERROR("load vkCreateWin32SurfaceKHR fail!\n");
 		return false;
