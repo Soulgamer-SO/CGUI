@@ -40,15 +40,8 @@ functions_h := $(patsubst %.c,%.h,$(functions_src))
 functions_o := $(patsubst %.c,%.o,$(functions_src))
 target_o := $(main_o) $(functions_o)
 target_src := $(main_src) $(functions_src) $(functions_h)
-is_file_exists:= 1
 
-ifneq ((wildcard $(target_bin_install_path)),)
-	is_file_exists := 1
-else
-	is_file_exists := 0
-endif
-
-.PHONY:debug release install clean
+.PHONY:debug release clean install
 
 # make
 all:$(target_src)
@@ -70,11 +63,10 @@ release:$(target_src)
 	$(CC) -D $(VK_USE_PLATFORM) $(main_src) $(functions_src) -O0 -o $(target_path_release)$(target_bin) $(LD_LIBRARY_FLAGS)
 
 install:
-	@echo "is_file_exists = $(is_file_exists)" 
-ifeq ($(is_file_exists),1)
-ifeq ($(VK_USE_PLATFORM),VK_USE_PLATFORM_XCB_KHR)
+ifneq ($(shell test -e '$(target_bin_install_path)' && echo exists),exists)
+	@echo "the target bin does not exist!"
+else ifeq ($(VK_USE_PLATFORM),VK_USE_PLATFORM_XCB_KHR)
 	create_desktop.sh
-endif
 endif
 
 clean:
