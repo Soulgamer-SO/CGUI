@@ -5,10 +5,10 @@ target_bin := cgui-app
 
 #如果是Linux
 ifeq ($(shell uname),Linux)
-  ifeq ($(shell uname -m),x86_64)
-  VK_USE_PLATFORM := VK_USE_PLATFORM_XCB_KHR
-  LD_LIBRARY_FLAGS += -ldl -lxcb -lxcb-icccm
-  endif
+ifeq ($(shell uname -m),x86_64)
+VK_USE_PLATFORM := VK_USE_PLATFORM_XCB_KHR
+LD_LIBRARY_FLAGS += -ldl -lxcb -lxcb-icccm
+endif
 endif
 
 #如果是Windows
@@ -20,16 +20,17 @@ endif
 
 #如果是Android
 ifeq ($(shell uname),Linux)
-  ifeq ($(shell uname -m),aarch64)
-  VK_USE_PLATFORM := VK_USE_PLATFORM_ANDROID_KHR
-  target_bin := cgui-app
-  endif
+ifeq ($(shell uname -m),aarch64)
+VK_USE_PLATFORM := VK_USE_PLATFORM_ANDROID_KHR
+target_bin := cgui-app
+endif
 endif
 
 DEBUG = DEBUG
 CFLAGS = -D $(VK_USE_PLATFORM) -D $(DEBUG) -Wall -g -O0
 target_path_debug := build/debug/
 target_path_release := build/release/
+target_bin_install_path := $(target_path_release)$(target_bin)
 main_src_path := src/main/
 functions_src_path := src/functions/
 main_src := $(wildcard $(main_src_path)*.c)
@@ -39,6 +40,14 @@ functions_h := $(patsubst %.c,%.h,$(functions_src))
 functions_o := $(patsubst %.c,%.o,$(functions_src))
 target_o := $(main_o) $(functions_o)
 target_src := $(main_src) $(functions_src) $(functions_h)
+is_file_exists:= 1
+
+ifneq ((wildcard $(target_bin_install_path)),)
+	is_file_exists := 1
+else
+	is_file_exists := 0
+endif
+
 .PHONY:debug release install clean
 
 # make
@@ -55,11 +64,19 @@ functions_build_obj: $(functions_src) $(functions_h)
 debug:$(target_o) $(target_src)
 	mkdir -p build/debug/
 	$(CC) $(main_o) $(functions_o) -O0 -o $(target_path_debug)$(target_bin) $(LD_LIBRARY_FLAGS)
+
 release:$(target_src)
 	mkdir -p build/release/
 	$(CC) -D $(VK_USE_PLATFORM) $(main_src) $(functions_src) -O0 -o $(target_path_release)$(target_bin) $(LD_LIBRARY_FLAGS)
+
 install:
-	bin/$(target_bin)
+	@echo "is_file_exists = $(is_file_exists)" 
+ifeq ($(is_file_exists),1)
+ifeq ($(VK_USE_PLATFORM),VK_USE_PLATFORM_XCB_KHR)
+	create_desktop.sh
+endif
+endif
+
 clean:
 	-rm $(main_o)
 	-rm $(functions_o)
