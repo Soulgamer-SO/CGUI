@@ -26,16 +26,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_platform.h"
 #include <stdlib.h>
 
-cg_memory_pool_var_t g_memory_pool_var = {
-	.memory_pool = nullptr,
-	.size = CG_MEMORY_POOL_SIZE,
-	.free_size = 0,
-	.memory_count = 0,
-	.last_memory_size = 0,
-	.last_memory_end_addr = nullptr,
-	.free_memory_node_count = 0,
-	.free_memory_node_addr_array = nullptr};
-
 MAIN {
 	cg_var_t var;
 	cg_memory_pool_var_t memory_pool_var = {
@@ -55,18 +45,6 @@ MAIN {
 		var.p_memory_pool_var = &memory_pool_var;
 		PRINT_LOG("create memory_pool_var success!\n");
 	}
-
-#if 1
-	cg_var_t var2;
-	g_memory_pool_var.memory_pool = calloc(1, g_memory_pool_var.size);
-	g_memory_pool_var.free_memory_node_addr_array = calloc(CG_MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
-	if (cg_create_memory_pool(&g_memory_pool_var) == false) {
-		goto exit;
-	} else {
-		var2.p_memory_pool_var = &g_memory_pool_var;
-		PRINT_LOG("create g_memory_pool_var success!\n");
-	}
-#endif
 
 #ifdef _WIN32
 	var.wsi_var.WinAPI_var.hInstance = hInstance,
