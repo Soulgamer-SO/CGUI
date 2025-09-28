@@ -26,7 +26,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_platform.h"
 #include <stdlib.h>
 
-// gdb反汇编调试命令 -exec disassemble /m main
 MAIN {
 	cg_var_t var;
 	cg_memory_pool_var_t memory_pool_var = {
