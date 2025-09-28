@@ -64,7 +64,7 @@ MAIN {
 		goto exit;
 	} else {
 		var2.p_memory_pool_var = &g_memory_pool_var;
-		PRINT_LOG("create memory_pool_var success!\n");
+		PRINT_LOG("create g_memory_pool_var success!\n");
 	}
 #endif
 
