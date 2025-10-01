@@ -29,6 +29,7 @@ compile_commands.json
 *.lib
 
 # Executables
+*.desktop
 *.exe
 *.out
 *.app
