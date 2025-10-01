@@ -66,7 +66,7 @@ install:
 ifneq ($(shell test -e '$(target_bin_install_path)' && echo exists),exists)
 	@echo "the target bin does not exist!"
 else ifeq ($(VK_USE_PLATFORM),VK_USE_PLATFORM_XCB_KHR)
-	create_desktop.sh
+	bash create_desktop.sh
 endif
 
 clean:
