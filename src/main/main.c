@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
+/*提交时转换为LF，统一用LF行尾 git config --global core.autocrlf input*/
 #include "../functions/cg_destroy.h"
 #include "../functions/cg_event_loop.h"
 #include "../functions/cg_gpu_memory_pool.h"
