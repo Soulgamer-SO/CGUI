@@ -1,4 +1,5 @@
 {
     "files.encoding": "utf8",
+    "files.eol": "\n",
     "C_Cpp.errorSquiggles": "enabled"
 }
