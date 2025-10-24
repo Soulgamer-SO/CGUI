@@ -35,15 +35,15 @@ bool cg_initialize_var(cg_var_t *p_var) {
 	p_var->instance_var.vk_instance = VK_NULL_HANDLE;
 	p_var->physical_device_var.physical_device = VK_NULL_HANDLE;
 	p_var->physical_device_var.enabled_physical_device_extensions_count = 2;
-	p_var->physical_device_var.enabled_physcial_device_extension_array = (char **)cg_alloc_memory(p_var->p_memory_pool_var, p_var->physical_device_var.enabled_physical_device_extensions_count * sizeof(char *));
-	if (p_var->physical_device_var.enabled_physcial_device_extension_array == nullptr) {
+	p_var->physical_device_var.enabled_physical_device_extension_array = (char **)cg_alloc_memory(p_var->p_memory_pool_var, p_var->physical_device_var.enabled_physical_device_extensions_count * sizeof(char *));
+	if (p_var->physical_device_var.enabled_physical_device_extension_array == nullptr) {
 		return false;
 	} else {
 		PRINT_LOG("alloc memory success!\n");
 	}
 
-	p_var->physical_device_var.enabled_physcial_device_extension_array[0] = VK_KHR_SWAPCHAIN_EXTENSION_NAME;
-	p_var->physical_device_var.enabled_physcial_device_extension_array[1] = VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME;
+	p_var->physical_device_var.enabled_physical_device_extension_array[1] = VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME;
+	p_var->physical_device_var.enabled_physical_device_extension_array[0] = VK_KHR_SWAPCHAIN_EXTENSION_NAME;
 	p_var->logic_device_var.vk_logic_device = VK_NULL_HANDLE;
 
 	if (cg_load_library(p_var) == false) {
@@ -74,8 +74,8 @@ bool cg_initialize_var(cg_var_t *p_var) {
 		return false;
 	}
 
-	PRINT_LOG("%s\n", (char *)p_var->physical_device_var.enabled_physcial_device_extension_array[0]);
-	PRINT_LOG("%s\n", (char *)p_var->physical_device_var.enabled_physcial_device_extension_array[1]);
+	PRINT_LOG("%s\n", (char *)p_var->physical_device_var.enabled_physical_device_extension_array[0]);
+	PRINT_LOG("%s\n", (char *)p_var->physical_device_var.enabled_physical_device_extension_array[1]);
 
 	// 创建命令缓存
 	p_var->command_pool_var.command_pool = VK_NULL_HANDLE;

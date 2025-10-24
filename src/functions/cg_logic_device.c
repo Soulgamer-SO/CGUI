@@ -155,7 +155,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 		.enabledLayerCount = 0,
 		.ppEnabledLayerNames = nullptr,
 		.enabledExtensionCount = p_var->physical_device_var.enabled_physical_device_extensions_count,
-		.ppEnabledExtensionNames = (const char *const *)&p_var->physical_device_var.enabled_physcial_device_extension_array[0],
+		.ppEnabledExtensionNames = (const char *const *)&p_var->physical_device_var.enabled_physical_device_extension_array[0],
 		.pEnabledFeatures = &p_var->physical_device_var.device_feature_array};
 
 	// create logic device
@@ -177,7 +177,7 @@ bool cg_create_logic_device(cg_var_t *p_var, VkDevice *p_vk_logic_device) {
 
 #ifdef DEBUG
 	for (uint32_t i = 0; i < p_var->physical_device_var.enabled_physical_device_extensions_count; i++) {
-		PRINT_LOG("enabled_physcial_device_extension_array[%d] = %s;\n", i, p_var->physical_device_var.enabled_physcial_device_extension_array[i]);
+		PRINT_LOG("enabled_physical_device_extension_array[%d] = %s;\n", i, p_var->physical_device_var.enabled_physical_device_extension_array[i]);
 	}
 	PRINT_LOG("%d个物理设备扩展已经全部启用!\n", p_var->physical_device_var.enabled_physical_device_extensions_count);
 	PRINT_LOG("enabled queue familiy = queue_familiy_array[%d];\n", queue_create_info.queueFamilyIndex);

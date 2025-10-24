@@ -114,20 +114,20 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 		PRINT_ERROR("get extensions_device_count fail!\n");
 		return false;
 	}
-	p_var->physical_device_var.available_physcial_device_extension_array = (VkExtensionProperties *)cg_alloc_memory(
+	p_var->physical_device_var.available_physical_device_extension_array = (VkExtensionProperties *)cg_alloc_memory(
 		p_var->p_memory_pool_var,
 		p_var->physical_device_var.physical_device_extensions_count * sizeof(VkExtensionProperties));
-	if (p_var->physical_device_var.available_physcial_device_extension_array == nullptr) {
-		PRINT_ERROR("create available_physcial_device_extension_array fail!\n");
+	if (p_var->physical_device_var.available_physical_device_extension_array == nullptr) {
+		PRINT_ERROR("create available_physical_device_extension_array fail!\n");
 		return false;
-	} else if (p_var->physical_device_var.available_physcial_device_extension_array != nullptr) {
+	} else if (p_var->physical_device_var.available_physical_device_extension_array != nullptr) {
 		PRINT_LOG("alloc memory success!\n");
 		p_var->library_var.vk_result = enumerate_device_extension_properties(
 			p_var->physical_device_var.physical_device, nullptr,
 			&p_var->physical_device_var.physical_device_extensions_count,
-			&p_var->physical_device_var.available_physcial_device_extension_array[0]);
+			&p_var->physical_device_var.available_physical_device_extension_array[0]);
 		if (p_var->physical_device_var.physical_device_extensions_count == 0) {
-			PRINT_ERROR("get available_physcial_device_extension_arrt fail!\n");
+			PRINT_ERROR("get available_physical_device_extension_arrt fail!\n");
 			return false;
 		}
 	}
@@ -135,7 +135,7 @@ bool cg_select_physical_device(cg_var_t *p_var, uint32_t *p_physical_device_coun
 	// 打印可用的物理设备扩展的列表
 	/* #ifdef DEBUG
 		for (uint32_t i = 0; i < p_var->physical_device_var.physical_device_extensions_count; i++) {
-			PRINT_LOG("available_physcial_device_extension_array[%d] %s 版本%d;\n", i, (p_var->physical_device_var.available_physcial_device_extension_array[i].extensionName), (p_var->physical_device_var.available_physcial_device_extension_array[i]).specVersion);
+			PRINT_LOG("available_physical_device_extension_array[%d] %s 版本%d;\n", i, (p_var->physical_device_var.available_physical_device_extension_array[i].extensionName), (p_var->physical_device_var.available_physical_device_extension_array[i]).specVersion);
 		}
 	#endif */
 

@@ -83,10 +83,10 @@ typedef struct vk_physical_device_var_t {
 	VkPhysicalDeviceFeatures device_feature_array;
 	VkPhysicalDeviceProperties device_properties;
 	// 可用的物理设备扩展列表
-	VkExtensionProperties *available_physcial_device_extension_array;
+	VkExtensionProperties *available_physical_device_extension_array;
 	// 启用的物理设备扩展的数量
 	uint32_t enabled_physical_device_extensions_count;
-	char **enabled_physcial_device_extension_array;
+	char **enabled_physical_device_extension_array;
 	// 获取物理设备内存属性
 	VkPhysicalDeviceMemoryProperties physical_device_memory_properties;
 } vk_physical_device_var_t;
