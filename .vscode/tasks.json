@@ -1,0 +1,55 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "make_debug",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"command": "make debug",
+			"group": "build",
+			"detail": "make debug"
+		},
+		{
+			"type": "shell",
+			"label": "make_release",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"command": "make release",
+			"group": "build",
+			"detail": "make release"
+		},
+		{
+			"type": "shell",
+			"label": "make_clean",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"command": "make clean",
+			"group": "none",
+			"detail": "make clean"
+		},
+		{
+			"type": "shell",
+			"label": "xmake_debug",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"command": "xmake f --toolchain=gcc -m debug && xmake",
+			"group": "build",
+			"detail": "xmake debug"
+		},
+		{
+			"type": "shell",
+			"label": "xmake_release",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"command": "xmake f --toolchain=gcc -m release && xmake",
+			"group": "build",
+			"detail": "xmake release"
+		}
+	]
+}
