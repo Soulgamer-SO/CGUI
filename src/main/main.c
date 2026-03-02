@@ -58,6 +58,12 @@ MAIN {
 		goto destroy_memory_pool;
 	}
 
+	// 测试cg_free_memory函数
+#if 1
+	void *test_memory = cg_alloc_memory(&memory_pool_var, 1024ULL * 1024);
+	cg_free_memory(&memory_pool_var, test_memory);
+#endif
+
 #if 0
 	cg_gpu_memory_pool_var_t gpu_memory_pool_var = {
 		.memory_pool = VK_DEVICE_ADDR_NULL,

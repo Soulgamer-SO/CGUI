@@ -70,7 +70,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_mp, size_t size);
 
 // 释放指定内存块
 // 禁止释放没有被申请过的内存,否则将产生无法预测的错误
-void cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr);
+bool cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr);
 
 // 如果成功该函数返回内存块占用大小,失败就返回0
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_mp, void *memory_addr);
