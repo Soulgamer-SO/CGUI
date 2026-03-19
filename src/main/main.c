@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "../functions/cg_destroy.h"
 #include "../functions/cg_event_loop.h"
-#include "../functions/cg_gpu_memory_pool.h"
+#include "../functions/cg_gpu_memory.h"
 #include "../functions/cg_initialize.h"
 #include "../functions/cg_log.h"
 #include "../functions/cg_memory_pool.h"
@@ -65,7 +65,7 @@ MAIN {
 #endif
 
 #if 0
-	cg_gpu_memory_pool_var_t gpu_memory_pool_var = {
+	cg_gpu_memory_var_t gpu_memory_var = {
 		.memory_pool = VK_DEVICE_ADDR_NULL,
 		.size = MEMORY_POOL_SIZE,
 		.free_size = 0,
@@ -75,12 +75,12 @@ MAIN {
 		.free_memory_node_count = 0,
 		.free_memory_node_addr_array = VK_DEVICE_ADDR_NULL,
 		.vk_device_memory = VK_NULL_HANDLE};
-	if (cg_create_gpu_memory_pool(&gpu_memory_pool_var, &var) == false) {
-		PRINT_ERROR("create gpu_memory_pool_var fail!\n");
+	if (cg_create_gpu_memory(&gpu_memory_var, &var) == false) {
+		PRINT_ERROR("create gpu_memory_var fail!\n");
 		goto destroy_var;
 	} else {
-		var.p_gpu_memory_pool_var = &gpu_memory_pool_var;
-		PRINT_LOG("create gpu_memory_pool_var success!\n");
+		var.p_gpu_memory_var = &gpu_memory_var;
+		PRINT_LOG("create gpu_memory_var success!\n");
 	}
 #endif
 

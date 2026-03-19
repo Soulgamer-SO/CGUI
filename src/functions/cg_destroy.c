@@ -48,8 +48,8 @@ void cg_destroy_command_pool(cg_var_t *p_var, VkCommandPool command_pool) {
 		PFN_vkDestroyCommandPool destroy_command_pool = nullptr;
 		destroy_command_pool = (PFN_vkDestroyCommandPool)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkDestroyCommandPool");
 		if (destroy_command_pool != nullptr) {
-			if (p_var->command_pool_var.command_pool != VK_NULL_HANDLE) {
-				destroy_command_pool(p_var->logic_device_var.vk_logic_device, p_var->command_pool_var.command_pool, nullptr);
+			if (command_pool != VK_NULL_HANDLE) {
+				destroy_command_pool(p_var->logic_device_var.vk_logic_device, command_pool, nullptr);
 			}
 		}
 	}

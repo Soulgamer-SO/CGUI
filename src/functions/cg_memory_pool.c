@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 bool cg_create_memory_pool(cg_memory_pool_var_t *p_mp) {
 	if (p_mp->size < sizeof(cg_memory_node_t)) {
-		PRINT_ERROR("memory pool size should more bigger!\n");
+		PRINT_ERROR("memory pool size should be larger!\n");
 		return false;
 	}
 	if (p_mp->memory_pool == nullptr || p_mp->free_memory_node_addr_array == nullptr) {

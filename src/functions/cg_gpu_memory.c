@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "cg_gpu_memory_pool.h"
+#include "cg_gpu_memory.h"
 
-bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp, cg_var_t *p_var) {
+bool cg_create_gpu_memory(cg_gpu_memory_var_t *p_mp, cg_var_t *p_var) {
 	if (p_mp->size < sizeof(cg_gpu_memory_node_t)) {
-		PRINT_ERROR("memory pool size should more bigger!\n");
+		PRINT_ERROR("memory pool size should be larger!\n");
 		return false;
 	}
 	VkBuffer vk_buffer;
@@ -60,7 +60,7 @@ bool cg_create_gpu_memory_pool(cg_gpu_memory_pool_var_t *p_mp, cg_var_t *p_var) 
 	return false;
 }
 
-VkDeviceAddress cg_alloc_gpu_memory(cg_gpu_memory_pool_var_t *p_mp, size_t size) {
+VkDeviceAddress cg_alloc_gpu_memory(cg_gpu_memory_var_t *p_mp, size_t size) {
 	return 0;
 }
 
