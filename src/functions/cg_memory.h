@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef CG_MEMORY_POOL_H
-#define CG_MEMORY_POOL_H 1
+#ifndef CG_MEMORY_H
+#define CG_MEMORY_H 1
 #include "cg_log.h"
 #include <stdint.h>
 #ifdef __linux
@@ -84,4 +84,4 @@ bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_mp, cg_memory_node_t *p_me
 // 删除被释放的内存块信息节点地址的列表中一个元素(末尾交换法)
 bool cg_rm_one_p_memory_node(cg_memory_pool_var_t *p_mp, uint32_t index);
 
-#endif // CG_MEMORY_POOL_H 1
+#endif // CG_MEMORY_H 1
