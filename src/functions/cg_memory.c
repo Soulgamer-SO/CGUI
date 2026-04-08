@@ -262,12 +262,12 @@ int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_mp, void *memory_addr) 
 	return -1;
 }
 
-bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_mp, cg_memory_node_t *p_memory_node) {
-	if (p_mp->free_memory_node_count == CG_MAX_FREE_MEM_NODE_COUNT) {
-		PRINT_ERROR("p_mp->free_memory_node_count == MAX_FREE_MEM_NODE_COUNT!\n");
+bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_mp, cg_memory_node_t *memory_node_addr) {
+	if (p_mp->free_memory_node_count == p_mp->free_memory_node_addr_max_count) {
+		PRINT_ERROR("p_mp->free_memory_node_count == memory_node_addr_max_count!\n");
 		return false;
 	}
-	p_mp->free_memory_node_addr_array[p_mp->free_memory_node_count - 1] = p_memory_node;
+	p_mp->free_memory_node_addr_array[p_mp->free_memory_node_count - 1] = memory_node_addr;
 	p_mp->free_memory_node_count++;
 	return true;
 }

@@ -27,8 +27,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#define CG_MEMORY_POOL_SIZE (4ULL * 1024 * 1024 * 1024)
-#define CG_MAX_FREE_MEM_NODE_COUNT (4U * 1024)
 
 // 记录内存块的信息的节点,节点本身位置在内存块的前面
 typedef struct cg_memory_node cg_memory_node_t;
@@ -59,6 +57,8 @@ typedef struct cg_memory_pool_var {
 	uint32_t free_memory_node_count;
 	// 空闲内存块信息节点地址的列表
 	cg_memory_node_t **free_memory_node_addr_array;
+	// 空闲内存块信息节点地址的列表最大数量
+	uint32_t free_memory_node_addr_max_count;
 } cg_memory_pool_var_t;
 
 /*创建内存池(侵入式内存池)
@@ -75,13 +75,13 @@ bool cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr);
 // 如果成功该函数返回内存块占用大小,失败就返回0
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_mp, void *memory_addr);
 
-// 如果成功,参数返回被释放的内存块信息节点列表元素的索引,失败就返回-1
+// 如果成功,参数返回内存块信息节点列表元素的索引,失败就返回-1
 int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_mp, void *memory_addr);
 
-// 被释放的内存块信息节点地址的列表末尾添加一个元素
-bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_mp, cg_memory_node_t *p_memory_node);
+// 内存块信息节点地址的列表末尾添加一个元素
+bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_mp, cg_memory_node_t *memory_node_addr);
 
-// 删除被释放的内存块信息节点地址的列表中一个元素(末尾交换法)
+// 删除内存块信息节点地址的列表其中一个元素(末尾交换法)
 bool cg_rm_one_p_memory_node(cg_memory_pool_var_t *p_mp, uint32_t index);
 
 #endif // CG_MEMORY_H 1

@@ -29,7 +29,7 @@ void cg_event_loop(cg_var_t *p_var) {
 			xcb_expose_event_t *expose_event = (xcb_expose_event_t *)p_var->event_loop_var.event;
 			if (expose_event->window == p_var->wsi_var.xcb_surface_create_info.window) {
 				PRINT_LOG(
-					"expose! expose_event x = %i; expose_event y = %i; expose_event width = %i; expose_event height = %i;\n",
+					"expose_event x = %i; expose_event y = %i; expose_event width = %i; expose_event height = %i;\n",
 					expose_event->x,
 					expose_event->y,
 					expose_event->width,

@@ -25,6 +25,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "../functions/cg_memory.h"
 #include "cg_platform.h"
 #include <stdlib.h>
+#define CG_MEMORY_POOL_SIZE (4ULL * 1024 * 1024 * 1024)
+#define CG_MAX_FREE_MEM_NODE_COUNT (4U * 1024)
 
 MAIN {
 	cg_var_t var;
@@ -35,7 +37,8 @@ MAIN {
 		.memory_count = 0,
 		.p_last_memory_node = nullptr,
 		.free_memory_node_count = 0,
-		.free_memory_node_addr_array = nullptr};
+		.free_memory_node_addr_array = nullptr,
+		.free_memory_node_addr_max_count = CG_MAX_FREE_MEM_NODE_COUNT};
 	memory_pool_var.memory_pool = calloc(1, memory_pool_var.size);
 	memory_pool_var.free_memory_node_addr_array = calloc(CG_MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
 	if (cg_create_memory_pool(&memory_pool_var) == false) {
