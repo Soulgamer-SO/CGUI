@@ -37,7 +37,7 @@ struct cg_memory_node {
 	void *memory_addr;
 	// 内存块大小(不包含内存信息节点本身)
 	size_t size;
-	// 记录上一个内存块信息节点的地址
+	// 记录排在此内存块前面的内存块信息节点的地址
 	struct cg_memory_node *prev_memory_node_addr;
 };
 
@@ -49,7 +49,7 @@ typedef struct cg_memory_pool_var {
 	size_t size;
 	// 内存池剩余可用大小
 	size_t free_size;
-	// 内存块数量,可能包括空闲内存块
+	// 非空闲内存块数量
 	uint32_t memory_count;
 	// 保存排在最后的内存块的信息节点的指针
 	cg_memory_node_t *p_last_memory_node;
@@ -75,13 +75,13 @@ bool cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr);
 // 如果成功该函数返回内存块占用大小,失败就返回0
 size_t cg_get_memory_size(cg_memory_pool_var_t *p_mp, void *memory_addr);
 
-// 如果成功,参数返回内存块信息节点列表元素的索引,失败就返回-1
+// 如果成功,参数返回空闲内存块信息节点列表元素的索引,失败就返回-1
 int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_mp, void *memory_addr);
 
-// 内存块信息节点地址的列表末尾添加一个元素
+// 在空闲内存块信息节点地址的列表末尾添加一个元素
 bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_mp, cg_memory_node_t *memory_node_addr);
 
-// 删除内存块信息节点地址的列表其中一个元素(末尾交换法)
+// 删除空闲内存块信息节点地址的列表其中一个元素(末尾交换法)
 bool cg_rm_one_p_memory_node(cg_memory_pool_var_t *p_mp, uint32_t index);
 
 #endif // CG_MEMORY_H 1

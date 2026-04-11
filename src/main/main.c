@@ -48,6 +48,84 @@ MAIN {
 		PRINT_LOG("create memory_pool_var success!\n");
 	}
 
+	// 测试内存池的分配和释放功能
+#if DEBUG
+#define TEST_CG_MEMORY_POOL_SIZE (1024ULL)
+#define TEST_CG_MAX_FREE_MEM_NODE_COUNT (32U)
+	PRINT_LOG("test memory pool start!\n");
+	cg_memory_pool_var_t test_memory_pool = {
+		.memory_pool = nullptr,
+		.size = TEST_CG_MEMORY_POOL_SIZE,
+		.free_size = 0,
+		.memory_count = 0,
+		.p_last_memory_node = nullptr,
+		.free_memory_node_count = 0,
+		.free_memory_node_addr_array = nullptr,
+		.free_memory_node_addr_max_count = TEST_CG_MAX_FREE_MEM_NODE_COUNT};
+	test_memory_pool.memory_pool = calloc(1, test_memory_pool.size);
+	test_memory_pool.free_memory_node_addr_array = calloc(TEST_CG_MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
+	if (cg_create_memory_pool(&test_memory_pool) == false || test_memory_pool.memory_pool == nullptr || test_memory_pool.free_memory_node_addr_array == nullptr) {
+		goto exit;
+	} else {
+		PRINT_LOG("create memory_pool_var success!\n");
+	}
+
+	void *test_memory_1 = cg_alloc_memory(&test_memory_pool, 128);
+	if (test_memory_1 == nullptr) {
+		PRINT_ERROR("alloc test_memory_1 fail!\n");
+		goto destroy_memory_pool;
+	}
+
+	void *test_memory_2 = cg_alloc_memory(&test_memory_pool, 256);
+	if (test_memory_2 == nullptr) {
+		PRINT_ERROR("alloc test_memory_2 fail!\n");
+		goto destroy_memory_pool;
+	}
+
+	void *test_memory_3 = cg_alloc_memory(&test_memory_pool, (640 - 3 * sizeof(cg_memory_node_t)));
+	if (test_memory_3 == nullptr) {
+		PRINT_ERROR("alloc test_memory_3 fail!\n");
+		goto destroy_memory_pool;
+	}
+
+	// 测试分配过大的内存块,检查是否正确返回nullptr
+	void *test_too_large_memory = cg_alloc_memory(&test_memory_pool, TEST_CG_MEMORY_POOL_SIZE);
+	if (test_too_large_memory == nullptr) {
+		PRINT_ERROR("alloc test_too_large_memory fail!\n");
+	}
+
+	// 释放内存块test_memory_1,测试第一个内存块的释放是否成功
+	if (cg_free_memory(&test_memory_pool, test_memory_1) == false) {
+		PRINT_ERROR("free test_memory_1 fail!\n");
+		goto destroy_memory_pool;
+	} else {
+		test_memory_1 = nullptr;
+	}
+
+	// 释放内存块test_memory_2,测试内存块合并功能,检查内存池的free_size是否正确更新
+	if (cg_free_memory(&test_memory_pool, test_memory_2) == false) {
+		PRINT_ERROR("free test_memory_2 fail!\n");
+		goto destroy_memory_pool;
+	} else {
+		test_memory_2 = nullptr;
+	}
+
+	// 再次分配内存块test_memory_4,大小为128字节,检查是分配到的地址是否和内存池开始地址一样
+	void *test_memory_4 = cg_alloc_memory(&test_memory_pool, 128);
+	if (test_memory_4 == nullptr) {
+		PRINT_ERROR("alloc test_memory_4 fail!\n");
+		goto destroy_memory_pool;
+	} else {
+		if (test_memory_4 == test_memory_pool.memory_pool + sizeof(cg_memory_node_t)) {
+			PRINT_LOG("和内存池开始地址一样!\n");
+		} else {
+			PRINT_ERROR("和内存池开始地址不一样!\n");
+		}
+	}
+
+	PRINT_LOG("test memory pool end!\n");
+#endif
+
 #ifdef _WIN32
 	var.wsi_var.WinAPI_var.hInstance = hInstance,
 	var.wsi_var.WinAPI_var.hPrevInstance = hPrevInstance;
@@ -61,19 +139,17 @@ MAIN {
 		goto destroy_memory_pool;
 	}
 
-	// 测试cg_free_memory函数
-#if 1
-	void *test_memory = cg_alloc_memory(&memory_pool_var, 1024ULL * 1024);
-	if (test_memory == nullptr) {
-		PRINT_ERROR("cg_alloc_memory fail!\n");
-		goto destroy_var;
-	}
-#endif
-
 	cg_event_loop(&var);
+
 destroy_var:
 	cg_destroy(&var);
 destroy_memory_pool:
+#if DEBUG
+	free(test_memory_pool.memory_pool);
+	test_memory_pool.memory_pool = nullptr;
+	free(test_memory_pool.free_memory_node_addr_array);
+	test_memory_pool.free_memory_node_addr_array = nullptr;
+#endif
 	free(memory_pool_var.memory_pool);
 	memory_pool_var.memory_pool = nullptr;
 	free(memory_pool_var.free_memory_node_addr_array);
