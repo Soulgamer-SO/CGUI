@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef CG_WSI_H
 #define CG_WSI_H 1
-#include "cg_var.h"
+#include "cg_info.h"
 #ifdef __linux
 #include <xcb/xcb_icccm.h>
 #include <xcb/xcb_util.h>
@@ -30,6 +30,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endif // _WIN32
 
 // 创建窗口
-bool cg_create_window(cg_var_t *p_info);
+bool cg_create_window(cg_info_t *p_info);
 
 #endif // CG_WSI_H 1

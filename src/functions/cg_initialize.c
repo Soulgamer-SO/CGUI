@@ -27,15 +27,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #include "cg_sync.h"
 #include "cg_wsi.h"
 
-bool cg_initialize_var(cg_var_t *p_var) {
-	if (p_var->p_memory_pool_var == nullptr) {
+bool cg_initialize_var(cg_info_t *p_info) {
+	if (p_info->p_memory_pool == nullptr) {
 		return false;
 	}
-	p_var->library_var.vk_result = VK_SUCCESS;
-	p_var->instance_var.vk_instance = VK_NULL_HANDLE;
-	p_var->physical_device_var.physical_device = VK_NULL_HANDLE;
-	p_var->physical_device_var.enabled_physical_device_extensions_count = 2;
-	p_var->physical_device_var.enabled_physical_device_extension_array = (char **)cg_alloc_memory(p_var->p_memory_pool_var, p_var->physical_device_var.enabled_physical_device_extensions_count * sizeof(char *));
+	p_info->library.vk_result = VK_SUCCESS;
+	p_info->instance.vk_instance = VK_NULL_HANDLE;
+	p_info->physical_device.physical_device = VK_NULL_HANDLE;
+	p_info->physical_device.enabled_physical_device_extensions_count = 2;
+	p_info->physical_device.enabled_physical_device_extension_array = (char **)cg_alloc_memory(p_var->p_memory_pool_var, p_var->physical_device_var.enabled_physical_device_extensions_count * sizeof(char *));
 	if (p_var->physical_device_var.enabled_physical_device_extension_array == nullptr) {
 		PRINT_ERROR("alloc memory fail!\n");
 		return false;
