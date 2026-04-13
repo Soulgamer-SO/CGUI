@@ -107,68 +107,68 @@ bool cg_create_window(cg_info_t *p_info) {
 
 #ifdef VK_USE_PLATFORM_WIN32_KHR
 	// 注册Windows class
-	p_info->wsi_var.WinAPI_var.w_class_name = (LPCSTR) "WindowClassSoul";
-	p_info->wsi_var.WinAPI_var.wnd_class = (WNDCLASSEX){
-		.cbSize = sizeof(p_info->wsi_var.WinAPI_var.wnd_class),
+	p_info->wsi.WinAPI_info.w_class_name = (LPCSTR) "WindowClassSoul";
+	p_info->wsi.WinAPI_info.wnd_class = (WNDCLASSEX){
+		.cbSize = sizeof(p_info->wsi.WinAPI_info.wnd_class),
 		.style = CS_HREDRAW | CS_VREDRAW,
 		.lpfnWndProc = window_proc,
 		.cbClsExtra = 0,
 		.cbWndExtra = 0,
-		.hInstance = p_info->wsi_var.WinAPI_var.hInstance,
-		.hIcon = LoadIcon(p_info->wsi_var.WinAPI_var.hInstance, "content/Soul.ico"),
+		.hInstance = p_info->wsi.WinAPI_info.hInstance,
+		.hIcon = LoadIcon(p_info->wsi.WinAPI_info.hInstance, "content/Soul.ico"),
 		.hCursor = LoadCursor(nullptr, IDC_ARROW),
 		.hbrBackground = CreateSolidBrush(cg_change_RGB_color(255, 0, 0)),
 		.lpszMenuName = "menu",
-		.lpszClassName = p_info->wsi_var.WinAPI_var.w_class_name,
+		.lpszClassName = p_info->wsi.WinAPI_info.w_class_name,
 		.hIconSm = LoadImage(
-			p_info->wsi_var.WinAPI_var.hInstance,
+			p_info->wsi.WinAPI_info.hInstance,
 			"content/Soul.ico", IMAGE_ICON,
 			GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON),
 			LR_DEFAULTSIZE | LR_LOADFROMFILE)};
-	if (RegisterClassEx(&p_info->wsi_var.WinAPI_var.wnd_class) == false) {
+	if (RegisterClassEx(&p_info->wsi.WinAPI_info.wnd_class) == false) {
 		PRINT_ERROR("Windows API RegisterClassEx fail!\n");
 		return false;
 	}
 
 	// 用Windows API创建窗口
-	p_info->wsi_var.win32_surface_create_info.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-	p_info->wsi_var.win32_surface_create_info.pNext = nullptr;
-	p_info->wsi_var.win32_surface_create_info.flags = 0;
-	p_info->wsi_var.win32_surface_create_info.hinstance = p_info->wsi_var.WinAPI_var.hInstance;
-	p_info->wsi_var.win32_surface_create_info.hwnd = nullptr;
-	p_info->wsi_var.win32_surface_create_info.hwnd = CreateWindowEx(
+	p_info->wsi.win32_surface_create_info.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+	p_info->wsi.win32_surface_create_info.pNext = nullptr;
+	p_info->wsi.win32_surface_create_info.flags = 0;
+	p_info->wsi.win32_surface_create_info.hinstance = p_info->wsi.WinAPI_info.hInstance;
+	p_info->wsi.win32_surface_create_info.hwnd = nullptr;
+	p_info->wsi.win32_surface_create_info.hwnd = CreateWindowEx(
 		0,
-		p_info->wsi_var.WinAPI_var.w_class_name,
-		(LPCSTR)p_info->wsi_var.window_name,
+		p_info->wsi.WinAPI_info.w_class_name,
+		(LPCSTR)p_info->wsi.window_name,
 		WS_OVERLAPPEDWINDOW,
-		p_info->wsi_var.window_x, p_info->wsi_var.window_y,
-		p_info->wsi_var.window_width, p_info->wsi_var.window_height,
+		p_info->wsi.window_x, p_info->wsi.window_y,
+		p_info->wsi.window_width, p_info->wsi.window_height,
 		(HWND) nullptr,
 		(HMENU) nullptr,
-		p_info->wsi_var.WinAPI_var.hInstance,
+		p_info->wsi.WinAPI_info.hInstance,
 		(LPVOID) nullptr);
-	if (p_info->wsi_var.win32_surface_create_info.hwnd == nullptr) {
+	if (p_info->wsi.win32_surface_create_info.hwnd == nullptr) {
 		PRINT_ERROR("Windows API CreateWindowEx fail!\n");
 		return false;
 	}
 	PFN_vkCreateWin32SurfaceKHR create_win32_surface = nullptr;
-	create_win32_surface = (PFN_vkCreateWin32SurfaceKHR)p_info->library_var.vk_get_instance_proc_addr(p_info->instance_var.vk_instance, "vkCreateWin32SurfaceKHR");
+	create_win32_surface = (PFN_vkCreateWin32SurfaceKHR)p_info->library.vk_get_instance_proc_addr(p_info->instance.vk_instance, "vkCreateWin32SurfaceKHR");
 	if (create_win32_surface == nullptr) {
 		PRINT_ERROR("load vkCreateWin32SurfaceKHR fail!\n");
 		return false;
 	}
-	p_info->library_var.vk_result = create_win32_surface(
-		p_info->instance_var.vk_instance, &p_info->wsi_var.win32_surface_create_info,
-		nullptr, &p_info->wsi_var.surface);
-	if (p_info->library_var.vk_result != VK_SUCCESS || p_info->wsi_var.surface == VK_NULL_HANDLE) {
+	p_info->library.vk_result = create_win32_surface(
+		p_info->instance.vk_instance, &p_info->wsi.win32_surface_create_info,
+		nullptr, &p_info->wsi.surface);
+	if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.surface == VK_NULL_HANDLE) {
 		PRINT_ERROR("create win32 surface fail!\n");
 		return false;
 	}
 
 	// 弹出窗口
-	p_info->wsi_var.WinAPI_var.nCmdShow = SW_SHOW;
-	ShowWindow(p_info->wsi_var.win32_surface_create_info.hwnd, p_info->wsi_var.WinAPI_var.nCmdShow);
-	UpdateWindow(p_info->wsi_var.win32_surface_create_info.hwnd);
+	p_info->wsi.WinAPI_info.nCmdShow = SW_SHOW;
+	ShowWindow(p_info->wsi.win32_surface_create_info.hwnd, p_info->wsi.WinAPI_info.nCmdShow);
+	UpdateWindow(p_info->wsi.win32_surface_create_info.hwnd);
 
 #endif // VK_USE_PLATFORM_WIN32_KHR
 

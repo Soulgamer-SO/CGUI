@@ -67,7 +67,7 @@ MAIN {
 	if (cg_create_memory_pool(&test_memory_pool) == false || test_memory_pool.memory_pool == nullptr || test_memory_pool.free_memory_node_addr_array == nullptr) {
 		goto exit;
 	} else {
-		PRINT_LOG("create memory_pool_var success!\n");
+		PRINT_LOG("create memory_pool success!\n");
 	}
 
 	void *test_memory_1 = cg_alloc_memory(&test_memory_pool, 128);
