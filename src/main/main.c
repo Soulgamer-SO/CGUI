@@ -127,10 +127,10 @@ MAIN {
 #endif
 
 #ifdef _WIN32
-	var.wsi_var.WinAPI_var.hInstance = hInstance,
-	var.wsi_var.WinAPI_var.hPrevInstance = hPrevInstance;
-	var.wsi_var.WinAPI_var.pCmdLine = pCmdLine;
-	var.wsi_var.WinAPI_var.nCmdShow = nCmdShow;
+	var.wsi.WinAPI_info.hInstance = hInstance,
+	var.wsi.WinAPI_info.hPrevInstance = hPrevInstance;
+	var.wsi.WinAPI_info.pCmdLine = pCmdLine;
+	var.wsi.WinAPI_info.nCmdShow = nCmdShow;
 #endif // _WIN32
 	bool is_init = false;
 	is_init = cg_initialize_var(&var);
@@ -150,10 +150,10 @@ destroy_memory_pool:
 	free(test_memory_pool.free_memory_node_addr_array);
 	test_memory_pool.free_memory_node_addr_array = nullptr;
 #endif
-	free(memory_pool_var.memory_pool);
-	memory_pool_var.memory_pool = nullptr;
-	free(memory_pool_var.free_memory_node_addr_array);
-	memory_pool_var.free_memory_node_addr_array = nullptr;
+	free(memory_pool.memory_pool);
+	memory_pool.memory_pool = nullptr;
+	free(memory_pool.free_memory_node_addr_array);
+	memory_pool.free_memory_node_addr_array = nullptr;
 exit:
 	PRINT_LOG("Exit success!\n");
 	return EXIT_SUCCESS;

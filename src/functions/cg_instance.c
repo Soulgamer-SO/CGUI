@@ -79,7 +79,7 @@ bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
 	enabled_extension_name_array[1] = VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
 #endif // _WIN32
 
-	/* p_info->instance.enabled_extension_name_array = (char***)malloc(p_info->instance_var.enabled_instance_extension_count * sizeof(char *));
+	/* p_info->instance.enabled_extension_name_array = (char***)malloc(p_info->instance.enabled_instance_extension_count * sizeof(char *));
 	    if (p_info->instance.enabled_extension_name_array == nullptr)
 	    {
 		return false;
