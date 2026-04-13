@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "cg_swapchain.h"
 
-bool cg_select_swapchain(cg_var_t *p_var) {
+bool cg_select_swapchain(cg_info_t *p_info) {
 	p_var->wsi_var.old_swapchain = VK_NULL_HANDLE;
 
 	// 设置交换链图像的数量
@@ -115,7 +115,7 @@ bool cg_select_swapchain(cg_var_t *p_var) {
 	return true;
 }
 
-bool cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain) {
+bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
 	PFN_vkCreateSwapchainKHR create_swapchain = nullptr;
 	create_swapchain = (PFN_vkCreateSwapchainKHR)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateSwapchainKHR");
 	if (create_swapchain == nullptr) {
@@ -215,7 +215,7 @@ bool cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain) {
 	return true;
 }
 
-bool cg_select_present_mode(cg_var_t *p_var) {
+bool cg_select_present_mode(cg_info_t *p_info) {
 	p_var->wsi_var.present_mode_count = 0;
 	PFN_vkGetPhysicalDeviceSurfacePresentModesKHR get_physical_device_surface_present_modes = nullptr;
 	get_physical_device_surface_present_modes = (PFN_vkGetPhysicalDeviceSurfacePresentModesKHR)p_var->library_var.vk_get_instance_proc_addr(

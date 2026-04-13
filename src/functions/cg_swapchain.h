@@ -19,18 +19,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef CG_SWAPCHAIN_H
 #define CG_SWAPCHAIN_H 1
-#include "cg_var.h"
+#include "cg_info.h"
 #ifdef __linux
 #include <dlfcn.h>
 #endif // __linux
 
 // 选择想要的交换链
-bool cg_select_swapchain(cg_var_t *p_var);
+bool cg_select_swapchain(cg_info_t *p_info);
 
 // 创建交换链
-bool cg_create_swapchain(cg_var_t *p_var, VkSwapchainKHR *p_swapchain);
+bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain);
 
 // 选择想要的显示模式
-bool cg_select_present_mode(cg_var_t *p_var);
+bool cg_select_present_mode(cg_info_t *p_info);
 
 #endif // CG_SWAPCHAIN_H
