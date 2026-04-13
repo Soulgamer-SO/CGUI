@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "cg_sync.h"
 
-void cg_create_semaphore(cg_var_t *p_var) {
+void cg_create_semaphore(cg_info_t *p_info) {
 	PFN_vkCreateSemaphore create_semaphore = nullptr;
 	create_semaphore = (PFN_vkCreateSemaphore)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateSemaphore");
 	if (create_semaphore == nullptr) {
@@ -42,7 +42,7 @@ void cg_create_semaphore(cg_var_t *p_var) {
 	return;
 }
 
-void cg_create_fence(cg_var_t *p_var) {
+void cg_create_fence(cg_info_t *p_info) {
 	PFN_vkCreateFence vkCreateFence = nullptr;
 	vkCreateFence = (PFN_vkCreateFence)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkCreateFence");
 	if (vkCreateFence == nullptr) {
@@ -67,7 +67,7 @@ void cg_create_fence(cg_var_t *p_var) {
 	return;
 }
 
-void cg_wait_for_fences(cg_var_t *p_var) {
+void cg_wait_for_fences(cg_info_t *p_info) {
 	PFN_vkWaitForFences vkWaitForFences = nullptr;
 	vkWaitForFences = (PFN_vkWaitForFences)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkWaitForFences");
 	if (vkWaitForFences == nullptr) {
@@ -89,7 +89,7 @@ void cg_wait_for_fences(cg_var_t *p_var) {
 	return;
 }
 
-void cg_reset_for_fences(cg_var_t *p_var) {
+void cg_reset_for_fences(cg_info_t *p_info) {
 	PFN_vkResetFences vkResetFences = nullptr;
 	vkResetFences = (PFN_vkResetFences)p_var->library_var.vk_get_device_proc_addr(p_var->logic_device_var.vk_logic_device, "vkResetFences");
 	if (nullptr == vkResetFences) {
@@ -107,7 +107,7 @@ void cg_reset_for_fences(cg_var_t *p_var) {
 	return;
 }
 
-void cg_submit_command_buff_to_queue(cg_var_t *p_var) {
+void cg_submit_command_buff_to_queue(cg_info_t *p_info) {
 
 	VkSubmitInfo submit_info = {
 		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
