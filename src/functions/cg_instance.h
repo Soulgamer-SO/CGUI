@@ -19,12 +19,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef CG_INSTANCE_H
 #define CG_INSTANCE_H 1
-#include "cg_var.h"
+#include "cg_info.h"
 #ifdef __linux
 #include <dlfcn.h>
 #endif // __linux
 
 // 创建Vulkan实例
-bool cg_create_instance(cg_var_t *p_var, VkInstance *p_vk_instance);
+bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance);
 
 #endif // CG_INSTANCE_H 1

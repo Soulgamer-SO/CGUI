@@ -19,12 +19,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef CG_LOAD_LIBRARY_H
 #define CG_LOAD_LIBRARY_H 1
-#include "cg_var.h"
+#include "cg_info.h"
 #ifdef __linux
 #include <dlfcn.h>
 #endif // __linux
 
 // 加载函数库
-bool cg_load_library(cg_var_t *p_var);
+bool cg_load_library(cg_info_t *p_info);
 
 #endif // CG_LOAD_LIBRARY_H 1
