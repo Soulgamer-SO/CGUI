@@ -21,13 +21,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifdef __linux
 #include <xcb/xcb_event.h>
 
-void cg_event_loop(cg_var_t *p_var) {
-	p_var->event_loop_var.is_running = true;
-	while (p_var->event_loop_var.is_running && (p_var->event_loop_var.event = xcb_wait_for_event(p_var->wsi_var.xcb_surface_create_info.connection))) {
-		switch (XCB_EVENT_RESPONSE_TYPE(p_var->event_loop_var.event)) {
+void cg_event_loop(cg_info_t *p_info) {
+	p_info->event_loop.is_running = true;
+	while (p_info->event_loop.is_running && (p_info->event_loop.event = xcb_wait_for_event(p_info->wsi.xcb_surface_create_info.connection))) {
+		switch (XCB_EVENT_RESPONSE_TYPE(p_info->event_loop.event)) {
 		case XCB_EXPOSE: {
-			xcb_expose_event_t *expose_event = (xcb_expose_event_t *)p_var->event_loop_var.event;
-			if (expose_event->window == p_var->wsi_var.xcb_surface_create_info.window) {
+			xcb_expose_event_t *expose_event = (xcb_expose_event_t *)p_info->event_loop.event;
+			if (expose_event->window == p_info->wsi.xcb_surface_create_info.window) {
 				PRINT_LOG(
 					"expose_event x = %i; expose_event y = %i; expose_event width = %i; expose_event height = %i;\n",
 					expose_event->x,
@@ -49,14 +49,14 @@ void cg_event_loop(cg_var_t *p_var) {
 #ifdef _WIN32
 #include "cg_input.h"
 
-void cg_event_loop(cg_var_t *p_var) {
-	p_var->event_loop_var.is_running = true;
-	p_var->event_loop_var.msg.message = WM_NULL;
-	GetMessage(&p_var->event_loop_var.msg, nullptr, 0, 0);
-	while (p_var->event_loop_var.is_running && (p_var->event_loop_var.msg.message != WM_QUIT)) {
-		if (PeekMessage(&p_var->event_loop_var.msg, nullptr, 0, 0, PM_REMOVE) != false) {
-			TranslateMessage(&p_var->event_loop_var.msg);
-			DispatchMessage(&p_var->event_loop_var.msg);
+void cg_event_loop(cg_info_t *p_info) {
+	p_info->event_loop.is_running = true;
+	p_info->event_loop.msg.message = WM_NULL;
+	GetMessage(&p_info->event_loop.msg, nullptr, 0, 0);
+	while (p_info->event_loop.is_running && (p_info->event_loop.msg.message != WM_QUIT)) {
+		if (PeekMessage(&p_info->event_loop.msg, nullptr, 0, 0, PM_REMOVE) != false) {
+			TranslateMessage(&p_info->event_loop.msg);
+			DispatchMessage(&p_info->event_loop.msg);
 		}
 	}
 
