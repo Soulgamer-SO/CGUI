@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "cg_memory.h"
 
-bool cg_create_memory_pool(cg_memory_pool_var_t *p_mp) {
+bool cg_create_memory_pool(cg_memory_pool_info_t *p_mp) {
 	if (p_mp->size < sizeof(cg_memory_node_t)) {
 		PRINT_ERROR("memory pool size should be larger!\n");
 		return false;
@@ -39,7 +39,7 @@ bool cg_create_memory_pool(cg_memory_pool_var_t *p_mp) {
 	return true;
 }
 
-void *cg_alloc_memory(cg_memory_pool_var_t *p_mp, size_t size) {
+void *cg_alloc_memory(cg_memory_pool_info_t *p_mp, size_t size) {
 	// 保存排在最后的内存块的尾地址
 	void *last_memory_end_addr = nullptr;
 	size_t node_and_mem_size = sizeof(cg_memory_node_t) + size;
@@ -164,7 +164,7 @@ void *cg_alloc_memory(cg_memory_pool_var_t *p_mp, size_t size) {
 	return nullptr;
 }
 
-bool cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr) {
+bool cg_free_memory(cg_memory_pool_info_t *p_mp, void *memory_addr) {
 	if (memory_addr < p_mp->memory_pool || memory_addr >= p_mp->memory_pool + p_mp->size || memory_addr == nullptr) {
 		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return false;
@@ -289,7 +289,7 @@ bool cg_free_memory(cg_memory_pool_var_t *p_mp, void *memory_addr) {
 	return true;
 }
 
-size_t cg_get_memory_size(cg_memory_pool_var_t *p_mp, void *memory_addr) {
+size_t cg_get_memory_size(cg_memory_pool_info_t *p_mp, void *memory_addr) {
 	if (memory_addr < p_mp->memory_pool || memory_addr >= p_mp->memory_pool + p_mp->size) {
 		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return 0;
@@ -298,7 +298,7 @@ size_t cg_get_memory_size(cg_memory_pool_var_t *p_mp, void *memory_addr) {
 	return p_memory_node->size;
 }
 
-int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_mp, void *memory_addr) {
+int32_t cg_get_memory_node_index(cg_memory_pool_info_t *p_mp, void *memory_addr) {
 	if (memory_addr < p_mp->memory_pool || memory_addr >= p_mp->memory_pool + p_mp->size) {
 		PRINT_ERROR("this memory is not in the memory pool!\n");
 		return -1;
@@ -313,7 +313,7 @@ int32_t cg_get_memory_node_index(cg_memory_pool_var_t *p_mp, void *memory_addr) 
 	return -1;
 }
 
-bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_mp, cg_memory_node_t *memory_node_addr) {
+bool cg_add_one_p_memory_node(cg_memory_pool_info_t *p_mp, cg_memory_node_t *memory_node_addr) {
 	if (p_mp->free_memory_node_count == p_mp->free_memory_node_addr_max_count) {
 		PRINT_ERROR("p_mp->free_memory_node_count == memory_node_addr_max_count!\n");
 		return false;
@@ -329,7 +329,7 @@ bool cg_add_one_p_memory_node(cg_memory_pool_var_t *p_mp, cg_memory_node_t *memo
 	return true;
 }
 
-bool cg_rm_one_p_memory_node(cg_memory_pool_var_t *p_mp, uint32_t index) {
+bool cg_rm_one_p_memory_node(cg_memory_pool_info_t *p_mp, uint32_t index) {
 	if (p_mp->free_memory_node_count == 1) {
 		memset(p_mp->free_memory_node_addr_array, 0, p_mp->free_memory_node_addr_max_count * sizeof(cg_memory_node_t *));
 		p_mp->free_memory_node_count = 0;

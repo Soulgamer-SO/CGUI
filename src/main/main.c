@@ -29,8 +29,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define CG_MAX_FREE_MEM_NODE_COUNT (4U * 1024)
 
 MAIN {
-	cg_var_t var;
-	cg_memory_pool_var_t memory_pool_var = {
+	cg_info_t var;
+	cg_memory_pool_info_t memory_pool = {
 		.memory_pool = nullptr,
 		.size = CG_MEMORY_POOL_SIZE,
 		.free_size = 0,
@@ -39,13 +39,13 @@ MAIN {
 		.free_memory_node_count = 0,
 		.free_memory_node_addr_array = nullptr,
 		.free_memory_node_addr_max_count = CG_MAX_FREE_MEM_NODE_COUNT};
-	memory_pool_var.memory_pool = calloc(1, memory_pool_var.size);
-	memory_pool_var.free_memory_node_addr_array = calloc(CG_MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
-	if (cg_create_memory_pool(&memory_pool_var) == false) {
+	memory_pool.memory_pool = calloc(1, memory_pool.size);
+	memory_pool.free_memory_node_addr_array = calloc(CG_MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
+	if (cg_create_memory_pool(&memory_pool) == false) {
 		goto exit;
 	} else {
-		var.p_memory_pool_var = &memory_pool_var;
-		PRINT_LOG("create memory_pool_var success!\n");
+		var.p_memory_pool = &memory_pool;
+		PRINT_LOG("create memory_pool success!\n");
 	}
 
 	// 测试内存池的分配和释放功能
@@ -53,7 +53,7 @@ MAIN {
 #define TEST_CG_MEMORY_POOL_SIZE (1024ULL)
 #define TEST_CG_MAX_FREE_MEM_NODE_COUNT (32U)
 	PRINT_LOG("test memory pool start!\n");
-	cg_memory_pool_var_t test_memory_pool = {
+	cg_memory_pool_info_t test_memory_pool = {
 		.memory_pool = nullptr,
 		.size = TEST_CG_MEMORY_POOL_SIZE,
 		.free_size = 0,

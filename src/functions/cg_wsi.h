@@ -30,6 +30,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endif // _WIN32
 
 // 创建窗口
-bool cg_create_window(cg_var_t *p_var);
+bool cg_create_window(cg_var_t *p_info);
 
 #endif // CG_WSI_H 1

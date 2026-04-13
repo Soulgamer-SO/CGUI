@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef CG_GPU_MEMORY_H
 #define CG_GPU_MEMORY_H 1
 #include "cg_log.h"
-#include "cg_var.h"
+#include "cg_info.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>

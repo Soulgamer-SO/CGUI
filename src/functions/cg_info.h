@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef CG_VAR_H
-#define CG_VAR_H 1
+#ifndef CG_INFO_H
+#define CG_INFO_H 1
 #include "cg_memory.h"
 #include <stdint.h>
 #include <stdio.h>
@@ -29,7 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <xcb/xcb_icccm.h>
 #endif // __linux
 
-typedef struct library_var {
+typedef struct library_info {
 	// Vulkan命令返回代码 Vulkan command return codes
 	VkResult vk_result;
 	// Linux下加载Vulkan函数库
@@ -46,10 +46,10 @@ typedef struct library_var {
 	PFN_vkGetInstanceProcAddr vk_get_instance_proc_addr;
 	// 加载逻辑设备函数的函数 PFN_vkGetDeviceProcAddr
 	PFN_vkGetDeviceProcAddr vk_get_device_proc_addr;
-} library_var_t;
+} library_info_t;
 
 // instance
-typedef struct vk_instance_var {
+typedef struct vk_instance_info {
 	// 创建Vulkan实例
 	VkInstance vk_instance;
 	// 获得Vulkan实例扩展数量
@@ -60,10 +60,10 @@ typedef struct vk_instance_var {
 	uint32_t enabled_instance_extension_count;
 	// 已启用的实例扩展的名单
 	char **enabled_extension_name_array;
-} vk_instance_var_t;
+} vk_instance_info_t;
 
 // physical device
-typedef struct vk_physical_device_var_t {
+typedef struct vk_physical_device_info_t {
 	// 要被选择的物理设备(显卡)
 	VkPhysicalDevice physical_device;
 	// 获取可用的物理设备的数量
@@ -89,10 +89,10 @@ typedef struct vk_physical_device_var_t {
 	char **enabled_physical_device_extension_array;
 	// 获取物理设备内存属性
 	VkPhysicalDeviceMemoryProperties physical_device_memory_properties;
-} vk_physical_device_var_t;
+} vk_physical_device_info_t;
 
 // logic device
-typedef struct vk_logic_device_var {
+typedef struct vk_logic_device_info {
 	// 获取队列家族和它们的属性,选择想要的队列家族
 	uint32_t queue_family_count;
 	VkQueueFamilyProperties *queue_family_array;
@@ -111,19 +111,19 @@ typedef struct vk_logic_device_var {
 
 	// 创建Vulkan逻辑设备
 	VkDevice vk_logic_device;
-} vk_logic_device_var_t;
+} vk_logic_device_info_t;
 
 // command pool var
-typedef struct vk_command_pool_var {
+typedef struct vk_command_pool_info {
 	// 命令池
 	VkCommandPool command_pool;
 	// 命令缓存列表
 	uint32_t command_buffer_count;
 	VkCommandBuffer *command_buffer_array;
-} vk_command_pool_var_t;
+} vk_command_pool_info_t;
 
 // sync var
-typedef struct sync_var {
+typedef struct sync_info {
 	// 信号量数量
 	uint32_t semaphore_count;
 	// 信号列表
@@ -150,10 +150,10 @@ typedef struct sync_var {
 	uint32_t semaphore_pipeline_stage_count;
 	// pipeline阶段的位掩码列表
 	VkPipelineStageFlags *semaphore_pipeline_stage_array;
-} sync_var_t;
+} sync_info_t;
 
 // window var
-typedef struct wsi_var {
+typedef struct wsi_info {
 	char *window_name;
 	int16_t window_x;
 	int16_t window_y;
@@ -165,19 +165,19 @@ typedef struct wsi_var {
 	VkSurfaceKHR surface;
 #ifdef VK_USE_PLATFORM_XCB_KHR
 	// XCB API
-	struct XCB_API_var {
+	struct XCB_API_info {
 		int screen_num;
 		uint32_t mask;
 		xcb_screen_t *screen;
 		xcb_size_hints_t window_size_hints;
-	} XCB_API_var;
+	} XCB_API_info;
 
 	VkXcbSurfaceCreateInfoKHR xcb_surface_create_info;
 #endif // VK_USE_PLATFORM_XCB_KHR
 
 #ifdef _WIN32
-	// Windows API
-	struct WinAPI_var {
+	// Windows API 相关
+	struct WinAPI_info {
 		// WinMain()函数参数
 		HINSTANCE hInstance;
 		HINSTANCE hPrevInstance;
@@ -186,7 +186,7 @@ typedef struct wsi_var {
 		// RegisterClassEx()函数参数
 		WNDCLASSEX wnd_class;
 		LPCSTR w_class_name;
-	} WinAPI_var;
+	} WinAPI_info;
 
 	VkWin32SurfaceCreateInfoKHR win32_surface_create_info;
 #endif // _WIN32
@@ -223,10 +223,10 @@ typedef struct wsi_var {
 	uint32_t image_index;
 	// 图像视图
 	VkImageView *swapchain_image_view_array;
-} wsi_var_t;
+} wsi_info_t;
 
 // event loop var
-typedef struct event_loop_var {
+typedef struct event_loop_info {
 	bool is_running;
 #ifdef VK_USE_PLATFORM_XCB_KHR
 	xcb_generic_event_t *event;
@@ -235,19 +235,19 @@ typedef struct event_loop_var {
 #ifdef _WIN32
 	MSG msg;
 #endif // _WIN32
-} event_loop_var_t;
+} event_loop_info_t;
 
 // var of project
-typedef struct cg_var {
-	cg_memory_pool_var_t *p_memory_pool_var;
-	library_var_t library_var;
-	vk_instance_var_t instance_var;
-	vk_physical_device_var_t physical_device_var;
-	vk_logic_device_var_t logic_device_var;
-	vk_command_pool_var_t command_pool_var;
-	sync_var_t sync_var;
-	wsi_var_t wsi_var;
-	event_loop_var_t event_loop_var;
-} cg_var_t;
+typedef struct cg_info {
+	cg_memory_pool_info_t *p_memory_pool;
+	library_info_t library;
+	vk_instance_info_t instance;
+	vk_physical_device_info_t physical_device;
+	vk_logic_device_info_t logic_device;
+	vk_command_pool_info_t command_pool;
+	sync_info_t sync;
+	wsi_info_t wsi;
+	event_loop_info_t event_loop;
+} cg_info_t;
 
-#endif // CG_VAR_H 1
+#endif // CG_INFO_H 1
