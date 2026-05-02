@@ -29,7 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define CG_MAX_FREE_MEM_NODE_COUNT (4U * 1024)
 
 MAIN {
-	cg_info_t var;
+	cg_info_t info;
 	cg_memory_pool_info_t memory_pool = {
 		.memory_pool = nullptr,
 		.size = CG_MEMORY_POOL_SIZE,
@@ -44,7 +44,7 @@ MAIN {
 	if (cg_create_memory_pool(&memory_pool) == false) {
 		goto exit;
 	} else {
-		var.p_memory_pool = &memory_pool;
+		info.p_memory_pool = &memory_pool;
 		PRINT_LOG("create memory_pool success!\n");
 	}
 
@@ -127,22 +127,22 @@ MAIN {
 #endif
 
 #ifdef _WIN32
-	var.wsi.WinAPI_info.hInstance = hInstance,
-	var.wsi.WinAPI_info.hPrevInstance = hPrevInstance;
-	var.wsi.WinAPI_info.pCmdLine = pCmdLine;
-	var.wsi.WinAPI_info.nCmdShow = nCmdShow;
+	info.wsi.WinAPI_info.hInstance = hInstance,
+	info.wsi.WinAPI_info.hPrevInstance = hPrevInstance;
+	info.wsi.WinAPI_info.pCmdLine = pCmdLine;
+	info.wsi.WinAPI_info.nCmdShow = nCmdShow;
 #endif // _WIN32
 	bool is_init = false;
-	is_init = cg_initialize_var(&var);
+	is_init = cg_initialize_var(&info);
 	if (is_init == false) {
 		PRINT_ERROR("initialize fail!\n");
 		goto destroy_memory_pool;
 	}
 
-	cg_event_loop(&var);
+	cg_event_loop(&info);
 
 destroy_var:
-	cg_destroy(&var);
+	cg_destroy(&info);
 destroy_memory_pool:
 #if DEBUG
 	free(test_memory_pool.memory_pool);
