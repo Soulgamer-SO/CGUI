@@ -333,15 +333,18 @@ bool cg_rm_one_p_memory_node(cg_memory_pool_info_t *p_mp, uint32_t index) {
 	if (p_mp->free_memory_node_count == 1) {
 		memset(p_mp->free_memory_node_addr_array, 0, p_mp->free_memory_node_addr_max_count * sizeof(cg_memory_node_t *));
 		p_mp->free_memory_node_count = 0;
-		p_mp->free_memory_node_count--;
 		return true;
 	}
 	if (p_mp->free_memory_node_count - 1 > index) {
 		p_mp->free_memory_node_addr_array[index] = p_mp->free_memory_node_addr_array[p_mp->free_memory_node_count - 1];
 		p_mp->free_memory_node_addr_array[p_mp->free_memory_node_count - 1] = nullptr;
+		p_mp->free_memory_node_count--;
+		return true;
 	}
 	if (p_mp->free_memory_node_count - 1 == index) {
 		p_mp->free_memory_node_addr_array[index] = nullptr;
+		p_mp->free_memory_node_count--;
+		return true;
 	}
 
 	return false;
