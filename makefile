@@ -18,14 +18,6 @@ LD_LIBRARY_FLAGS += -lgdi32
 target_bin := cgui-app.exe
 endif
 
-#如果是Android
-ifeq ($(shell uname),Linux)
-ifeq ($(shell uname -m),aarch64)
-VK_USE_PLATFORM := VK_USE_PLATFORM_ANDROID_KHR
-target_bin := cgui-app
-endif
-endif
-
 DEBUG = DEBUG
 CFLAGS = -D $(VK_USE_PLATFORM) -D $(DEBUG) -Wall -g -O0
 target_path_debug := build/debug/
