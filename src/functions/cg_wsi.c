@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 bool cg_create_window(cg_info_t *p_info) {
     p_info->wsi.surface = VK_NULL_HANDLE;
-    p_info->wsi.window_name = "CGUI-App";
+    p_info->wsi.window_name = "cgui-app";
     p_info->wsi.window_x = 200;
     p_info->wsi.window_y = 200;
     p_info->wsi.window_width = 1280;
