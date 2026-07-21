@@ -51,7 +51,10 @@ bool cg_create_window(cg_info_t *p_info) {
     p_info->wsi.XCB_API_info.mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
     p_info->wsi.XCB_API_info.screen = xcb_setup_roots_iterator(xcb_get_setup(p_info->wsi.xcb_surface_create_info.connection)).data;
     p_info->wsi.XCB_API_info.value_list.background_pixel = cg_change_RGB_color(255, 0, 0);
-    p_info->wsi.XCB_API_info.value_list.event_mask = XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_KEY_PRESS;
+    p_info->wsi.XCB_API_info.value_list.event_mask = XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE |
+                                                     XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE |
+                                                     XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_POINTER_MOTION |
+                                                     XCB_EVENT_MASK_STRUCTURE_NOTIFY;
     p_info->wsi.XCB_API_info.cookie = xcb_create_window_aux(
         p_info->wsi.xcb_surface_create_info.connection,
         XCB_COPY_FROM_PARENT,
