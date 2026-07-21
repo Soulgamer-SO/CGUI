@@ -21,58 +21,58 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 bool cg_load_library(cg_info_t *p_info) {
 #ifdef __linux
-	p_info->library.vulkan_library = nullptr;
-	p_info->library.vulkan_library = dlopen("libvulkan.so.1", RTLD_NOW);
-	if (p_info->library.vulkan_library == nullptr) {
-		PRINT_ERROR("load libvulkan.so.1 fail!\n");
-		return false;
-	} else {
-		PRINT_LOG("load vulkan.so.1 success!\n");
-	}
+    p_info->library.vulkan_library = nullptr;
+    p_info->library.vulkan_library = dlopen("libvulkan.so.1", RTLD_NOW);
+    if (p_info->library.vulkan_library == nullptr) {
+        PRINT_ERROR("load libvulkan.so.1 fail!\n");
+        return false;
+    } else {
+        PRINT_LOG("load vulkan.so.1 success!\n");
+    }
 
-	// 加载实例函数的函数 vkGetInstanceProcAddr
-	p_info->library.vk_get_instance_proc_addr = nullptr;
-	p_info->library.vk_get_instance_proc_addr = (PFN_vkGetInstanceProcAddr)dlsym(p_info->library.vulkan_library, "vkGetInstanceProcAddr");
-	if (p_info->library.vk_get_instance_proc_addr == nullptr) {
-		PRINT_ERROR("load vkGetInstanceProcAddr fail!\n");
-		return false;
-	}
+    // 加载实例函数的函数 vkGetInstanceProcAddr
+    p_info->library.vk_get_instance_proc_addr = nullptr;
+    p_info->library.vk_get_instance_proc_addr = (PFN_vkGetInstanceProcAddr)dlsym(p_info->library.vulkan_library, "vkGetInstanceProcAddr");
+    if (p_info->library.vk_get_instance_proc_addr == nullptr) {
+        PRINT_ERROR("load vkGetInstanceProcAddr fail!\n");
+        return false;
+    }
 
-	// 加载设备函数的函数 vkGetDeviceProcAddr
-	p_info->library.vk_get_device_proc_addr = nullptr;
-	p_info->library.vk_get_device_proc_addr = (PFN_vkGetDeviceProcAddr)dlsym(p_info->library.vulkan_library, "vkGetDeviceProcAddr");
-	if (p_info->library.vk_get_device_proc_addr == nullptr) {
-		PRINT_ERROR("load vkGetDeviceProcAddr fail!\n");
-		return false;
-	}
+    // 加载设备函数的函数 vkGetDeviceProcAddr
+    p_info->library.vk_get_device_proc_addr = nullptr;
+    p_info->library.vk_get_device_proc_addr = (PFN_vkGetDeviceProcAddr)dlsym(p_info->library.vulkan_library, "vkGetDeviceProcAddr");
+    if (p_info->library.vk_get_device_proc_addr == nullptr) {
+        PRINT_ERROR("load vkGetDeviceProcAddr fail!\n");
+        return false;
+    }
 #endif // __linux
 
 #ifdef _WIN32
-	p_info->library.vulkan_library = nullptr;
-	p_info->library.vulkan_library = LoadLibrary("vulkan-1.dll");
-	if (p_info->library.vulkan_library == nullptr) {
-		PRINT_ERROR("load vulkan-1.dll fail!\n");
-		return false;
-	} else {
-		PRINT_LOG("load vulkan-1.dll success!\n");
-	}
+    p_info->library.vulkan_library = nullptr;
+    p_info->library.vulkan_library = LoadLibrary("vulkan-1.dll");
+    if (p_info->library.vulkan_library == nullptr) {
+        PRINT_ERROR("load vulkan-1.dll fail!\n");
+        return false;
+    } else {
+        PRINT_LOG("load vulkan-1.dll success!\n");
+    }
 
-	// 加载实例函数的函数 vkGetInstanceProcAddr
-	p_info->library.vk_get_instance_proc_addr = nullptr;
-	p_info->library.vk_get_instance_proc_addr = (PFN_vkGetInstanceProcAddr)GetProcAddress(p_info->library.vulkan_library, "vkGetInstanceProcAddr");
-	if (p_info->library.vk_get_instance_proc_addr == nullptr) {
-		PRINT_ERROR("load vkGetInstanceProcAddr fail!\n");
-		return false;
-	}
+    // 加载实例函数的函数 vkGetInstanceProcAddr
+    p_info->library.vk_get_instance_proc_addr = nullptr;
+    p_info->library.vk_get_instance_proc_addr = (PFN_vkGetInstanceProcAddr)GetProcAddress(p_info->library.vulkan_library, "vkGetInstanceProcAddr");
+    if (p_info->library.vk_get_instance_proc_addr == nullptr) {
+        PRINT_ERROR("load vkGetInstanceProcAddr fail!\n");
+        return false;
+    }
 
-	// 加载设备函数的函数 vkGetDeviceProcAddr
-	p_info->library.vk_get_device_proc_addr = nullptr;
-	p_info->library.vk_get_device_proc_addr = (PFN_vkGetDeviceProcAddr)GetProcAddress(p_info->library.vulkan_library, "vkGetDeviceProcAddr");
-	if (p_info->library.vk_get_device_proc_addr == nullptr) {
-		PRINT_ERROR("load vkGetDeviceProcAddr fail!\n");
-		return false;
-	}
+    // 加载设备函数的函数 vkGetDeviceProcAddr
+    p_info->library.vk_get_device_proc_addr = nullptr;
+    p_info->library.vk_get_device_proc_addr = (PFN_vkGetDeviceProcAddr)GetProcAddress(p_info->library.vulkan_library, "vkGetDeviceProcAddr");
+    if (p_info->library.vk_get_device_proc_addr == nullptr) {
+        PRINT_ERROR("load vkGetDeviceProcAddr fail!\n");
+        return false;
+    }
 #endif // _WIN32
 
-	return true;
+    return true;
 }

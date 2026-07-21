@@ -1,5 +1,7 @@
+Language: C
 BasedOnStyle: LLVM
-IndentWidth: 8
-ContinuationIndentWidth: 8
-UseTab: Always
+IndentWidth: 4
+ContinuationIndentWidth: 4
+UseTab: Never
+Tabwidth: 4
 ColumnLimit: 0

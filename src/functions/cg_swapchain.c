@@ -20,293 +20,293 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_swapchain.h"
 
 bool cg_select_swapchain(cg_info_t *p_info) {
-	p_info->wsi.old_swapchain = VK_NULL_HANDLE;
+    p_info->wsi.old_swapchain = VK_NULL_HANDLE;
 
-	// 设置交换链图像的数量
-	p_info->wsi.enabled_image_count = p_info->wsi.surface_capabilities.maxImageCount + 1;
-	if (p_info->wsi.enabled_image_count > p_info->wsi.surface_capabilities.maxImageCount &&
-	    p_info->wsi.surface_capabilities.maxImageCount > 0) {
-		p_info->wsi.enabled_image_count = p_info->wsi.surface_capabilities.maxImageCount;
-	}
+    // 设置交换链图像的数量
+    p_info->wsi.enabled_image_count = p_info->wsi.surface_capabilities.maxImageCount + 1;
+    if (p_info->wsi.enabled_image_count > p_info->wsi.surface_capabilities.maxImageCount &&
+        p_info->wsi.surface_capabilities.maxImageCount > 0) {
+        p_info->wsi.enabled_image_count = p_info->wsi.surface_capabilities.maxImageCount;
+    }
 
-	// 设置交换链图像的尺寸
-	if (p_info->wsi.surface_capabilities.currentExtent.width == 0xFFFFFFFF) {
-		p_info->wsi.enabled_image_extent_size.width = 1280;
-		p_info->wsi.enabled_image_extent_size.height = 720;
-	}
-	if (p_info->wsi.enabled_image_extent_size.width > p_info->wsi.surface_capabilities.maxImageExtent.width) {
-		p_info->wsi.enabled_image_extent_size.width = p_info->wsi.surface_capabilities.maxImageExtent.width;
-	} else if (p_info->wsi.enabled_image_extent_size.width < p_info->wsi.surface_capabilities.minImageExtent.width) {
-		p_info->wsi.enabled_image_extent_size.width = p_info->wsi.surface_capabilities.minImageExtent.width;
-	}
+    // 设置交换链图像的尺寸
+    if (p_info->wsi.surface_capabilities.currentExtent.width == 0xFFFFFFFF) {
+        p_info->wsi.enabled_image_extent_size.width = 1280;
+        p_info->wsi.enabled_image_extent_size.height = 720;
+    }
+    if (p_info->wsi.enabled_image_extent_size.width > p_info->wsi.surface_capabilities.maxImageExtent.width) {
+        p_info->wsi.enabled_image_extent_size.width = p_info->wsi.surface_capabilities.maxImageExtent.width;
+    } else if (p_info->wsi.enabled_image_extent_size.width < p_info->wsi.surface_capabilities.minImageExtent.width) {
+        p_info->wsi.enabled_image_extent_size.width = p_info->wsi.surface_capabilities.minImageExtent.width;
+    }
 
-	if (p_info->wsi.enabled_image_extent_size.height > p_info->wsi.surface_capabilities.maxImageExtent.height) {
-		p_info->wsi.enabled_image_extent_size.height = p_info->wsi.surface_capabilities.maxImageExtent.height;
-	} else if (p_info->wsi.enabled_image_extent_size.height < p_info->wsi.surface_capabilities.minImageExtent.height) {
-		p_info->wsi.enabled_image_extent_size.height = p_info->wsi.surface_capabilities.minImageExtent.height;
-	} else {
-		p_info->wsi.enabled_image_extent_size = p_info->wsi.surface_capabilities.currentExtent;
-	}
+    if (p_info->wsi.enabled_image_extent_size.height > p_info->wsi.surface_capabilities.maxImageExtent.height) {
+        p_info->wsi.enabled_image_extent_size.height = p_info->wsi.surface_capabilities.maxImageExtent.height;
+    } else if (p_info->wsi.enabled_image_extent_size.height < p_info->wsi.surface_capabilities.minImageExtent.height) {
+        p_info->wsi.enabled_image_extent_size.height = p_info->wsi.surface_capabilities.minImageExtent.height;
+    } else {
+        p_info->wsi.enabled_image_extent_size = p_info->wsi.surface_capabilities.currentExtent;
+    }
 
-	// 设置交换链图像的功能
-	if (p_info->wsi.surface_capabilities.supportedUsageFlags & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) {
-		p_info->wsi.enabled_image_usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-		PRINT_LOG("enabled_image_usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;\n");
-	}
-	// 设置交换链图像的变换
-	p_info->wsi.enabled_surface_transform = p_info->wsi.surface_capabilities.currentTransform;
+    // 设置交换链图像的功能
+    if (p_info->wsi.surface_capabilities.supportedUsageFlags & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) {
+        p_info->wsi.enabled_image_usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        PRINT_LOG("enabled_image_usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;\n");
+    }
+    // 设置交换链图像的变换
+    p_info->wsi.enabled_surface_transform = p_info->wsi.surface_capabilities.currentTransform;
 
-	// 获得支持的交换链图像的格式的列表
-	PFN_vkGetPhysicalDeviceSurfaceFormatsKHR get_physical_device_surface_formats = nullptr;
-	get_physical_device_surface_formats = (PFN_vkGetPhysicalDeviceSurfaceFormatsKHR)p_info->library.vk_get_instance_proc_addr(p_info->instance.vk_instance, "vkGetPhysicalDeviceSurfaceFormatsKHR");
-	if (get_physical_device_surface_formats == nullptr) {
-		PRINT_ERROR("load vkGetPhysicalDeviceSurfaceFormatsKHR fail!\n");
-		return false;
-	}
-	p_info->wsi.surface_format_count = 0;
-	p_info->library.vk_result = get_physical_device_surface_formats(
-		p_info->physical_device.physical_device,
-		p_info->wsi.surface,
-		&p_info->wsi.surface_format_count,
-		nullptr);
-	if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.surface_format_count == 0) {
-		PRINT_ERROR("surface_format_count fail!\n");
-		return false;
-	}
-	p_info->wsi.surface_format_array = (VkSurfaceFormatKHR *)cg_alloc_memory(
-		p_info->p_memory_pool,
-		p_info->wsi.surface_format_count * sizeof(VkSurfaceFormatKHR));
-	p_info->library.vk_result = get_physical_device_surface_formats(
-		p_info->physical_device.physical_device, p_info->wsi.surface,
-		&p_info->wsi.surface_format_count, p_info->wsi.surface_format_array);
-	if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.surface_format_array == nullptr) {
-		PRINT_ERROR("surface_format_array fail!\n");
-		return false;
-	} else {
-		PRINT_LOG("alloc memory success!\n");
-	}
+    // 获得支持的交换链图像的格式的列表
+    PFN_vkGetPhysicalDeviceSurfaceFormatsKHR get_physical_device_surface_formats = nullptr;
+    get_physical_device_surface_formats = (PFN_vkGetPhysicalDeviceSurfaceFormatsKHR)p_info->library.vk_get_instance_proc_addr(p_info->instance.vk_instance, "vkGetPhysicalDeviceSurfaceFormatsKHR");
+    if (get_physical_device_surface_formats == nullptr) {
+        PRINT_ERROR("load vkGetPhysicalDeviceSurfaceFormatsKHR fail!\n");
+        return false;
+    }
+    p_info->wsi.surface_format_count = 0;
+    p_info->library.vk_result = get_physical_device_surface_formats(
+        p_info->physical_device.physical_device,
+        p_info->wsi.surface,
+        &p_info->wsi.surface_format_count,
+        nullptr);
+    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.surface_format_count == 0) {
+        PRINT_ERROR("surface_format_count fail!\n");
+        return false;
+    }
+    p_info->wsi.surface_format_array = (VkSurfaceFormatKHR *)cg_alloc_memory(
+        p_info->p_memory_pool,
+        p_info->wsi.surface_format_count * sizeof(VkSurfaceFormatKHR));
+    p_info->library.vk_result = get_physical_device_surface_formats(
+        p_info->physical_device.physical_device, p_info->wsi.surface,
+        &p_info->wsi.surface_format_count, p_info->wsi.surface_format_array);
+    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.surface_format_array == nullptr) {
+        PRINT_ERROR("surface_format_array fail!\n");
+        return false;
+    } else {
+        PRINT_LOG("alloc memory success!\n");
+    }
 
 #ifdef DEBUG
-	for (uint32_t i = 0; i < p_info->wsi.surface_format_count; i++) {
-		PRINT_LOG("format_array[%d] = %d;\n", i, p_info->wsi.surface_format_array[i].format);
-	}
+    for (uint32_t i = 0; i < p_info->wsi.surface_format_count; i++) {
+        PRINT_LOG("format_array[%d] = %d;\n", i, p_info->wsi.surface_format_array[i].format);
+    }
 #endif
 
-	// 选择交换链图像的格式 VK_FORMAT_B8G8R8A8_UNORM
-	p_info->wsi.enabled_surface_format.format = VK_FORMAT_B8G8R8A8_UNORM;
+    // 选择交换链图像的格式 VK_FORMAT_B8G8R8A8_UNORM
+    p_info->wsi.enabled_surface_format.format = VK_FORMAT_B8G8R8A8_UNORM;
 
-	// 判断是否支持自己想要的交换链图像的格式,VK_FORMAT_UNDEFINED 表示支持任意格式
-	bool is_surface_format_supported = false;
-	for (uint32_t i = 0; i < p_info->wsi.surface_format_count; i++) {
-		if (p_info->wsi.surface_format_array[i].format == p_info->wsi.enabled_surface_format.format) {
-			p_info->wsi.enabled_surface_format.colorSpace = p_info->wsi.surface_format_array[i].colorSpace;
-			is_surface_format_supported = true;
-			break;
-		}
-	}
+    // 判断是否支持自己想要的交换链图像的格式,VK_FORMAT_UNDEFINED 表示支持任意格式
+    bool is_surface_format_supported = false;
+    for (uint32_t i = 0; i < p_info->wsi.surface_format_count; i++) {
+        if (p_info->wsi.surface_format_array[i].format == p_info->wsi.enabled_surface_format.format) {
+            p_info->wsi.enabled_surface_format.colorSpace = p_info->wsi.surface_format_array[i].colorSpace;
+            is_surface_format_supported = true;
+            break;
+        }
+    }
 
-	if (is_surface_format_supported == true) {
-		PRINT_LOG("is_surface_format_supported = true!\n");
-	} else {
-		PRINT_LOG("is_surface_format_supported = false!\n");
-		return false;
-	}
+    if (is_surface_format_supported == true) {
+        PRINT_LOG("is_surface_format_supported = true!\n");
+    } else {
+        PRINT_LOG("is_surface_format_supported = false!\n");
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
-	PFN_vkCreateSwapchainKHR create_swapchain = nullptr;
-	create_swapchain = (PFN_vkCreateSwapchainKHR)p_info->library.vk_get_device_proc_addr(p_info->logic_device.vk_logic_device, "vkCreateSwapchainKHR");
-	if (create_swapchain == nullptr) {
-		PRINT_ERROR("load vkCreateSwapchainKHR fail!\n");
-		return false;
-	}
+    PFN_vkCreateSwapchainKHR create_swapchain = nullptr;
+    create_swapchain = (PFN_vkCreateSwapchainKHR)p_info->library.vk_get_device_proc_addr(p_info->logic_device.vk_logic_device, "vkCreateSwapchainKHR");
+    if (create_swapchain == nullptr) {
+        PRINT_ERROR("load vkCreateSwapchainKHR fail!\n");
+        return false;
+    }
 
-	*p_swapchain = VK_NULL_HANDLE;
-	p_info->library.vk_result = create_swapchain(
-		p_info->logic_device.vk_logic_device,
-		&(VkSwapchainCreateInfoKHR){
-			.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
-			.pNext = nullptr,
-			.flags = 0,
-			.surface = p_info->wsi.surface,
-			.minImageCount = p_info->wsi.enabled_image_count,
-			.imageFormat = p_info->wsi.enabled_surface_format.format,
-			.imageColorSpace = p_info->wsi.enabled_surface_format.colorSpace,
-			.imageExtent = p_info->wsi.enabled_image_extent_size,
-			.imageArrayLayers = 1,
-			.imageUsage = p_info->wsi.enabled_image_usage,
-			.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
-			.queueFamilyIndexCount = 0,
-			.pQueueFamilyIndices = nullptr,
-			.preTransform = p_info->wsi.enabled_surface_transform,
-			.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-			.presentMode = p_info->wsi.enabled_present_mode,
-			.clipped = VK_TRUE,
-			.oldSwapchain = p_info->wsi.old_swapchain},
-		nullptr, p_swapchain);
-	if (p_info->library.vk_result != VK_SUCCESS || p_swapchain == VK_NULL_HANDLE) {
-		PRINT_ERROR("create swapchain fail!\n");
-		return false;
-	}
+    *p_swapchain = VK_NULL_HANDLE;
+    p_info->library.vk_result = create_swapchain(
+        p_info->logic_device.vk_logic_device,
+        &(VkSwapchainCreateInfoKHR){
+            .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+            .pNext = nullptr,
+            .flags = 0,
+            .surface = p_info->wsi.surface,
+            .minImageCount = p_info->wsi.enabled_image_count,
+            .imageFormat = p_info->wsi.enabled_surface_format.format,
+            .imageColorSpace = p_info->wsi.enabled_surface_format.colorSpace,
+            .imageExtent = p_info->wsi.enabled_image_extent_size,
+            .imageArrayLayers = 1,
+            .imageUsage = p_info->wsi.enabled_image_usage,
+            .imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
+            .queueFamilyIndexCount = 0,
+            .pQueueFamilyIndices = nullptr,
+            .preTransform = p_info->wsi.enabled_surface_transform,
+            .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+            .presentMode = p_info->wsi.enabled_present_mode,
+            .clipped = VK_TRUE,
+            .oldSwapchain = p_info->wsi.old_swapchain},
+        nullptr, p_swapchain);
+    if (p_info->library.vk_result != VK_SUCCESS || p_swapchain == VK_NULL_HANDLE) {
+        PRINT_ERROR("create swapchain fail!\n");
+        return false;
+    }
 
-	// destroy_swapchain(p_info, p_info->wsi.old_swapchain);
-	// p_info->wsi.old_swapchain = VK_NULL_HANDLE;
+    // destroy_swapchain(p_info, p_info->wsi.old_swapchain);
+    // p_info->wsi.old_swapchain = VK_NULL_HANDLE;
 
-	// 获得交换链图像的列表
-	PFN_vkGetSwapchainImagesKHR get_swapchain_image_array = nullptr;
-	get_swapchain_image_array = (PFN_vkGetSwapchainImagesKHR)p_info->library.vk_get_device_proc_addr(p_info->logic_device.vk_logic_device, "vkGetSwapchainImagesKHR");
-	if (get_swapchain_image_array == nullptr) {
-		PRINT_ERROR("load vkGetSwapchainImagesKHR fail!\n");
-		return false;
-	}
-	p_info->wsi.swapchain_image_count = 0;
-	p_info->library.vk_result = get_swapchain_image_array(
-		p_info->logic_device.vk_logic_device,
-		p_info->wsi.swapchain,
-		&p_info->wsi.swapchain_image_count, nullptr);
-	if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.swapchain_image_count == 0) {
-		PRINT_ERROR("swapchain_image_count fail!\n");
-		return false;
-	}
-	p_info->wsi.swapchain_image_array = (VkImage *)cg_alloc_memory(p_info->p_memory_pool, p_info->wsi.swapchain_image_count * sizeof(VkImage));
-	if (p_info->wsi.swapchain_image_array != nullptr) {
-		p_info->library.vk_result = get_swapchain_image_array(
-			p_info->logic_device.vk_logic_device, p_info->wsi.swapchain,
-			&p_info->wsi.swapchain_image_count, p_info->wsi.swapchain_image_array);
-		if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.swapchain_image_array == nullptr) {
-			PRINT_ERROR("swapchain_image_array fail!\n");
-			return false;
-		} else {
-			PRINT_LOG("alloc memory success!\n");
-		}
+    // 获得交换链图像的列表
+    PFN_vkGetSwapchainImagesKHR get_swapchain_image_array = nullptr;
+    get_swapchain_image_array = (PFN_vkGetSwapchainImagesKHR)p_info->library.vk_get_device_proc_addr(p_info->logic_device.vk_logic_device, "vkGetSwapchainImagesKHR");
+    if (get_swapchain_image_array == nullptr) {
+        PRINT_ERROR("load vkGetSwapchainImagesKHR fail!\n");
+        return false;
+    }
+    p_info->wsi.swapchain_image_count = 0;
+    p_info->library.vk_result = get_swapchain_image_array(
+        p_info->logic_device.vk_logic_device,
+        p_info->wsi.swapchain,
+        &p_info->wsi.swapchain_image_count, nullptr);
+    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.swapchain_image_count == 0) {
+        PRINT_ERROR("swapchain_image_count fail!\n");
+        return false;
+    }
+    p_info->wsi.swapchain_image_array = (VkImage *)cg_alloc_memory(p_info->p_memory_pool, p_info->wsi.swapchain_image_count * sizeof(VkImage));
+    if (p_info->wsi.swapchain_image_array != nullptr) {
+        p_info->library.vk_result = get_swapchain_image_array(
+            p_info->logic_device.vk_logic_device, p_info->wsi.swapchain,
+            &p_info->wsi.swapchain_image_count, p_info->wsi.swapchain_image_array);
+        if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.swapchain_image_array == nullptr) {
+            PRINT_ERROR("swapchain_image_array fail!\n");
+            return false;
+        } else {
+            PRINT_LOG("alloc memory success!\n");
+        }
 
 #ifdef DEBUG
-		for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
-			PRINT_LOG("swapchain_image_array[%d] address = %p;\n", i, p_info->wsi.swapchain_image_array[i]);
-		}
+        for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
+            PRINT_LOG("swapchain_image_array[%d] address = %p;\n", i, p_info->wsi.swapchain_image_array[i]);
+        }
 #endif // DEBUG
-	}
+    }
 
-	// 获得下个用于显示的图像的索引
-	PFN_vkAcquireNextImageKHR acquire_next_image = nullptr;
-	acquire_next_image = (PFN_vkAcquireNextImageKHR)p_info->library.vk_get_device_proc_addr(p_info->logic_device.vk_logic_device, "vkAcquireNextImageKHR");
-	if (acquire_next_image == nullptr) {
-		PRINT_ERROR("load vkAcquireNextImageKHR fail!\n");
-		return false;
-	}
-	p_info->library.vk_result = acquire_next_image(
-		p_info->logic_device.vk_logic_device,
-		p_info->wsi.swapchain,
-		2000000000,		  // p_info->sync.timeout,
-		VK_SEMAPHORE_TYPE_BINARY, // p_info->sync.semaphore_array[0],
-		VK_NULL_HANDLE,		  // p_info->sync.fence_array[0],
-		&p_info->wsi.image_index);
-	switch (p_info->library.vk_result) {
-	case VK_SUCCESS:
-	case VK_SUBOPTIMAL_KHR:
-		break;
-	default:
-		PRINT_ERROR("vkAcquireNextImageKHR fail!\n");
-		return false;
-	}
+    // 获得下个用于显示的图像的索引
+    PFN_vkAcquireNextImageKHR acquire_next_image = nullptr;
+    acquire_next_image = (PFN_vkAcquireNextImageKHR)p_info->library.vk_get_device_proc_addr(p_info->logic_device.vk_logic_device, "vkAcquireNextImageKHR");
+    if (acquire_next_image == nullptr) {
+        PRINT_ERROR("load vkAcquireNextImageKHR fail!\n");
+        return false;
+    }
+    p_info->library.vk_result = acquire_next_image(
+        p_info->logic_device.vk_logic_device,
+        p_info->wsi.swapchain,
+        2000000000,               // p_info->sync.timeout,
+        VK_SEMAPHORE_TYPE_BINARY, // p_info->sync.semaphore_array[0],
+        VK_NULL_HANDLE,           // p_info->sync.fence_array[0],
+        &p_info->wsi.image_index);
+    switch (p_info->library.vk_result) {
+    case VK_SUCCESS:
+    case VK_SUBOPTIMAL_KHR:
+        break;
+    default:
+        PRINT_ERROR("vkAcquireNextImageKHR fail!\n");
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool cg_select_present_mode(cg_info_t *p_info) {
-	p_info->wsi.present_mode_count = 0;
-	PFN_vkGetPhysicalDeviceSurfacePresentModesKHR get_physical_device_surface_present_modes = nullptr;
-	get_physical_device_surface_present_modes = (PFN_vkGetPhysicalDeviceSurfacePresentModesKHR)p_info->library.vk_get_instance_proc_addr(
-		p_info->instance.vk_instance, "vkGetPhysicalDeviceSurfacePresentModesKHR");
-	if (get_physical_device_surface_present_modes == nullptr) {
-		PRINT_ERROR("load vkGetPhysicalDeviceSurfacePresentModesKHR fail!\n");
-		return false;
-	}
-	p_info->library.vk_result = get_physical_device_surface_present_modes(
-		p_info->physical_device.physical_device, p_info->wsi.surface,
-		&p_info->wsi.present_mode_count, nullptr);
-	if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.present_mode_count == 0) {
-		PRINT_ERROR("present_mode_count fail!\n");
-		return false;
-	}
+    p_info->wsi.present_mode_count = 0;
+    PFN_vkGetPhysicalDeviceSurfacePresentModesKHR get_physical_device_surface_present_modes = nullptr;
+    get_physical_device_surface_present_modes = (PFN_vkGetPhysicalDeviceSurfacePresentModesKHR)p_info->library.vk_get_instance_proc_addr(
+        p_info->instance.vk_instance, "vkGetPhysicalDeviceSurfacePresentModesKHR");
+    if (get_physical_device_surface_present_modes == nullptr) {
+        PRINT_ERROR("load vkGetPhysicalDeviceSurfacePresentModesKHR fail!\n");
+        return false;
+    }
+    p_info->library.vk_result = get_physical_device_surface_present_modes(
+        p_info->physical_device.physical_device, p_info->wsi.surface,
+        &p_info->wsi.present_mode_count, nullptr);
+    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.present_mode_count == 0) {
+        PRINT_ERROR("present_mode_count fail!\n");
+        return false;
+    }
 
-	// 获得Vulkan显示模式的列表
-	p_info->wsi.present_mode_array = (VkPresentModeKHR *)cg_alloc_memory(
-		p_info->p_memory_pool,
-		p_info->wsi.present_mode_count * sizeof(VkPresentModeKHR));
-	if (p_info->wsi.present_mode_array == nullptr) {
-		return false;
-	} else {
-		PRINT_LOG("alloc memory success!\n");
-	}
+    // 获得Vulkan显示模式的列表
+    p_info->wsi.present_mode_array = (VkPresentModeKHR *)cg_alloc_memory(
+        p_info->p_memory_pool,
+        p_info->wsi.present_mode_count * sizeof(VkPresentModeKHR));
+    if (p_info->wsi.present_mode_array == nullptr) {
+        return false;
+    } else {
+        PRINT_LOG("alloc memory success!\n");
+    }
 
-	p_info->library.vk_result = get_physical_device_surface_present_modes(
-		p_info->physical_device.physical_device, p_info->wsi.surface,
-		&p_info->wsi.present_mode_count, p_info->wsi.present_mode_array);
-	if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.present_mode_array == nullptr) {
-		PRINT_ERROR("present_mode_array fail!\n");
-		return false;
-	}
+    p_info->library.vk_result = get_physical_device_surface_present_modes(
+        p_info->physical_device.physical_device, p_info->wsi.surface,
+        &p_info->wsi.present_mode_count, p_info->wsi.present_mode_array);
+    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.present_mode_array == nullptr) {
+        PRINT_ERROR("present_mode_array fail!\n");
+        return false;
+    }
 
-	// 遍历打印Vulkan显示模式的列表
+    // 遍历打印Vulkan显示模式的列表
 #ifdef DEBUG
-	for (uint32_t i = 0; i < p_info->wsi.present_mode_count; i++) {
-		switch (p_info->wsi.present_mode_array[i]) {
-		case VK_PRESENT_MODE_IMMEDIATE_KHR:
-			PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_IMMEDIATE_KHR;\n", i);
-			break;
-		case VK_PRESENT_MODE_MAILBOX_KHR:
-			PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_MAILBOX_KHR;\n", i);
-			break;
-		case VK_PRESENT_MODE_FIFO_KHR:
-			PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_FIFO_KHR;\n", i);
-			break;
-		case VK_PRESENT_MODE_FIFO_RELAXED_KHR:
-			PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_FIFO_RELAXED_KHR;\n", i);
-			break;
-		case VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR:
-			PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR;\n", i);
-			break;
-		case VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR:
-			PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR;\n", i);
-			break;
-		case VK_PRESENT_MODE_MAX_ENUM_KHR:
-			PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_MAX_ENUM_KHR;\n", i);
-			break;
-		}
-	}
+    for (uint32_t i = 0; i < p_info->wsi.present_mode_count; i++) {
+        switch (p_info->wsi.present_mode_array[i]) {
+        case VK_PRESENT_MODE_IMMEDIATE_KHR:
+            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_IMMEDIATE_KHR;\n", i);
+            break;
+        case VK_PRESENT_MODE_MAILBOX_KHR:
+            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_MAILBOX_KHR;\n", i);
+            break;
+        case VK_PRESENT_MODE_FIFO_KHR:
+            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_FIFO_KHR;\n", i);
+            break;
+        case VK_PRESENT_MODE_FIFO_RELAXED_KHR:
+            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_FIFO_RELAXED_KHR;\n", i);
+            break;
+        case VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR:
+            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR;\n", i);
+            break;
+        case VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR:
+            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR;\n", i);
+            break;
+        case VK_PRESENT_MODE_MAX_ENUM_KHR:
+            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_MAX_ENUM_KHR;\n", i);
+            break;
+        }
+    }
 #endif // DEBUG
 
-	// 选择想要的显示模式
-	for (uint32_t i = 0; i < p_info->wsi.present_mode_count; i++) {
-		if (p_info->wsi.present_mode_array[i] == VK_PRESENT_MODE_FIFO_KHR) {
-			p_info->wsi.enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;
-			PRINT_LOG("enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;\n");
-			break;
-		} else {
-			p_info->wsi.enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;
-			PRINT_LOG("enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;\n");
-			break;
-		}
-	}
+    // 选择想要的显示模式
+    for (uint32_t i = 0; i < p_info->wsi.present_mode_count; i++) {
+        if (p_info->wsi.present_mode_array[i] == VK_PRESENT_MODE_FIFO_KHR) {
+            p_info->wsi.enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;
+            PRINT_LOG("enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;\n");
+            break;
+        } else {
+            p_info->wsi.enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;
+            PRINT_LOG("enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;\n");
+            break;
+        }
+    }
 
-	// 获得支持的显示功能
-	PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR get_physical_device_surface_capabilities = nullptr;
-	get_physical_device_surface_capabilities = (PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR)p_info->library.vk_get_instance_proc_addr(p_info->instance.vk_instance, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
-	if (get_physical_device_surface_capabilities == nullptr) {
-		PRINT_ERROR("load vkGetPhysicalDeviceSurfaceCapabilitiesKHR fail!\n");
-		return false;
-	}
-	p_info->library.vk_result = get_physical_device_surface_capabilities(
-		p_info->physical_device.physical_device,
-		p_info->wsi.surface,
-		&p_info->wsi.surface_capabilities);
-	if (p_info->library.vk_result != VK_SUCCESS) {
-		PRINT_ERROR("surface_capabilities fail!\n");
-		return false;
-	}
+    // 获得支持的显示功能
+    PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR get_physical_device_surface_capabilities = nullptr;
+    get_physical_device_surface_capabilities = (PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR)p_info->library.vk_get_instance_proc_addr(p_info->instance.vk_instance, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
+    if (get_physical_device_surface_capabilities == nullptr) {
+        PRINT_ERROR("load vkGetPhysicalDeviceSurfaceCapabilitiesKHR fail!\n");
+        return false;
+    }
+    p_info->library.vk_result = get_physical_device_surface_capabilities(
+        p_info->physical_device.physical_device,
+        p_info->wsi.surface,
+        &p_info->wsi.surface_capabilities);
+    if (p_info->library.vk_result != VK_SUCCESS) {
+        PRINT_ERROR("surface_capabilities fail!\n");
+        return false;
+    }
 
-	return true;
+    return true;
 }

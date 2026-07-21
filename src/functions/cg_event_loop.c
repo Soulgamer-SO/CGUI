@@ -22,27 +22,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <xcb/xcb_event.h>
 
 void cg_event_loop(cg_info_t *p_info) {
-	p_info->event_loop.is_running = true;
-	while (p_info->event_loop.is_running && (p_info->event_loop.event = xcb_wait_for_event(p_info->wsi.xcb_surface_create_info.connection))) {
-		switch (XCB_EVENT_RESPONSE_TYPE(p_info->event_loop.event)) {
-		case XCB_EXPOSE: {
-			xcb_expose_event_t *expose_event = (xcb_expose_event_t *)p_info->event_loop.event;
-			if (expose_event->window == p_info->wsi.xcb_surface_create_info.window) {
-				PRINT_LOG(
-					"expose_event x = %i; expose_event y = %i; expose_event width = %i; expose_event height = %i;\n",
-					expose_event->x,
-					expose_event->y,
-					expose_event->width,
-					expose_event->height);
-			}
-		} break;
-		default:
-			/* Unknown event type, ignore it */
-			break;
-		}
-	}
+    p_info->event_loop.is_running = true;
+    while (p_info->event_loop.is_running && (p_info->event_loop.event = xcb_wait_for_event(p_info->wsi.xcb_surface_create_info.connection))) {
+        switch (XCB_EVENT_RESPONSE_TYPE(p_info->event_loop.event)) {
+        case XCB_EXPOSE: {
+            xcb_expose_event_t *expose_event = (xcb_expose_event_t *)p_info->event_loop.event;
+            if (expose_event->window == p_info->wsi.xcb_surface_create_info.window) {
+                PRINT_LOG(
+                    "expose_event x = %i; expose_event y = %i; expose_event width = %i; expose_event height = %i;\n",
+                    expose_event->x,
+                    expose_event->y,
+                    expose_event->width,
+                    expose_event->height);
+            }
+        } break;
+        default:
+            /* Unknown event type, ignore it */
+            break;
+        }
+    }
 
-	return;
+    return;
 }
 #endif // __linux
 
@@ -50,33 +50,33 @@ void cg_event_loop(cg_info_t *p_info) {
 #include "cg_input.h"
 
 void cg_event_loop(cg_info_t *p_info) {
-	p_info->event_loop.is_running = true;
-	p_info->event_loop.msg.message = WM_NULL;
-	GetMessage(&p_info->event_loop.msg, nullptr, 0, 0);
-	while (p_info->event_loop.is_running && (p_info->event_loop.msg.message != WM_QUIT)) {
-		if (PeekMessage(&p_info->event_loop.msg, nullptr, 0, 0, PM_REMOVE) != false) {
-			TranslateMessage(&p_info->event_loop.msg);
-			DispatchMessage(&p_info->event_loop.msg);
-		}
-	}
+    p_info->event_loop.is_running = true;
+    p_info->event_loop.msg.message = WM_NULL;
+    GetMessage(&p_info->event_loop.msg, nullptr, 0, 0);
+    while (p_info->event_loop.is_running && (p_info->event_loop.msg.message != WM_QUIT)) {
+        if (PeekMessage(&p_info->event_loop.msg, nullptr, 0, 0, PM_REMOVE) != false) {
+            TranslateMessage(&p_info->event_loop.msg);
+            DispatchMessage(&p_info->event_loop.msg);
+        }
+    }
 
-	return;
+    return;
 }
 
 LRESULT CALLBACK window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-	switch (msg) {
-	case WM_KEYDOWN:
-		if (wparam == (VK_CONTROL | KEY_Q)) {
-			DestroyWindow(wnd);
-		}
-		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-	default:
-		return DefWindowProc(wnd, msg, wparam, lparam);
-	}
+    switch (msg) {
+    case WM_KEYDOWN:
+        if (wparam == (VK_CONTROL | KEY_Q)) {
+            DestroyWindow(wnd);
+        }
+        break;
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+    default:
+        return DefWindowProc(wnd, msg, wparam, lparam);
+    }
 
-	return 0;
+    return 0;
 }
 #endif // _WIN32

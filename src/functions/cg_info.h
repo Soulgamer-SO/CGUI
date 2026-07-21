@@ -30,226 +30,226 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endif // __linux
 
 typedef struct library_info {
-	// Vulkan命令返回代码 Vulkan command return codes
-	VkResult vk_result;
-	// Linux下加载Vulkan函数库
+    // Vulkan命令返回代码 Vulkan command return codes
+    VkResult vk_result;
+    // Linux下加载Vulkan函数库
 #ifdef __linux
-	void *vulkan_library;
+    void *vulkan_library;
 #endif // __linux
 
 // Windows下加载Vulkan函数库
 #ifdef _WIN32
-	HMODULE vulkan_library;
+    HMODULE vulkan_library;
 #endif // _WIN32
 
-	// 加载实例函数的函数 PFN_vkGetInstanceProcAddr
-	PFN_vkGetInstanceProcAddr vk_get_instance_proc_addr;
-	// 加载逻辑设备函数的函数 PFN_vkGetDeviceProcAddr
-	PFN_vkGetDeviceProcAddr vk_get_device_proc_addr;
+    // 加载实例函数的函数 PFN_vkGetInstanceProcAddr
+    PFN_vkGetInstanceProcAddr vk_get_instance_proc_addr;
+    // 加载逻辑设备函数的函数 PFN_vkGetDeviceProcAddr
+    PFN_vkGetDeviceProcAddr vk_get_device_proc_addr;
 } library_info_t;
 
 // instance
 typedef struct vk_instance_info {
-	// 创建Vulkan实例
-	VkInstance vk_instance;
-	// 获得Vulkan实例扩展数量
-	uint32_t instance_extension_count;
-	// 获得所有可用实例扩展的名单
-	VkExtensionProperties *instance_extension_array;
-	// 已启用的实例扩展数量
-	uint32_t enabled_instance_extension_count;
-	// 已启用的实例扩展的名单
-	char **enabled_extension_name_array;
+    // 创建Vulkan实例
+    VkInstance vk_instance;
+    // 获得Vulkan实例扩展数量
+    uint32_t instance_extension_count;
+    // 获得所有可用实例扩展的名单
+    VkExtensionProperties *instance_extension_array;
+    // 已启用的实例扩展数量
+    uint32_t enabled_instance_extension_count;
+    // 已启用的实例扩展的名单
+    char **enabled_extension_name_array;
 } vk_instance_info_t;
 
 // physical device
 typedef struct vk_physical_device_info_t {
-	// 要被选择的物理设备(显卡)
-	VkPhysicalDevice physical_device;
-	// 获取可用的物理设备的数量
-	uint32_t physical_device_count;
-	// 获取可用的物理设备的句柄名单
-	VkPhysicalDevice *available_physical_device_array;
-	// 被选择的显卡的索引
-	uint32_t physical_device_index;
-	// 其他显卡的索引
-	uint32_t other_physical_device_index;
-	// 选择的其他显卡
-	VkPhysicalDevice other_physical_device;
-	// 可用的物理设备扩展的数量
-	uint32_t physical_device_extensions_count;
-	// 检查物理设备功能和属性,选择想要的物理设备
-	bool is_physical_device_supported;
-	VkPhysicalDeviceFeatures device_feature_array;
-	VkPhysicalDeviceProperties device_properties;
-	// 可用的物理设备扩展列表
-	VkExtensionProperties *available_physical_device_extension_array;
-	// 启用的物理设备扩展的数量
-	uint32_t enabled_physical_device_extensions_count;
-	char **enabled_physical_device_extension_array;
-	// 获取物理设备内存属性
-	VkPhysicalDeviceMemoryProperties physical_device_memory_properties;
+    // 要被选择的物理设备(显卡)
+    VkPhysicalDevice physical_device;
+    // 获取可用的物理设备的数量
+    uint32_t physical_device_count;
+    // 获取可用的物理设备的句柄名单
+    VkPhysicalDevice *available_physical_device_array;
+    // 被选择的显卡的索引
+    uint32_t physical_device_index;
+    // 其他显卡的索引
+    uint32_t other_physical_device_index;
+    // 选择的其他显卡
+    VkPhysicalDevice other_physical_device;
+    // 可用的物理设备扩展的数量
+    uint32_t physical_device_extensions_count;
+    // 检查物理设备功能和属性,选择想要的物理设备
+    bool is_physical_device_supported;
+    VkPhysicalDeviceFeatures device_feature_array;
+    VkPhysicalDeviceProperties device_properties;
+    // 可用的物理设备扩展列表
+    VkExtensionProperties *available_physical_device_extension_array;
+    // 启用的物理设备扩展的数量
+    uint32_t enabled_physical_device_extensions_count;
+    char **enabled_physical_device_extension_array;
+    // 获取物理设备内存属性
+    VkPhysicalDeviceMemoryProperties physical_device_memory_properties;
 } vk_physical_device_info_t;
 
 // logic device
 typedef struct vk_logic_device_info {
-	// 获取队列家族和它们的属性,选择想要的队列家族
-	uint32_t queue_family_count;
-	VkQueueFamilyProperties *queue_family_array;
-	VkQueueFamilyProperties *queue_family_property_array;
+    // 获取队列家族和它们的属性,选择想要的队列家族
+    uint32_t queue_family_count;
+    VkQueueFamilyProperties *queue_family_array;
+    VkQueueFamilyProperties *queue_family_property_array;
 
-	// 选择想要的队列家族并返回其索引
-	uint32_t queue_family_index;
-	// 支持有关图形操作的队列家族的索引
-	uint32_t graphic_queue_family_index;
-	// 队列的句柄
-	VkQueue queue_family_handle;
-	// 优先级列表
-	uint32_t queue_priority_array_count;
-	uint32_t queue_priority_array_index;
-	float *queue_priority_array;
+    // 选择想要的队列家族并返回其索引
+    uint32_t queue_family_index;
+    // 支持有关图形操作的队列家族的索引
+    uint32_t graphic_queue_family_index;
+    // 队列的句柄
+    VkQueue queue_family_handle;
+    // 优先级列表
+    uint32_t queue_priority_array_count;
+    uint32_t queue_priority_array_index;
+    float *queue_priority_array;
 
-	// 创建Vulkan逻辑设备
-	VkDevice vk_logic_device;
+    // 创建Vulkan逻辑设备
+    VkDevice vk_logic_device;
 } vk_logic_device_info_t;
 
 // command pool var
 typedef struct vk_command_pool_info {
-	// 命令池
-	VkCommandPool command_pool;
-	// 命令缓存列表
-	uint32_t command_buffer_count;
-	VkCommandBuffer *command_buffer_array;
+    // 命令池
+    VkCommandPool command_pool;
+    // 命令缓存列表
+    uint32_t command_buffer_count;
+    VkCommandBuffer *command_buffer_array;
 } vk_command_pool_info_t;
 
 // sync var
 typedef struct sync_info {
-	// 信号量数量
-	uint32_t semaphore_count;
-	// 信号列表
-	VkSemaphore *semaphore_array;
-	// 信号名单列表
-	char **semaphore_name_array;
+    // 信号量数量
+    uint32_t semaphore_count;
+    // 信号列表
+    VkSemaphore *semaphore_array;
+    // 信号名单列表
+    char **semaphore_name_array;
 
-	// 等待的信号量数量
-	uint32_t wait_semaphore_count;
-	// 等待的信号量列表
-	VkSemaphore *wait_semaphore_array;
+    // 等待的信号量数量
+    uint32_t wait_semaphore_count;
+    // 等待的信号量列表
+    VkSemaphore *wait_semaphore_array;
 
-	// 围栏列表
-	VkFence *fence_array;
-	// 围栏的数量
-	uint32_t fence_count;
+    // 围栏列表
+    VkFence *fence_array;
+    // 围栏的数量
+    uint32_t fence_count;
 
-	// 是否在等待
-	bool is_wait_for;
-	// 单位纳秒 1,000,000,000ns = 1s
-	uint64_t timeout;
+    // 是否在等待
+    bool is_wait_for;
+    // 单位纳秒 1,000,000,000ns = 1s
+    uint64_t timeout;
 
-	// pipeline阶段的位掩码数量
-	uint32_t semaphore_pipeline_stage_count;
-	// pipeline阶段的位掩码列表
-	VkPipelineStageFlags *semaphore_pipeline_stage_array;
+    // pipeline阶段的位掩码数量
+    uint32_t semaphore_pipeline_stage_count;
+    // pipeline阶段的位掩码列表
+    VkPipelineStageFlags *semaphore_pipeline_stage_array;
 } sync_info_t;
 
 // window var
 typedef struct wsi_info {
-	char *window_name;
-	int16_t window_x;
-	int16_t window_y;
-	uint16_t window_width;
-	uint16_t window_height;
-	uint16_t border_width;
-	bool is_window_resizeable;
-	// 显示表面
-	VkSurfaceKHR surface;
+    char *window_name;
+    int16_t window_x;
+    int16_t window_y;
+    uint16_t window_width;
+    uint16_t window_height;
+    uint16_t border_width;
+    bool is_window_resizeable;
+    // 显示表面
+    VkSurfaceKHR surface;
 #ifdef VK_USE_PLATFORM_XCB_KHR
-	// XCB API
-	struct XCB_API_info {
-		int screen_num;
-		uint32_t mask;
-		xcb_screen_t *screen;
-		xcb_size_hints_t window_size_hints;
-		xcb_create_window_value_list_t value_list;
-		xcb_void_cookie_t cookie;
-	} XCB_API_info;
+    // XCB API
+    struct XCB_API_info {
+        int screen_num;
+        uint32_t mask;
+        xcb_screen_t *screen;
+        xcb_size_hints_t window_size_hints;
+        xcb_create_window_value_list_t value_list;
+        xcb_void_cookie_t cookie;
+    } XCB_API_info;
 
-	VkXcbSurfaceCreateInfoKHR xcb_surface_create_info;
+    VkXcbSurfaceCreateInfoKHR xcb_surface_create_info;
 #endif // VK_USE_PLATFORM_XCB_KHR
 
 #ifdef _WIN32
-	// Windows API 相关
-	struct WinAPI_info {
-		// WinMain()函数参数
-		HINSTANCE hInstance;
-		HINSTANCE hPrevInstance;
-		LPSTR pCmdLine;
-		int nCmdShow;
-		// RegisterClassEx()函数参数
-		WNDCLASSEX wnd_class;
-		LPCSTR w_class_name;
-	} WinAPI_info;
+    // Windows API 相关
+    struct WinAPI_info {
+        // WinMain()函数参数
+        HINSTANCE hInstance;
+        HINSTANCE hPrevInstance;
+        LPSTR pCmdLine;
+        int nCmdShow;
+        // RegisterClassEx()函数参数
+        WNDCLASSEX wnd_class;
+        LPCSTR w_class_name;
+    } WinAPI_info;
 
-	VkWin32SurfaceCreateInfoKHR win32_surface_create_info;
+    VkWin32SurfaceCreateInfoKHR win32_surface_create_info;
 #endif // _WIN32
 
-	// Vulkan显示模式的数量
-	uint32_t present_mode_count;
-	// Vulkan显示模式的列表
-	VkPresentModeKHR *present_mode_array;
-	// 启用的显示模式
-	VkPresentModeKHR enabled_present_mode;
-	// 支持的显示功能
-	VkSurfaceCapabilitiesKHR surface_capabilities;
-	// 启用的交换链图像的数量
-	uint32_t enabled_image_count;
-	// 启用的交换链图像的尺寸
-	VkExtent2D enabled_image_extent_size;
-	// 启用的交换链图像的功能
-	VkImageUsageFlags enabled_image_usage;
-	// 启用的交换链图像变换
-	VkSurfaceTransformFlagBitsKHR enabled_surface_transform;
-	// 启用的交换链图像格式
-	VkSurfaceFormatKHR enabled_surface_format;
-	// 支持的交换链图像格式列表
-	uint32_t surface_format_count;
-	VkSurfaceFormatKHR *surface_format_array;
-	// 创建交换链 create swapchain
-	VkSwapchainKHR swapchain;
-	VkSwapchainKHR old_swapchain;
-	// 交换链图像数量
-	uint32_t swapchain_image_count;
-	// 交换链图像的句柄列表
-	VkImage *swapchain_image_array;
-	// 获得交换链图像
-	uint32_t image_index;
-	// 图像视图
-	VkImageView *swapchain_image_view_array;
+    // Vulkan显示模式的数量
+    uint32_t present_mode_count;
+    // Vulkan显示模式的列表
+    VkPresentModeKHR *present_mode_array;
+    // 启用的显示模式
+    VkPresentModeKHR enabled_present_mode;
+    // 支持的显示功能
+    VkSurfaceCapabilitiesKHR surface_capabilities;
+    // 启用的交换链图像的数量
+    uint32_t enabled_image_count;
+    // 启用的交换链图像的尺寸
+    VkExtent2D enabled_image_extent_size;
+    // 启用的交换链图像的功能
+    VkImageUsageFlags enabled_image_usage;
+    // 启用的交换链图像变换
+    VkSurfaceTransformFlagBitsKHR enabled_surface_transform;
+    // 启用的交换链图像格式
+    VkSurfaceFormatKHR enabled_surface_format;
+    // 支持的交换链图像格式列表
+    uint32_t surface_format_count;
+    VkSurfaceFormatKHR *surface_format_array;
+    // 创建交换链 create swapchain
+    VkSwapchainKHR swapchain;
+    VkSwapchainKHR old_swapchain;
+    // 交换链图像数量
+    uint32_t swapchain_image_count;
+    // 交换链图像的句柄列表
+    VkImage *swapchain_image_array;
+    // 获得交换链图像
+    uint32_t image_index;
+    // 图像视图
+    VkImageView *swapchain_image_view_array;
 } wsi_info_t;
 
 // event loop var
 typedef struct event_loop_info {
-	bool is_running;
+    bool is_running;
 #ifdef VK_USE_PLATFORM_XCB_KHR
-	xcb_generic_event_t *event;
+    xcb_generic_event_t *event;
 #endif // VK_USE_PLATFORM_XCB_KHR
 
 #ifdef _WIN32
-	MSG msg;
+    MSG msg;
 #endif // _WIN32
 } event_loop_info_t;
 
 // var of project
 typedef struct cg_info {
-	cg_memory_pool_info_t *p_memory_pool;
-	library_info_t library;
-	vk_instance_info_t instance;
-	vk_physical_device_info_t physical_device;
-	vk_logic_device_info_t logic_device;
-	vk_command_pool_info_t command_pool;
-	sync_info_t sync;
-	wsi_info_t wsi;
-	event_loop_info_t event_loop;
+    cg_memory_pool_info_t *p_memory_pool;
+    library_info_t library;
+    vk_instance_info_t instance;
+    vk_physical_device_info_t physical_device;
+    vk_logic_device_info_t logic_device;
+    vk_command_pool_info_t command_pool;
+    sync_info_t sync;
+    wsi_info_t wsi;
+    event_loop_info_t event_loop;
 } cg_info_t;
 
 #endif // CG_INFO_H 1

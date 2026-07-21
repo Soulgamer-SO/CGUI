@@ -31,34 +31,34 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // 记录内存块的信息的节点,节点本身位置在内存块的前面
 typedef struct cg_memory_node cg_memory_node_t;
 struct cg_memory_node {
-	// 表示内存块是否被使用
-	bool is_used;
-	// 内存块地址
-	void *memory_addr;
-	// 内存块大小(不包含内存信息节点本身)
-	size_t size;
-	// 记录排在此内存块前面的内存块信息节点的地址
-	struct cg_memory_node *prev_memory_node_addr;
+    // 表示内存块是否被使用
+    bool is_used;
+    // 内存块地址
+    void *memory_addr;
+    // 内存块大小(不包含内存信息节点本身)
+    size_t size;
+    // 记录排在此内存块前面的内存块信息节点的地址
+    struct cg_memory_node *prev_memory_node_addr;
 };
 
 // 用来记录内存池信息(侵入式内存池),可以根据情况再创建各自独立的多个内存池
 typedef struct cg_memory_pool_info {
-	// 内存池,内存池开始地址
-	void *memory_pool;
-	// 内存池总大小
-	size_t size;
-	// 内存池剩余可用大小
-	size_t free_size;
-	// 非空闲内存块数量
-	uint32_t memory_count;
-	// 保存排在最后的内存块的信息节点的指针
-	cg_memory_node_t *p_last_memory_node;
-	// 空闲内存块信息节点数量
-	uint32_t free_memory_node_count;
-	// 空闲内存块信息节点地址的列表
-	cg_memory_node_t **free_memory_node_addr_array;
-	// 空闲内存块信息节点地址的列表最大数量
-	uint32_t free_memory_node_addr_max_count;
+    // 内存池,内存池开始地址
+    void *memory_pool;
+    // 内存池总大小
+    size_t size;
+    // 内存池剩余可用大小
+    size_t free_size;
+    // 非空闲内存块数量
+    uint32_t memory_count;
+    // 保存排在最后的内存块的信息节点的指针
+    cg_memory_node_t *p_last_memory_node;
+    // 空闲内存块信息节点数量
+    uint32_t free_memory_node_count;
+    // 空闲内存块信息节点地址的列表
+    cg_memory_node_t **free_memory_node_addr_array;
+    // 空闲内存块信息节点地址的列表最大数量
+    uint32_t free_memory_node_addr_max_count;
 } cg_memory_pool_info_t;
 
 /*创建内存池(侵入式内存池)
