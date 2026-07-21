@@ -6,13 +6,7 @@
                 "${workspaceFolder}/**"
             ],
             "cStandard": "c23",
-            "defines": [
-                "DEBUG",
-                "VK_USE_PLATFORM_XCB_KHR",
-                "nullptr",
-                "true",
-                "false"
-            ],
+            "defines": [],
             "intelliSenseMode": "linux-gcc-x64"
         }
     ],
