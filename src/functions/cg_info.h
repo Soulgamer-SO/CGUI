@@ -24,94 +24,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 #include <vulkan/vulkan.h>
-
 #ifdef __linux
 #include <xcb/xcb_icccm.h>
 #endif // __linux
 
-typedef struct library_info {
-    // Vulkan命令返回代码 Vulkan command return codes
-    VkResult vk_result;
-    // Linux下加载Vulkan函数库
-#ifdef __linux
-    void *vulkan_library;
-#endif // __linux
-
-// Windows下加载Vulkan函数库
-#ifdef _WIN32
-    HMODULE vulkan_library;
-#endif // _WIN32
-
-    // 加载实例函数的函数 PFN_vkGetInstanceProcAddr
-    PFN_vkGetInstanceProcAddr vk_get_instance_proc_addr;
-    // 加载逻辑设备函数的函数 PFN_vkGetDeviceProcAddr
-    PFN_vkGetDeviceProcAddr vk_get_device_proc_addr;
-} library_info_t;
-
-// instance
-typedef struct vk_instance_info {
-    // 创建Vulkan实例
-    VkInstance vk_instance;
-    // 获得Vulkan实例扩展数量
-    uint32_t instance_extension_count;
-    // 获得所有可用实例扩展的名单
-    VkExtensionProperties *instance_extension_array;
-    // 已启用的实例扩展数量
-    uint32_t enabled_instance_extension_count;
-    // 已启用的实例扩展的名单
-    char **enabled_extension_name_array;
-} vk_instance_info_t;
-
-// physical device
-typedef struct vk_physical_device_info_t {
-    // 要被选择的物理设备(显卡)
-    VkPhysicalDevice physical_device;
-    // 获取可用的物理设备的数量
-    uint32_t physical_device_count;
-    // 获取可用的物理设备的句柄名单
-    VkPhysicalDevice *available_physical_device_array;
-    // 被选择的显卡的索引
-    uint32_t physical_device_index;
-    // 其他显卡的索引
-    uint32_t other_physical_device_index;
-    // 选择的其他显卡
-    VkPhysicalDevice other_physical_device;
-    // 可用的物理设备扩展的数量
-    uint32_t physical_device_extensions_count;
-    // 检查物理设备功能和属性,选择想要的物理设备
-    bool is_physical_device_supported;
-    VkPhysicalDeviceFeatures device_feature_array;
-    VkPhysicalDeviceProperties device_properties;
-    // 可用的物理设备扩展列表
-    VkExtensionProperties *available_physical_device_extension_array;
-    // 启用的物理设备扩展的数量
-    uint32_t enabled_physical_device_extensions_count;
-    char **enabled_physical_device_extension_array;
-    // 获取物理设备内存属性
-    VkPhysicalDeviceMemoryProperties physical_device_memory_properties;
-} vk_physical_device_info_t;
-
-// logic device
-typedef struct vk_logic_device_info {
-    // 获取队列家族和它们的属性,选择想要的队列家族
-    uint32_t queue_family_count;
-    VkQueueFamilyProperties *queue_family_array;
-    VkQueueFamilyProperties *queue_family_property_array;
-
-    // 选择想要的队列家族并返回其索引
-    uint32_t queue_family_index;
-    // 支持有关图形操作的队列家族的索引
-    uint32_t graphic_queue_family_index;
-    // 队列的句柄
-    VkQueue queue_family_handle;
-    // 优先级列表
-    uint32_t queue_priority_array_count;
-    uint32_t queue_priority_array_index;
-    float *queue_priority_array;
-
-    // 创建Vulkan逻辑设备
-    VkDevice vk_logic_device;
-} vk_logic_device_info_t;
+#include "cg_instance_info.h"
+#include "cg_load_library_info.h"
+#include "cg_logic_device_info.h"
+#include "cg_physical_device_info.h"
 
 // command pool var
 typedef struct vk_command_pool_info {
