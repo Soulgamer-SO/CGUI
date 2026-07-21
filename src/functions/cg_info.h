@@ -28,124 +28,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <xcb/xcb_icccm.h>
 #endif // __linux
 
-#include "cg_instance_info.h"
 #include "cg_load_library_info.h"
-#include "cg_logic_device_info.h"
+
+#include "cg_instance_info.h"
+
 #include "cg_physical_device_info.h"
 
-// command pool var
-typedef struct vk_command_pool_info {
-    // 命令池
-    VkCommandPool command_pool;
-    // 命令缓存列表
-    uint32_t command_buffer_count;
-    VkCommandBuffer *command_buffer_array;
-} vk_command_pool_info_t;
+#include "cg_logic_device_info.h"
 
-// sync var
-typedef struct sync_info {
-    // 信号量数量
-    uint32_t semaphore_count;
-    // 信号列表
-    VkSemaphore *semaphore_array;
-    // 信号名单列表
-    char **semaphore_name_array;
+#include "cg_command_pool_info.h"
 
-    // 等待的信号量数量
-    uint32_t wait_semaphore_count;
-    // 等待的信号量列表
-    VkSemaphore *wait_semaphore_array;
+#include "cg_sync_info.h"
 
-    // 围栏列表
-    VkFence *fence_array;
-    // 围栏的数量
-    uint32_t fence_count;
-
-    // 是否在等待
-    bool is_wait_for;
-    // 单位纳秒 1,000,000,000ns = 1s
-    uint64_t timeout;
-
-    // pipeline阶段的位掩码数量
-    uint32_t semaphore_pipeline_stage_count;
-    // pipeline阶段的位掩码列表
-    VkPipelineStageFlags *semaphore_pipeline_stage_array;
-} sync_info_t;
-
-// window var
-typedef struct wsi_info {
-    const char *window_name;
-    int16_t window_x;
-    int16_t window_y;
-    uint16_t window_width;
-    uint16_t window_height;
-    uint16_t border_width;
-    bool is_window_resizeable;
-    // 显示表面
-    VkSurfaceKHR surface;
-#ifdef VK_USE_PLATFORM_XCB_KHR
-    // XCB API
-    struct XCB_API_info {
-        int screen_num;
-        uint32_t mask;
-        xcb_screen_t *screen;
-        xcb_size_hints_t window_size_hints;
-        xcb_create_window_value_list_t value_list;
-        xcb_void_cookie_t cookie;
-    } XCB_API_info;
-
-    VkXcbSurfaceCreateInfoKHR xcb_surface_create_info;
-#endif // VK_USE_PLATFORM_XCB_KHR
-
-#ifdef _WIN32
-    // Windows API 相关
-    struct WinAPI_info {
-        // WinMain()函数参数
-        HINSTANCE hInstance;
-        HINSTANCE hPrevInstance;
-        LPSTR pCmdLine;
-        int nCmdShow;
-        // RegisterClassEx()函数参数
-        WNDCLASSEX wnd_class;
-        LPCSTR w_class_name;
-    } WinAPI_info;
-
-    VkWin32SurfaceCreateInfoKHR win32_surface_create_info;
-#endif // _WIN32
-
-    // Vulkan显示模式的数量
-    uint32_t present_mode_count;
-    // Vulkan显示模式的列表
-    VkPresentModeKHR *present_mode_array;
-    // 启用的显示模式
-    VkPresentModeKHR enabled_present_mode;
-    // 支持的显示功能
-    VkSurfaceCapabilitiesKHR surface_capabilities;
-    // 启用的交换链图像的数量
-    uint32_t enabled_image_count;
-    // 启用的交换链图像的尺寸
-    VkExtent2D enabled_image_extent_size;
-    // 启用的交换链图像的功能
-    VkImageUsageFlags enabled_image_usage;
-    // 启用的交换链图像变换
-    VkSurfaceTransformFlagBitsKHR enabled_surface_transform;
-    // 启用的交换链图像格式
-    VkSurfaceFormatKHR enabled_surface_format;
-    // 支持的交换链图像格式列表
-    uint32_t surface_format_count;
-    VkSurfaceFormatKHR *surface_format_array;
-    // 创建交换链 create swapchain
-    VkSwapchainKHR swapchain;
-    VkSwapchainKHR old_swapchain;
-    // 交换链图像数量
-    uint32_t swapchain_image_count;
-    // 交换链图像的句柄列表
-    VkImage *swapchain_image_array;
-    // 获得交换链图像
-    uint32_t image_index;
-    // 图像视图
-    VkImageView *swapchain_image_view_array;
-} wsi_info_t;
+#include "cg_wsi_info.h"
 
 // event loop var
 typedef struct event_loop_info {
@@ -167,7 +62,7 @@ typedef struct event_loop_info {
 #endif // _WIN32
 } event_loop_info_t;
 
-// var of project
+// cgui-app info
 typedef struct cg_info {
     cg_memory_pool_info_t *p_memory_pool;
     library_info_t library;
