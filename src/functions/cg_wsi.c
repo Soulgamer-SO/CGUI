@@ -16,10 +16,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
 #include "cg_wsi.h"
 #include "cg_color.h"
 #include "cg_event_loop.h"
+#include "cg_log.h"
 #include "cg_swapchain.h"
 
 bool cg_create_window(cg_info_t *p_info) {
@@ -106,7 +106,11 @@ bool cg_create_window(cg_info_t *p_info) {
     xcb_map_window(
         p_info->wsi.xcb_surface_create_info.connection,
         p_info->wsi.xcb_surface_create_info.window);
-    xcb_flush(p_info->wsi.xcb_surface_create_info.connection);
+    int xcb_flush_result = xcb_flush(p_info->wsi.xcb_surface_create_info.connection);
+    if (xcb_flush_result <= 0) {
+        PRINT_ERROR("xcb_flush fail!\n");
+        return false;
+    }
 #endif // VK_USE_PLATFORM_XCB_KHR
 
 #ifdef VK_USE_PLATFORM_WIN32_KHR
