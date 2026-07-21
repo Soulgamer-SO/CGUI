@@ -232,6 +232,14 @@ typedef struct event_loop_info {
     bool is_running;
 #ifdef VK_USE_PLATFORM_XCB_KHR
     xcb_generic_event_t *event;
+    // file descriptor 文件描述符
+    int fd;
+    // 鼠标坐标
+    int mouse_x, mouse_y;
+    // 鼠标左键单击次数
+    int left_click_count;
+    // 鼠标右键单击次数
+    int right_click_count;
 #endif // VK_USE_PLATFORM_XCB_KHR
 
 #ifdef _WIN32

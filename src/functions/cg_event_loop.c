@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 void cg_event_loop(cg_info_t *p_info) {
     p_info->event_loop.is_running = true;
+    p_info->event_loop.fd = xcb_get_file_descriptor(p_info->wsi.xcb_surface_create_info.connection);
     while (p_info->event_loop.is_running && (p_info->event_loop.event = xcb_wait_for_event(p_info->wsi.xcb_surface_create_info.connection))) {
         switch (XCB_EVENT_RESPONSE_TYPE(p_info->event_loop.event)) {
         case XCB_EXPOSE: {
