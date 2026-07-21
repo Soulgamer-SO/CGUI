@@ -154,7 +154,7 @@ typedef struct sync_info {
 
 // window var
 typedef struct wsi_info {
-    char *window_name;
+    const char *window_name;
     int16_t window_x;
     int16_t window_y;
     uint16_t window_width;

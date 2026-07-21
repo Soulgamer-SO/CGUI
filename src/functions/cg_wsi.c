@@ -86,7 +86,8 @@ bool cg_create_window(cg_info_t *p_info) {
         p_info->wsi.xcb_surface_create_info.connection,
         p_info->wsi.xcb_surface_create_info.window,
         XCB_ATOM_STRING,
-        8, strlen(p_info->wsi.window_name),
+        8,
+        strlen(p_info->wsi.window_name),
         p_info->wsi.window_name);
     if (p_info->wsi.is_window_resizeable == false) {
         xcb_icccm_size_hints_set_min_size(
