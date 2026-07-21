@@ -50,7 +50,9 @@ bool cg_create_window(cg_info_t *p_info) {
 	p_info->wsi.xcb_surface_create_info.window = xcb_generate_id(p_info->wsi.xcb_surface_create_info.connection);
 	p_info->wsi.XCB_API_info.mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
 	p_info->wsi.XCB_API_info.screen = xcb_setup_roots_iterator(xcb_get_setup(p_info->wsi.xcb_surface_create_info.connection)).data;
-	xcb_create_window_aux(
+	p_info->wsi.XCB_API_info.value_list.background_pixel = cg_change_RGB_color(255, 0, 0);
+	p_info->wsi.XCB_API_info.value_list.event_mask = XCB_EVENT_MASK_EXPOSURE;
+	p_info->wsi.XCB_API_info.cookie = xcb_create_window_aux(
 		p_info->wsi.xcb_surface_create_info.connection,
 		XCB_COPY_FROM_PARENT,
 		p_info->wsi.xcb_surface_create_info.window,
@@ -61,9 +63,7 @@ bool cg_create_window(cg_info_t *p_info) {
 		XCB_WINDOW_CLASS_INPUT_OUTPUT,
 		p_info->wsi.XCB_API_info.screen->root_visual,
 		p_info->wsi.XCB_API_info.mask,
-		&(xcb_create_window_value_list_t){
-			.background_pixel = cg_change_RGB_color(255, 0, 0),
-			.event_mask = XCB_EVENT_MASK_EXPOSURE});
+		&p_info->wsi.XCB_API_info.value_list);
 	PFN_vkCreateXcbSurfaceKHR create_xcb_surface = nullptr;
 	create_xcb_surface = (PFN_vkCreateXcbSurfaceKHR)p_info->library.vk_get_instance_proc_addr(p_info->instance.vk_instance, "vkCreateXcbSurfaceKHR");
 	if (create_xcb_surface == nullptr) {

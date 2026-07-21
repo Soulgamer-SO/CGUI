@@ -170,6 +170,8 @@ typedef struct wsi_info {
 		uint32_t mask;
 		xcb_screen_t *screen;
 		xcb_size_hints_t window_size_hints;
+		xcb_create_window_value_list_t value_list;
+		xcb_void_cookie_t cookie;
 	} XCB_API_info;
 
 	VkXcbSurfaceCreateInfoKHR xcb_surface_create_info;
