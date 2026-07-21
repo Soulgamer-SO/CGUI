@@ -1,5 +1,5 @@
 {
-    "version": "2.0.0",
+    "version": "0.2.0",
     "configurations": [
         {
             "name": "LinuxDebugMake",
@@ -7,8 +7,10 @@
             "request": "launch",
             "preLaunchTask": "make_debug",
             "program": "${workspaceFolder}/build/debug/cgui-app",
+            "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
@@ -24,13 +26,19 @@
             "request": "launch",
             "preLaunchTask": "make_release",
             "program": "${workspaceFolder}/build/release/cgui-app",
+            "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
                 {
                     "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "text": "set debuginfod enabled off",
                     "ignoreFailures": true
                 }
             ]
@@ -41,8 +49,10 @@
             "request": "launch",
             "preLaunchTask": "make_debug",
             "program": "${workspaceFolder}/build/debug/cgui-app.exe",
+            "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
@@ -58,8 +68,10 @@
             "request": "launch",
             "preLaunchTask": "make_release",
             "program": "${workspaceFolder}/build/release/cgui-app.exe",
+            "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
@@ -75,8 +87,10 @@
             "request": "launch",
             "preLaunchTask": "xmake_debug",
             "program": "${workspaceFolder}/build/debug/cgui-app",
+            "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
@@ -92,8 +106,10 @@
             "request": "launch",
             "preLaunchTask": "xmake_release",
             "program": "${workspaceFolder}/build/release/cgui-app",
+            "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
@@ -109,8 +125,10 @@
             "request": "launch",
             "preLaunchTask": "xmake_debug",
             "program": "${workspaceFolder}/build/debug/cgui-app.exe",
+            "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
@@ -126,8 +144,10 @@
             "request": "launch",
             "preLaunchTask": "xmake_release",
             "program": "${workspaceFolder}/build/release/cgui-app.exe",
+            "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
