@@ -199,7 +199,6 @@ bool cg_free_memory(cg_memory_pool_info_t *p_mp, void *memory_addr) {
         if (p_prev_memory_node->is_used == false) {
             free_size = p_prev_memory_node->size + 2 * sizeof(cg_memory_node_t) + p_memory_node->size;
             p_mp->p_last_memory_node = p_prev_memory_node->prev_memory_node_addr;
-            memset(p_prev_memory_node, 0, free_size);
             int32_t prev_memory_node_index = cg_get_memory_node_index(p_mp, p_prev_memory_node->memory_addr);
             if (prev_memory_node_index == -1) {
                 PRINT_ERROR("fail!\n");
@@ -208,6 +207,7 @@ bool cg_free_memory(cg_memory_pool_info_t *p_mp, void *memory_addr) {
             cg_rm_one_p_memory_node(p_mp, prev_memory_node_index);
             p_mp->memory_count -= 2;
             p_mp->free_size += free_size;
+            memset(p_prev_memory_node, 0, free_size);
             return true;
         } else {
             free_size = sizeof(cg_memory_node_t) + p_memory_node->size;
@@ -270,13 +270,13 @@ bool cg_free_memory(cg_memory_pool_info_t *p_mp, void *memory_addr) {
     // 如果该内存块不排在最后尾,也不是排在内存池最前面的内存块,且该内存块的后一个内存块是空闲块,前一个不是
     if (p_next_memory_node != nullptr && p_next_memory_node->is_used == false && p_prev_memory_node->is_used == true) {
         free_size = p_memory_node->size + sizeof(cg_memory_node_t);
-        cg_memory_node_t *p_next_and_next_memory_node = (cg_memory_node_t *)(p_next_memory_node->memory_addr + p_next_memory_node->size);
-        size_t memory_new_size = p_memory_node->size + sizeof(cg_memory_node_t) + p_next_memory_node->size;
-        int32_t next_memory_node_index = cg_get_memory_node_index(p_mp, p_next_memory_node);
+        int32_t next_memory_node_index = cg_get_memory_node_index(p_mp, p_next_memory_node->memory_addr);
         if (next_memory_node_index == -1) {
             PRINT_ERROR("cg_get_memory_node_index fail!\n");
             return false;
         }
+        cg_memory_node_t *p_next_and_next_memory_node = (cg_memory_node_t *)(p_next_memory_node->memory_addr + p_next_memory_node->size);
+        size_t memory_new_size = p_memory_node->size + sizeof(cg_memory_node_t) + p_next_memory_node->size;
         p_mp->free_memory_node_addr_array[next_memory_node_index] = p_memory_node;
         p_next_and_next_memory_node->prev_memory_node_addr = p_memory_node;
         p_memory_node->size = memory_new_size;
@@ -324,8 +324,11 @@ bool cg_add_one_p_memory_node(cg_memory_pool_info_t *p_mp, cg_memory_node_t *mem
         return true;
     }
 
-    p_mp->free_memory_node_addr_array[p_mp->free_memory_node_count - 1] = memory_node_addr;
-    p_mp->free_memory_node_count++;
+    if (p_mp->free_memory_node_count >= 1) {
+        p_mp->free_memory_node_addr_array[p_mp->free_memory_node_count] = memory_node_addr;
+        p_mp->free_memory_node_count++;
+    }
+
     return true;
 }
 
