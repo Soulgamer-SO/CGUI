@@ -1,6 +1,9 @@
 # DIR
 build/
 
+#clice
+.clice/
+
 # Xmake
 .xmake/
 
