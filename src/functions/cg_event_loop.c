@@ -64,8 +64,13 @@ void cg_event_loop(cg_info_t *p_info) {
             p_info->event_loop.event = nullptr;
         }
 
+        if (!p_info->event_loop.is_running) {
+            break;
+        }
+
         if (xcb_connection_has_error(connection) != 0) {
             p_info->event_loop.is_running = false;
+            break;
         }
 
         if (!cg_draw_frame(p_info)) {
@@ -91,6 +96,10 @@ void cg_event_loop(cg_info_t *p_info) {
 
             TranslateMessage(&p_info->event_loop.msg);
             DispatchMessage(&p_info->event_loop.msg);
+        }
+
+        if (!p_info->event_loop.is_running) {
+            break;
         }
 
         if (!cg_draw_frame(p_info)) {

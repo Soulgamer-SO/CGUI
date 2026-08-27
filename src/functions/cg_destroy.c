@@ -59,11 +59,18 @@ void cg_destroy_command_pool(cg_info_t *p_info, VkCommandPool command_pool) {
 }
 
 void cg_destroy(cg_info_t *p_info) {
-#ifdef LINUX
-    xcb_disconnect(p_info->wsi.xcb_surface_create_info.connection);
-#endif // LINUX
     PFN_vkDestroySurfaceKHR destroy_surface = nullptr;
     PFN_vkDestroyDevice destroy_device = nullptr;
+    PFN_vkDeviceWaitIdle device_wait_idle = nullptr;
+
+    if (p_info->logic_device.vk_logic_device != VK_NULL_HANDLE) {
+        device_wait_idle = (PFN_vkDeviceWaitIdle)p_info->library.vk_get_device_proc_addr(
+            p_info->logic_device.vk_logic_device, "vkDeviceWaitIdle");
+        if (device_wait_idle != nullptr) {
+            device_wait_idle(p_info->logic_device.vk_logic_device);
+        }
+    }
+
     cg_destroy_render_resources(p_info);
     if (p_info->wsi.swapchain != VK_NULL_HANDLE) {
         cg_destroy_swapchain(p_info, p_info->wsi.swapchain);
@@ -113,6 +120,12 @@ destroy_instance:
     p_info->instance.vk_instance = VK_NULL_HANDLE;
 
 destroy_vulkan_library:
+#ifdef LINUX
+    if (p_info->wsi.xcb_surface_create_info.connection != nullptr) {
+        xcb_disconnect(p_info->wsi.xcb_surface_create_info.connection);
+        p_info->wsi.xcb_surface_create_info.connection = nullptr;
+    }
+#endif // LINUX
 #ifdef LINUX
     dlclose(p_info->library.vulkan_library);
 #endif // LINUX
