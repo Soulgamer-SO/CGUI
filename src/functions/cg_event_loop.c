@@ -53,7 +53,19 @@ void cg_event_loop(cg_info_t *p_info) {
 void cg_event_loop(cg_info_t *p_info) {
     p_info->event_loop.is_running = true;
     p_info->event_loop.msg.message = WM_NULL;
-    GetMessage(&p_info->event_loop.msg, nullptr, 0, 0);
+    int result = GetMessage(&p_info->event_loop.msg, nullptr, 0, 0);
+    if (result == -1) {
+        p_info->event_loop.is_running = false;
+        PRINT_ERROR("GetMessage error!\n");
+        break;
+    }
+    if (result == 0) {
+        p_info->event_loop.is_running = false;
+        PRINT_ERROR("GetMessage returned 0!\n");
+        break;
+    }
+    TranslateMessage(&p_info->event_loop.msg);
+    DispatchMessage(&p_info->event_loop.msg);
     while (p_info->event_loop.is_running && (p_info->event_loop.msg.message != WM_QUIT)) {
         if (PeekMessage(&p_info->event_loop.msg, nullptr, 0, 0, PM_REMOVE) != false) {
             TranslateMessage(&p_info->event_loop.msg);
@@ -67,7 +79,8 @@ void cg_event_loop(cg_info_t *p_info) {
 LRESULT CALLBACK window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
     switch (msg) {
     case WM_KEYDOWN:
-        if (wparam == (VK_CONTROL | KEY_Q)) {
+        if (wparam == KEY_Q &&
+            (GetKeyState(VK_CONTROL) & 0x8000) != 0) {
             DestroyWindow(wnd);
         }
         break;
