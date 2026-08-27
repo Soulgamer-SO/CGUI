@@ -82,6 +82,41 @@ bool cg_create_window(cg_info_t *p_info) {
         return false;
     }
 
+    xcb_intern_atom_cookie_t wm_protocols_cookie = xcb_intern_atom(
+        p_info->wsi.xcb_surface_create_info.connection,
+        1, 12, "WM_PROTOCOLS");
+    xcb_intern_atom_cookie_t wm_delete_window_cookie = xcb_intern_atom(
+        p_info->wsi.xcb_surface_create_info.connection,
+        0, 16, "WM_DELETE_WINDOW");
+    xcb_generic_error_t *atom_error = nullptr;
+    xcb_intern_atom_reply_t *wm_protocols_reply = xcb_intern_atom_reply(
+        p_info->wsi.xcb_surface_create_info.connection,
+        wm_protocols_cookie, &atom_error);
+    free(atom_error);
+    atom_error = nullptr;
+    xcb_intern_atom_reply_t *wm_delete_window_reply = xcb_intern_atom_reply(
+        p_info->wsi.xcb_surface_create_info.connection,
+        wm_delete_window_cookie, &atom_error);
+    free(atom_error);
+    if (wm_protocols_reply == nullptr || wm_delete_window_reply == nullptr) {
+        free(wm_protocols_reply);
+        free(wm_delete_window_reply);
+        PRINT_ERROR("get XCB window close atoms fail!\n");
+        return false;
+    }
+    p_info->wsi.XCB_API_info.wm_delete_window_atom = wm_delete_window_reply->atom;
+    xcb_change_property(
+        p_info->wsi.xcb_surface_create_info.connection,
+        XCB_PROP_MODE_REPLACE,
+        p_info->wsi.xcb_surface_create_info.window,
+        wm_protocols_reply->atom,
+        XCB_ATOM_ATOM,
+        32,
+        1,
+        &p_info->wsi.XCB_API_info.wm_delete_window_atom);
+    free(wm_protocols_reply);
+    free(wm_delete_window_reply);
+
     xcb_icccm_set_wm_name(
         p_info->wsi.xcb_surface_create_info.connection,
         p_info->wsi.xcb_surface_create_info.window,

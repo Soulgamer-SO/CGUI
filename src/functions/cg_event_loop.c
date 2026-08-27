@@ -22,25 +22,51 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <xcb/xcb_event.h>
 
 void cg_event_loop(cg_info_t *p_info) {
+    xcb_connection_t *connection = p_info->wsi.xcb_surface_create_info.connection;
+    xcb_window_t window = p_info->wsi.xcb_surface_create_info.window;
+
     p_info->event_loop.is_running = true;
-    p_info->event_loop.fd = xcb_get_file_descriptor(p_info->wsi.xcb_surface_create_info.connection);
-    while (p_info->event_loop.is_running && (p_info->event_loop.event = xcb_wait_for_event(p_info->wsi.xcb_surface_create_info.connection))) {
-        switch (XCB_EVENT_RESPONSE_TYPE(p_info->event_loop.event)) {
-        case XCB_EXPOSE: {
-            xcb_expose_event_t *expose_event = (xcb_expose_event_t *)p_info->event_loop.event;
-            if (expose_event->window == p_info->wsi.xcb_surface_create_info.window) {
-                PRINT_LOG(
-                    "expose_event x = %i; expose_event y = %i; expose_event width = %i; expose_event height = %i;\n",
-                    expose_event->x,
-                    expose_event->y,
-                    expose_event->width,
-                    expose_event->height);
+    p_info->event_loop.fd = xcb_get_file_descriptor(connection);
+
+    while (p_info->event_loop.is_running) {
+        while ((p_info->event_loop.event = xcb_poll_for_event(connection)) != nullptr) {
+            switch (XCB_EVENT_RESPONSE_TYPE(p_info->event_loop.event)) {
+            case XCB_EXPOSE: {
+                xcb_expose_event_t *expose_event = (xcb_expose_event_t *)p_info->event_loop.event;
+                if (expose_event->window == window) {
+                    PRINT_LOG(
+                        "expose_event x = %i; expose_event y = %i; expose_event width = %i; expose_event height = %i;\n",
+                        expose_event->x,
+                        expose_event->y,
+                        expose_event->width,
+                        expose_event->height);
+                }
+                break;
             }
-        } break;
-        default:
-            /* Unknown event type, ignore it */
-            break;
+            case XCB_CLIENT_MESSAGE:
+                if (((xcb_client_message_event_t *)p_info->event_loop.event)->window == window &&
+                    ((xcb_client_message_event_t *)p_info->event_loop.event)->data.data32[0] == p_info->wsi.XCB_API_info.wm_delete_window_atom) {
+                    p_info->event_loop.is_running = false;
+                }
+                break;
+            case XCB_DESTROY_NOTIFY:
+                if (((xcb_destroy_notify_event_t *)p_info->event_loop.event)->window == window) {
+                    p_info->event_loop.is_running = false;
+                }
+                break;
+            default:
+                break;
+            }
+
+            free(p_info->event_loop.event);
+            p_info->event_loop.event = nullptr;
         }
+
+        if (xcb_connection_has_error(connection) != 0) {
+            p_info->event_loop.is_running = false;
+        }
+
+        /* Update and render one frame here. */
     }
 
     return;
@@ -52,25 +78,18 @@ void cg_event_loop(cg_info_t *p_info) {
 
 void cg_event_loop(cg_info_t *p_info) {
     p_info->event_loop.is_running = true;
-    p_info->event_loop.msg.message = WM_NULL;
-    int result = GetMessage(&p_info->event_loop.msg, nullptr, 0, 0);
-    if (result == -1) {
-        p_info->event_loop.is_running = false;
-        PRINT_ERROR("GetMessage error!\n");
-        break;
-    }
-    if (result == 0) {
-        p_info->event_loop.is_running = false;
-        PRINT_ERROR("GetMessage returned 0!\n");
-        break;
-    }
-    TranslateMessage(&p_info->event_loop.msg);
-    DispatchMessage(&p_info->event_loop.msg);
-    while (p_info->event_loop.is_running && (p_info->event_loop.msg.message != WM_QUIT)) {
-        if (PeekMessage(&p_info->event_loop.msg, nullptr, 0, 0, PM_REMOVE) != false) {
+    while (p_info->event_loop.is_running) {
+        while (PeekMessage(&p_info->event_loop.msg, nullptr, 0, 0, PM_REMOVE) != false) {
+            if (p_info->event_loop.msg.message == WM_QUIT) {
+                p_info->event_loop.is_running = false;
+                break;
+            }
+
             TranslateMessage(&p_info->event_loop.msg);
             DispatchMessage(&p_info->event_loop.msg);
         }
+
+        /* Update and render one frame here. */
     }
 
     return;
