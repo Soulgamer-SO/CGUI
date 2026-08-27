@@ -60,8 +60,6 @@ MAIN {
     }
 
     cg_event_loop(&info);
-
-destroy_var:
     cg_destroy(&info);
 destroy_memory_pool:
     free(memory_pool.memory_pool);
