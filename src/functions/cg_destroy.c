@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "cg_destroy.h"
+#include "cg_render.h"
 
 void cg_destroy_instance(cg_info_t *p_info, VkInstance vk_instance) {
     if (vk_instance != VK_NULL_HANDLE && p_info->instance.vk_instance != VK_NULL_HANDLE) {
@@ -63,6 +64,7 @@ void cg_destroy(cg_info_t *p_info) {
 #endif // LINUX
     PFN_vkDestroySurfaceKHR destroy_surface = nullptr;
     PFN_vkDestroyDevice destroy_device = nullptr;
+    cg_destroy_render_resources(p_info);
     if (p_info->wsi.swapchain != VK_NULL_HANDLE) {
         cg_destroy_swapchain(p_info, p_info->wsi.swapchain);
         p_info->wsi.swapchain = VK_NULL_HANDLE;

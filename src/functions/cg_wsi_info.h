@@ -103,6 +103,10 @@ typedef struct wsi_info {
     uint32_t image_index;
     // 图像视图
     VkImageView *swapchain_image_view_array;
+    VkRenderPass render_pass;
+    VkFramebuffer *framebuffer_array;
+    VkPipelineLayout pipeline_layout;
+    VkPipeline graphics_pipeline;
 } wsi_info_t;
 
 #endif // CG_WSI_INFO_H 1

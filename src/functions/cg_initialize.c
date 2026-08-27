@@ -24,6 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_load_library.h"
 #include "cg_logic_device.h"
 #include "cg_physical_device.h"
+#include "cg_render.h"
 #include "cg_sync.h"
 #include "cg_wsi.h"
 
@@ -120,6 +121,11 @@ bool cg_initialize_var(cg_info_t *p_info) {
 
     if (cg_create_swapchain_resources(p_info) == false) {
         PRINT_ERROR("create swapchain fail!\n");
+        return false;
+    }
+
+    if (cg_create_render_resources(p_info) == false) {
+        PRINT_ERROR("create render resources fail!\n");
         return false;
     }
 
