@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdint.h>
 
 // 在Linux下顺序RGB
-#ifdef __linux
+#ifdef LINUX
 #define CG_RGB_RED 0xFF0000U
 #define CG_RGB_GREEN 0x00FF00U
 #define CG_RGB_BLUE 0x0000FFU
@@ -33,10 +33,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define CG_ARGB_BLUE 0x000000FFU
 #define CG_ARGB_WHITE 0x00000000U
 #define CG_ARGB_BLACK 0x00FFFFFFU
-#endif // __linux
+#endif // LINUX
 
 // 在Windos下顺序BGR
-#ifdef _WIN32
+#ifdef WINDOWS
 #define CG_RGB_RED 0x0000FFU
 #define CG_RGB_GREEN 0x00FF00U
 #define CG_RGB_BLUE 0xFF0000U
@@ -47,7 +47,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define CG_ARGB_BLUE 0x00FF0000U
 #define CG_ARGB_BLACK 0x00000000U
 #define CG_ARGB_WHITE 0x00FFFFFFU
-#endif // _WIN32
+#endif // WINDOWS
 
 // 改变ARGB格式颜色
 uint32_t cg_change_ARGB_color(uint32_t red, uint32_t green, uint32_t blue, uint32_t alpha);

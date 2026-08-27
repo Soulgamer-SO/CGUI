@@ -19,11 +19,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef CG_PLATFORM_H
 #define CG_PLATFORM_H 1
-#ifdef __linux
+#ifdef LINUX
 #define MAIN int main(void)
-#endif // Linux
-#ifdef _WIN32
+#endif // LINUX
+#ifdef WINDOWS
 #include <windows.h>
 #define MAIN int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
-#endif // Windows
+#endif // WINDOWS
 #endif // CG_PLATFORM_H 1

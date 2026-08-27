@@ -7,7 +7,18 @@
             ],
             "cStandard": "c23",
             "defines": [],
-            "intelliSenseMode": "linux-gcc-x64"
+            "intelliSenseMode": "linux-gcc-x64",
+            "configurationProvider": "clice-io.clice"
+        },
+        {
+            "name": "Windows",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "cStandard": "c23",
+            "defines": [],
+            "intelliSenseMode": "gcc-x64",
+            "configurationProvider": "clice-io.clice"
         }
     ],
     "version": 4

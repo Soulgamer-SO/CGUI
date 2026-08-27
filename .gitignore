@@ -1,5 +1,12 @@
 # DIR
 build/
+bin/
+
+# Executables
+*.desktop
+*.exe
+*.out
+*.app
 
 #clice
 .clice/
@@ -30,12 +37,6 @@ compile_commands.json
 *.la
 *.a
 *.lib
-
-# Executables
-*.desktop
-*.exe
-*.out
-*.app
 
 # MacOS cache
 .DS_Store

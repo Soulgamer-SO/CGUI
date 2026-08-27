@@ -1,11 +1,13 @@
 CC = gcc -m64 -std=c23
-VK_USE_PLATFORM := NONE_PLATFORM
+PLATFORM := NONE_PLATFORM
+VK_USE_PLATFORM := VK_NONE_PLATFORM
 LD_LIBRARY_FLAGS := 
 target_bin := cgui-app
 
 #如果是Linux
 ifeq ($(shell uname),Linux)
 ifeq ($(shell uname -m),x86_64)
+PLATFORM := LINUX
 VK_USE_PLATFORM := VK_USE_PLATFORM_XCB_KHR
 LD_LIBRARY_FLAGS += -ldl -lxcb -lxcb-icccm
 endif
@@ -13,13 +15,14 @@ endif
 
 #如果是Windows
 ifeq ($(OS),Windows_NT)
+PLATFORM := WINDOWS
 VK_USE_PLATFORM := VK_USE_PLATFORM_WIN32_KHR
 LD_LIBRARY_FLAGS += -lgdi32
 target_bin := cgui-app.exe
 endif
 
 DEBUG = DEBUG
-CFLAGS = -D $(VK_USE_PLATFORM) -D $(DEBUG) -Wall -g -O0
+CFLAGS = -D $(PLATFORM) -D $(VK_USE_PLATFORM) -D $(DEBUG) -Wall -g -O0
 target_path_debug := build/debug/
 target_path_release := build/release/
 target_bin_install_path := $(target_path_release)$(target_bin)
@@ -38,7 +41,7 @@ target_src := $(main_src) $(functions_src) $(functions_h)
 # make
 all:$(target_src)
 	mkdir -p build/release/
-	$(CC) -D $(VK_USE_PLATFORM) $(main_src) $(functions_src) -O0 -o $(target_path_release)$(target_bin) $(LD_LIBRARY_FLAGS)
+	$(CC) -D $(PLATFORM) -D $(VK_USE_PLATFORM) $(main_src) $(functions_src) -O0 -o $(target_path_release)$(target_bin) $(LD_LIBRARY_FLAGS)
 
 main_build_obj: $(main_src)
 	$(CC) $(CFLAGS) $(main_src) -c -o $(main_o)
@@ -52,13 +55,14 @@ debug:$(target_o) $(target_src)
 
 release:$(target_src)
 	mkdir -p build/release/
-	$(CC) -D $(VK_USE_PLATFORM) $(main_src) $(functions_src) -O0 -o $(target_path_release)$(target_bin) $(LD_LIBRARY_FLAGS)
+	$(CC) -D $(PLATFORM) -D $(VK_USE_PLATFORM) $(main_src) $(functions_src) -O0 -o $(target_path_release)$(target_bin) $(LD_LIBRARY_FLAGS)
 
 install:
 ifneq ($(shell test -e '$(target_bin_install_path)' && echo exists),exists)
 	@echo "the target bin does not exist!"
 else ifeq ($(VK_USE_PLATFORM),VK_USE_PLATFORM_XCB_KHR)
-	bash create_desktop.sh
+	mkdir -p bin/
+	@cp $(target_bin_install_path) bin/
 endif
 
 clean:

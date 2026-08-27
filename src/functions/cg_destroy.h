@@ -20,9 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef CG_DESTROY_H
 #define CG_DESTROY_H 1
 #include "cg_info.h"
-#ifdef __linux
+#ifdef LINUX
 #include <dlfcn.h>
-#endif // __linux
+#endif // LINUX
 
 // 销毁Vulkan实例
 void cg_destroy_instance(cg_info_t *p_info, VkInstance vk_instance);

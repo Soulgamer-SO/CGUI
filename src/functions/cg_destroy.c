@@ -111,13 +111,13 @@ destroy_instance:
     p_info->instance.vk_instance = VK_NULL_HANDLE;
 
 destroy_vulkan_library:
-#ifdef __linux
+#ifdef LINUX
     dlclose(p_info->library.vulkan_library);
-#endif // __linux
+#endif // LINUX
 
-#ifdef _WIN32
+#ifdef WINDOWS
     FreeLibrary(p_info->library.vulkan_library);
-#endif // _WIN32
+#endif // WINDOWS
     p_info->library.vulkan_library = nullptr;
 
 exit:

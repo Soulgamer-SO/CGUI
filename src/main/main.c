@@ -46,12 +46,12 @@ MAIN {
         PRINT_LOG("create memory_pool success!\n");
     }
 
-#ifdef _WIN32
+#ifdef WINDOWS
     info.wsi.WinAPI_info.hInstance = hInstance,
     info.wsi.WinAPI_info.hPrevInstance = hPrevInstance;
     info.wsi.WinAPI_info.pCmdLine = pCmdLine;
     info.wsi.WinAPI_info.nCmdShow = nCmdShow;
-#endif // _WIN32
+#endif // WINDOWS
     bool is_init = false;
     is_init = cg_initialize_var(&info);
     if (is_init == false) {
