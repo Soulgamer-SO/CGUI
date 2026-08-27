@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_load_library.h"
 #include "cg_logic_device.h"
 #include "cg_physical_device.h"
-// #include "cg_sync.h"
+#include "cg_sync.h"
 #include "cg_wsi.h"
 
 bool cg_initialize_var(cg_info_t *p_info) {
@@ -53,6 +53,12 @@ bool cg_initialize_var(cg_info_t *p_info) {
         PRINT_ERROR("create instance fail!\n");
         return false;
     }
+
+    if (cg_create_window(p_info) == false) {
+        PRINT_ERROR("create window fail!\n");
+        return false;
+    }
+
     p_info->physical_device.physical_device_count = 0;
     if (cg_enumerate_physical_device(p_info, &p_info->physical_device.physical_device_count, nullptr) == false) {
         PRINT_ERROR("enumerate physical device fail!\n");
@@ -112,8 +118,29 @@ bool cg_initialize_var(cg_info_t *p_info) {
         reset_for_fences(p_info);
     } */
 
-    if (cg_create_window(p_info) == false) {
-        PRINT_ERROR("create window fail!\n");
+    if (cg_create_swapchain_resources(p_info) == false) {
+        PRINT_ERROR("create swapchain fail!\n");
+        return false;
+    }
+
+    p_info->sync.semaphore_count = 2;
+    p_info->sync.semaphore_array = (VkSemaphore *)cg_alloc_memory(
+        p_info->p_memory_pool, p_info->sync.semaphore_count * sizeof(VkSemaphore));
+    p_info->sync.fence_count = 1;
+    p_info->sync.fence_array = (VkFence *)cg_alloc_memory(
+        p_info->p_memory_pool, sizeof(VkFence));
+    if (p_info->sync.semaphore_array == nullptr ||
+        p_info->sync.fence_array == nullptr) {
+        PRINT_ERROR("alloc synchronization objects fail!\n");
+        return false;
+    }
+    p_info->sync.semaphore_array[0] = VK_NULL_HANDLE;
+    p_info->sync.semaphore_array[1] = VK_NULL_HANDLE;
+    p_info->sync.fence_array[0] = VK_NULL_HANDLE;
+    if (cg_create_semaphore(p_info, &p_info->sync.semaphore_array[0]) == false ||
+        cg_create_semaphore(p_info, &p_info->sync.semaphore_array[1]) == false ||
+        cg_create_fence(p_info, &p_info->sync.fence_array[0]) == false) {
+        PRINT_ERROR("create synchronization objects fail!\n");
         return false;
     }
 

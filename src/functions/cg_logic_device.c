@@ -36,6 +36,14 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
         return false;
     }
 
+    PFN_vkGetPhysicalDeviceSurfaceSupportKHR get_surface_support =
+        (PFN_vkGetPhysicalDeviceSurfaceSupportKHR)p_info->library.vk_get_instance_proc_addr(
+            p_info->instance.vk_instance, "vkGetPhysicalDeviceSurfaceSupportKHR");
+    if (get_surface_support == nullptr) {
+        PRINT_ERROR("load vkGetPhysicalDeviceSurfaceSupportKHR fail!\n");
+        return false;
+    }
+
     p_info->logic_device.queue_family_array = (VkQueueFamilyProperties *)cg_alloc_memory(
         p_info->p_memory_pool,
         p_info->logic_device.queue_family_count * sizeof(VkQueueFamilyProperties));
@@ -128,14 +136,33 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
     // VK_QUEUE_SPARSE_BINDING_BIT = 0x00000008 // 二进制=1000
     // VK_QUEUE_PROTECTED_BIT = 0x00000010 // 二进制=1010
     p_info->logic_device.graphic_queue_family_index = 0;
+    bool has_graphics_present_queue = false;
     for (p_info->logic_device.queue_family_index = 0;
          p_info->logic_device.queue_family_index < p_info->logic_device.queue_family_count;
          p_info->logic_device.queue_family_index++) {
+        VkBool32 supports_present = VK_FALSE;
+        p_info->library.vk_result = get_surface_support(
+            p_info->physical_device.physical_device,
+            p_info->logic_device.queue_family_index,
+            p_info->wsi.surface,
+            &supports_present);
+        if (p_info->library.vk_result != VK_SUCCESS) {
+            PRINT_ERROR("get queue present support fail!\n");
+            return false;
+        }
+
         if (p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].queueCount > 0 &&
-            (p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].queueFlags & VK_QUEUE_GRAPHICS_BIT)) {
+            (p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].queueFlags & VK_QUEUE_GRAPHICS_BIT) &&
+            supports_present == VK_TRUE) {
             p_info->logic_device.graphic_queue_family_index = p_info->logic_device.queue_family_index;
+            has_graphics_present_queue = true;
             break;
         }
+    }
+
+    if (has_graphics_present_queue == false) {
+        PRINT_ERROR("no graphics and present queue family found!\n");
+        return false;
     }
 
     VkDeviceQueueCreateInfo queue_create_info = {
@@ -143,7 +170,7 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
         .pNext = nullptr,
         .flags = 0,
         .queueFamilyIndex = p_info->logic_device.graphic_queue_family_index,
-        .queueCount = p_info->logic_device.queue_family_array[p_info->logic_device.graphic_queue_family_index].queueCount,
+        .queueCount = 1,
         .pQueuePriorities = &p_info->logic_device.queue_priority_array[p_info->logic_device.queue_priority_array_index]};
 
     VkDeviceCreateInfo device_create_info = {
@@ -195,7 +222,7 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
     p_info->logic_device.queue_family_handle = nullptr;
     get_device_queue(
         *p_vk_logic_device,
-        p_info->logic_device.queue_family_index,
+        p_info->logic_device.graphic_queue_family_index,
         0,
         &p_info->logic_device.queue_family_handle);
     if (p_info->logic_device.queue_family_handle == nullptr) {

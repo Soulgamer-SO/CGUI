@@ -215,17 +215,24 @@ bool cg_create_window(cg_info_t *p_info) {
 
 #endif // WINDOWS
 
+    return true;
+}
+
+bool cg_create_swapchain_resources(cg_info_t *p_info) {
+    if (p_info->wsi.surface == VK_NULL_HANDLE ||
+        p_info->logic_device.vk_logic_device == VK_NULL_HANDLE) {
+        PRINT_ERROR("surface or logical device is not ready!\n");
+        return false;
+    }
+
     if (cg_select_present_mode(p_info) == false) {
         return false;
     }
     if (cg_select_swapchain(p_info) == false) {
         return false;
     }
+
     p_info->wsi.swapchain = VK_NULL_HANDLE;
     p_info->wsi.old_swapchain = VK_NULL_HANDLE;
-    if (cg_create_swapchain(p_info, &p_info->wsi.swapchain) == false) {
-        return false;
-    }
-
-    return true;
+    return cg_create_swapchain(p_info, &p_info->wsi.swapchain);
 }

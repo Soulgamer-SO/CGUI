@@ -22,10 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_info.h"
 
 // 创建信号量
-void cg_create_semaphore(cg_info_t *p_info);
+bool cg_create_semaphore(cg_info_t *p_info, VkSemaphore *p_semaphore);
 
 // 创建围栏
-void cg_create_fence(cg_info_t *p_info);
+bool cg_create_fence(cg_info_t *p_info, VkFence *p_fence);
 
 // 等待围栏状态
 void cg_wait_for_fences(cg_info_t *p_info);

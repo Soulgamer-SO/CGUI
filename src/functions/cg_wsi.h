@@ -31,5 +31,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // 创建窗口
 bool cg_create_window(cg_info_t *p_info);
+bool cg_create_swapchain_resources(cg_info_t *p_info);
 
 #endif // CG_WSI_H 1

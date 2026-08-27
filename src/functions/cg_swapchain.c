@@ -189,29 +189,6 @@ bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
 #endif // DEBUG
     }
 
-    // 获得下个用于显示的图像的索引
-    PFN_vkAcquireNextImageKHR acquire_next_image = nullptr;
-    acquire_next_image = (PFN_vkAcquireNextImageKHR)p_info->library.vk_get_device_proc_addr(p_info->logic_device.vk_logic_device, "vkAcquireNextImageKHR");
-    if (acquire_next_image == nullptr) {
-        PRINT_ERROR("load vkAcquireNextImageKHR fail!\n");
-        return false;
-    }
-    p_info->library.vk_result = acquire_next_image(
-        p_info->logic_device.vk_logic_device,
-        p_info->wsi.swapchain,
-        2000000000,               // p_info->sync.timeout,
-        VK_SEMAPHORE_TYPE_BINARY, // p_info->sync.semaphore_array[0],
-        VK_NULL_HANDLE,           // p_info->sync.fence_array[0],
-        &p_info->wsi.image_index);
-    switch (p_info->library.vk_result) {
-    case VK_SUCCESS:
-    case VK_SUBOPTIMAL_KHR:
-        break;
-    default:
-        PRINT_ERROR("vkAcquireNextImageKHR fail!\n");
-        return false;
-    }
-
     return true;
 }
 
