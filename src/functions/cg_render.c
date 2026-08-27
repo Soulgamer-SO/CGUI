@@ -113,7 +113,7 @@ bool cg_create_render_resources(cg_info_t *p_info) {
 
     VkShaderModule vertex_module = VK_NULL_HANDLE;
     VkShaderModule fragment_module = VK_NULL_HANDLE;
-    if (!cg_create_shader_module(p_info, "content/shader/shader.vert.spv", &vertex_module) || !cg_create_shader_module(p_info, "content/shader/shader_test.frag.spv", &fragment_module)) {
+    if (!cg_create_shader_module(p_info, "content/shader/star_polygon.vert.spv", &vertex_module) || !cg_create_shader_module(p_info, "content/shader/vertex_color.frag.spv", &fragment_module)) {
         return false;
     }
     VkPipelineShaderStageCreateInfo stages[2] = {{.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, .stage = VK_SHADER_STAGE_VERTEX_BIT, .module = vertex_module, .pName = "main"}, {.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, .stage = VK_SHADER_STAGE_FRAGMENT_BIT, .module = fragment_module, .pName = "main"}};
