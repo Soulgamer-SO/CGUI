@@ -288,6 +288,10 @@ bool cg_draw_frame(cg_info_t *p_info) {
 
 void cg_destroy_render_resources(cg_info_t *p_info) {
     VkDevice device = p_info->logic_device.vk_logic_device;
+    if (device == VK_NULL_HANDLE) {
+        return;
+    }
+
     PFN_vkDestroyFramebuffer destroy_framebuffer = (PFN_vkDestroyFramebuffer)p_info->library.vk_get_device_proc_addr(device, "vkDestroyFramebuffer");
     PFN_vkDestroyPipeline destroy_pipeline = (PFN_vkDestroyPipeline)p_info->library.vk_get_device_proc_addr(device, "vkDestroyPipeline");
     PFN_vkDestroyPipelineLayout destroy_pipeline_layout = (PFN_vkDestroyPipelineLayout)p_info->library.vk_get_device_proc_addr(device, "vkDestroyPipelineLayout");

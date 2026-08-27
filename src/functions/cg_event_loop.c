@@ -62,6 +62,9 @@ void cg_event_loop(cg_info_t *p_info) {
 
             free(p_info->event_loop.event);
             p_info->event_loop.event = nullptr;
+            if (!p_info->event_loop.is_running) {
+                break;
+            }
         }
 
         if (!p_info->event_loop.is_running) {
