@@ -60,200 +60,6 @@ static bool cg_create_shader_module(cg_info_t *p_info, const char *path, VkShade
         free(code);
         return false;
     }
-    VkShaderModuleCreateInfo shader_info = {
-        .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-        .codeSize = size,
-        .pCode = code};
-    VkResult result = create_shader_module(p_info->logic_device.vk_logic_device, &shader_info, nullptr, module);
-    free(code);
-    return result == VK_SUCCESS;
-}
-
-bool cg_create_render_resources(cg_info_t *p_info) {
-    VkDevice device = p_info->logic_device.vk_logic_device;
-    PFN_vkCreateImageView create_image_view = (PFN_vkCreateImageView)p_info->library.vk_get_device_proc_addr(device, "vkCreateImageView");
-    PFN_vkCreateRenderPass create_render_pass = (PFN_vkCreateRenderPass)p_info->library.vk_get_device_proc_addr(device, "vkCreateRenderPass");
-    PFN_vkCreateFramebuffer create_framebuffer = (PFN_vkCreateFramebuffer)p_info->library.vk_get_device_proc_addr(device, "vkCreateFramebuffer");
-    PFN_vkCreatePipelineLayout create_pipeline_layout = (PFN_vkCreatePipelineLayout)p_info->library.vk_get_device_proc_addr(device, "vkCreatePipelineLayout");
-    PFN_vkCreateGraphicsPipelines create_graphics_pipelines = (PFN_vkCreateGraphicsPipelines)p_info->library.vk_get_device_proc_addr(device, "vkCreateGraphicsPipelines");
-    PFN_vkDestroyShaderModule destroy_shader_module = (PFN_vkDestroyShaderModule)p_info->library.vk_get_device_proc_addr(device, "vkDestroyShaderModule");
-    if (create_image_view == nullptr || create_render_pass == nullptr || create_framebuffer == nullptr ||
-        create_pipeline_layout == nullptr || create_graphics_pipelines == nullptr || destroy_shader_module == nullptr) {
-        PRINT_ERROR("load render functions fail!\n");
-        return false;
-    }
-
-    p_info->wsi.render_pass = VK_NULL_HANDLE;
-    p_info->wsi.pipeline_layout = VK_NULL_HANDLE;
-    p_info->wsi.graphics_pipeline = VK_NULL_HANDLE;
-    p_info->wsi.swapchain_image_view_array = cg_alloc_memory(p_info->p_memory_pool, p_info->wsi.swapchain_image_count * sizeof(VkImageView));
-    p_info->wsi.framebuffer_array = cg_alloc_memory(p_info->p_memory_pool, p_info->wsi.swapchain_image_count * sizeof(VkFramebuffer));
-    if (p_info->wsi.swapchain_image_view_array == nullptr || p_info->wsi.framebuffer_array == nullptr) {
-        return false;
-    }
-
-    for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
-        VkImageViewCreateInfo view_info = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-            .image = p_info->wsi.swapchain_image_array[i],
-            .viewType = VK_IMAGE_VIEW_TYPE_2D,
-            .format = p_info->wsi.enabled_surface_format.format,
-            .components = {VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY},
-            .subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1}};
-        if (create_image_view(device, &view_info, nullptr, &p_info->wsi.swapchain_image_view_array[i]) != VK_SUCCESS) {
-            return false;
-        }
-    }
-
-    VkAttachmentDescription attachment = {
-        .format = p_info->wsi.enabled_surface_format.format,
-        .samples = VK_SAMPLE_COUNT_1_BIT,
-        .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
-        .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
-        .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-        .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-        .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-        .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR};
-    VkAttachmentReference color_reference = {.attachment = 0, .layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL};
-    VkSubpassDescription subpass = {.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS, .colorAttachmentCount = 1, .pColorAttachments = &color_reference};
-    VkRenderPassCreateInfo render_pass_info = {.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO, .attachmentCount = 1, .pAttachments = &attachment, .subpassCount = 1, .pSubpasses = &subpass};
-    if (create_render_pass(device, &render_pass_info, nullptr, &p_info->wsi.render_pass) != VK_SUCCESS) {
-        return false;
-    }
-
-    VkShaderModule vertex_module = VK_NULL_HANDLE;
-    VkShaderModule fragment_module = VK_NULL_HANDLE;
-    if (!cg_create_shader_module(p_info, "content/shader/shader.vert.spv", &vertex_module) ||
-        !cg_create_shader_module(p_info, "content/shader/shader_test.frag.spv", &fragment_module)) {
-        return false;
-    }
-    VkPipelineShaderStageCreateInfo stages[2] = {
-        {.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, .stage = VK_SHADER_STAGE_VERTEX_BIT, .module = vertex_module, .pName = "main"},
-        {.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, .stage = VK_SHADER_STAGE_FRAGMENT_BIT, .module = fragment_module, .pName = "main"}};
-    VkPipelineVertexInputStateCreateInfo vertex_input = {.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO};
-    VkPipelineInputAssemblyStateCreateInfo input_assembly = {.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO, .topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST};
-    VkPipelineViewportStateCreateInfo viewport_state = {.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO, .viewportCount = 1, .scissorCount = 1};
-    VkPipelineRasterizationStateCreateInfo rasterizer = {.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO, .polygonMode = VK_POLYGON_MODE_FILL, .cullMode = VK_CULL_MODE_NONE, .frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE, .lineWidth = 1.0f};
-    VkPipelineMultisampleStateCreateInfo multisample = {.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO, .rasterizationSamples = VK_SAMPLE_COUNT_1_BIT};
-    VkPipelineColorBlendAttachmentState blend_attachment = {.blendEnable = VK_FALSE, .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT};
-    VkPipelineColorBlendStateCreateInfo blend = {.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO, .attachmentCount = 1, .pAttachments = &blend_attachment};
-    VkDynamicState dynamic_states[2] = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
-    VkPipelineDynamicStateCreateInfo dynamic_state = {.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO, .dynamicStateCount = 2, .pDynamicStates = dynamic_states};
-    VkPipelineLayoutCreateInfo layout_info = {.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO};
-    if (create_pipeline_layout(device, &layout_info, nullptr, &p_info->wsi.pipeline_layout) != VK_SUCCESS) {
-        return false;
-    }
-    VkGraphicsPipelineCreateInfo pipeline_info = {
-        .sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
-        .stageCount = 2,
-        .pStages = stages,
-        .pVertexInputState = &vertex_input,
-        .pInputAssemblyState = &input_assembly,
-        .pViewportState = &viewport_state,
-        .pRasterizationState = &rasterizer,
-        .pMultisampleState = &multisample,
-        .pColorBlendState = &blend,
-        .pDynamicState = &dynamic_state,
-        .layout = p_info->wsi.pipeline_layout,
-        .renderPass = p_info->wsi.render_pass,
-        .subpass = 0};
-    VkResult pipeline_result = create_graphics_pipelines(device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &p_info->wsi.graphics_pipeline);
-    destroy_shader_module(device, vertex_module, nullptr);
-    destroy_shader_module(device, fragment_module, nullptr);
-    if (pipeline_result != VK_SUCCESS) {
-        return false;
-    }
-
-    for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
-        VkImageView view = p_info->wsi.swapchain_image_view_array[i];
-        VkFramebufferCreateInfo framebuffer_info = {
-            .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
-            .renderPass = p_info->wsi.render_pass,
-            .attachmentCount = 1,
-            .pAttachments = &view,
-            .width = p_info->wsi.enabled_image_extent_size.width,
-            .height = p_info->wsi.enabled_image_extent_size.height,
-            .layers = 1};
-        if (create_framebuffer(device, &framebuffer_info, nullptr, &p_info->wsi.framebuffer_array[i]) != VK_SUCCESS) {
-            return false;
-        }
-    }
-    return true;
-}
-
-void cg_destroy_render_resources(cg_info_t *p_info) {
-    VkDevice device = p_info->logic_device.vk_logic_device;
-    PFN_vkDestroyFramebuffer destroy_framebuffer = (PFN_vkDestroyFramebuffer)p_info->library.vk_get_device_proc_addr(device, "vkDestroyFramebuffer");
-    PFN_vkDestroyPipeline destroy_pipeline = (PFN_vkDestroyPipeline)p_info->library.vk_get_device_proc_addr(device, "vkDestroyPipeline");
-    PFN_vkDestroyPipelineLayout destroy_pipeline_layout = (PFN_vkDestroyPipelineLayout)p_info->library.vk_get_device_proc_addr(device, "vkDestroyPipelineLayout");
-    PFN_vkDestroyRenderPass destroy_render_pass = (PFN_vkDestroyRenderPass)p_info->library.vk_get_device_proc_addr(device, "vkDestroyRenderPass");
-    PFN_vkDestroyImageView destroy_image_view = (PFN_vkDestroyImageView)p_info->library.vk_get_device_proc_addr(device, "vkDestroyImageView");
-    if (destroy_framebuffer != nullptr && p_info->wsi.framebuffer_array != nullptr) {
-        for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
-            destroy_framebuffer(device, p_info->wsi.framebuffer_array[i], nullptr);
-        }
-    }
-    if (destroy_pipeline != nullptr) {
-        destroy_pipeline(device, p_info->wsi.graphics_pipeline, nullptr);
-    }
-    if (destroy_pipeline_layout != nullptr) {
-        destroy_pipeline_layout(device, p_info->wsi.pipeline_layout, nullptr);
-    }
-    if (destroy_render_pass != nullptr) {
-        destroy_render_pass(device, p_info->wsi.render_pass, nullptr);
-    }
-    if (destroy_image_view != nullptr && p_info->wsi.swapchain_image_view_array != nullptr) {
-        for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
-            destroy_image_view(device, p_info->wsi.swapchain_image_view_array[i], nullptr);
-        }
-    }
-    p_info->wsi.graphics_pipeline = VK_NULL_HANDLE;
-    p_info->wsi.pipeline_layout = VK_NULL_HANDLE;
-    p_info->wsi.render_pass = VK_NULL_HANDLE;
-}
-#include "cg_log.h"
-#include <stdio.h>
-#include <stdlib.h>
-
-static bool cg_read_shader(const char *path, uint32_t **code, size_t *size) {
-    FILE *file = fopen(path, "rb");
-    if (file == nullptr) {
-        return false;
-    }
-    if (fseek(file, 0, SEEK_END) != 0) {
-        fclose(file);
-        return false;
-    }
-    long file_size = ftell(file);
-    if (file_size <= 0 || (file_size % sizeof(uint32_t)) != 0) {
-        fclose(file);
-        return false;
-    }
-    rewind(file);
-    *code = malloc((size_t)file_size);
-    if (*code == nullptr || fread(*code, 1, (size_t)file_size, file) != (size_t)file_size) {
-        free(*code);
-        *code = nullptr;
-        fclose(file);
-        return false;
-    }
-    fclose(file);
-    *size = (size_t)file_size;
-    return true;
-}
-
-static bool cg_create_shader_module(cg_info_t *p_info, const char *path, VkShaderModule *module) {
-    uint32_t *code = nullptr;
-    size_t size = 0;
-    if (!cg_read_shader(path, &code, &size)) {
-        return false;
-    }
-    PFN_vkCreateShaderModule create_shader_module = (PFN_vkCreateShaderModule)p_info->library.vk_get_device_proc_addr(
-        p_info->logic_device.vk_logic_device, "vkCreateShaderModule");
-    if (create_shader_module == nullptr) {
-        free(code);
-        return false;
-    }
     VkShaderModuleCreateInfo create_info = {
         .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
         .codeSize = size,
@@ -478,4 +284,41 @@ bool cg_draw_frame(cg_info_t *p_info) {
     }
 
     return true;
+}
+
+void cg_destroy_render_resources(cg_info_t *p_info) {
+    VkDevice device = p_info->logic_device.vk_logic_device;
+    PFN_vkDestroyFramebuffer destroy_framebuffer = (PFN_vkDestroyFramebuffer)p_info->library.vk_get_device_proc_addr(device, "vkDestroyFramebuffer");
+    PFN_vkDestroyPipeline destroy_pipeline = (PFN_vkDestroyPipeline)p_info->library.vk_get_device_proc_addr(device, "vkDestroyPipeline");
+    PFN_vkDestroyPipelineLayout destroy_pipeline_layout = (PFN_vkDestroyPipelineLayout)p_info->library.vk_get_device_proc_addr(device, "vkDestroyPipelineLayout");
+    PFN_vkDestroyRenderPass destroy_render_pass = (PFN_vkDestroyRenderPass)p_info->library.vk_get_device_proc_addr(device, "vkDestroyRenderPass");
+    PFN_vkDestroyImageView destroy_image_view = (PFN_vkDestroyImageView)p_info->library.vk_get_device_proc_addr(device, "vkDestroyImageView");
+
+    if (destroy_framebuffer != nullptr && p_info->wsi.framebuffer_array != nullptr) {
+        for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
+            if (p_info->wsi.framebuffer_array[i] != VK_NULL_HANDLE) {
+                destroy_framebuffer(device, p_info->wsi.framebuffer_array[i], nullptr);
+            }
+        }
+    }
+    if (destroy_pipeline != nullptr && p_info->wsi.graphics_pipeline != VK_NULL_HANDLE) {
+        destroy_pipeline(device, p_info->wsi.graphics_pipeline, nullptr);
+    }
+    if (destroy_pipeline_layout != nullptr && p_info->wsi.pipeline_layout != VK_NULL_HANDLE) {
+        destroy_pipeline_layout(device, p_info->wsi.pipeline_layout, nullptr);
+    }
+    if (destroy_render_pass != nullptr && p_info->wsi.render_pass != VK_NULL_HANDLE) {
+        destroy_render_pass(device, p_info->wsi.render_pass, nullptr);
+    }
+    if (destroy_image_view != nullptr && p_info->wsi.swapchain_image_view_array != nullptr) {
+        for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
+            if (p_info->wsi.swapchain_image_view_array[i] != VK_NULL_HANDLE) {
+                destroy_image_view(device, p_info->wsi.swapchain_image_view_array[i], nullptr);
+            }
+        }
+    }
+
+    p_info->wsi.graphics_pipeline = VK_NULL_HANDLE;
+    p_info->wsi.pipeline_layout = VK_NULL_HANDLE;
+    p_info->wsi.render_pass = VK_NULL_HANDLE;
 }
