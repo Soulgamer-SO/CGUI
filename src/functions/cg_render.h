@@ -24,7 +24,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 bool cg_draw_frame(cg_info_t *p_info);
 bool cg_create_render_resources(cg_info_t *p_info);
 void cg_destroy_render_resources(cg_info_t *p_info);
-bool cg_create_render_resources(cg_info_t *p_info);
-void cg_destroy_render_resources(cg_info_t *p_info);
 
 #endif // CG_RENDER_H 1
