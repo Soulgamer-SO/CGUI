@@ -24,8 +24,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // 事件循环
 void cg_event_loop(cg_info_t *p_info);
 
-#ifdef _WIN32
+#ifdef WINDOWS
 LRESULT CALLBACK window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
-#endif // _WIN32
+#endif // WINDOWS
 
 #endif // CG_EVENT_LOOP_H 1

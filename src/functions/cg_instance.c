@@ -72,12 +72,12 @@ bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
     p_info->instance.enabled_instance_extension_count = 2;
     char *enabled_extension_name_array[p_info->instance.enabled_instance_extension_count];
     enabled_extension_name_array[0] = VK_KHR_SURFACE_EXTENSION_NAME;
-#ifdef __linux
+#ifdef LINUX
     enabled_extension_name_array[1] = VK_KHR_XCB_SURFACE_EXTENSION_NAME;
-#endif // __linux
-#ifdef _WIN32
+#endif // LINUX
+#ifdef WINDOWS
     enabled_extension_name_array[1] = VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
-#endif // _WIN32
+#endif // WINDOWS
 
     /* p_info->instance.enabled_extension_name_array = (char***)malloc(p_info->instance.enabled_instance_extension_count * sizeof(char *));
         if (p_info->instance.enabled_extension_name_array == nullptr)
@@ -85,12 +85,12 @@ bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
             return false;
         }
         p_info->instance.enabled_extension_name_array[0] = VK_KHR_SURFACE_EXTENSION_NAME;
-    #ifdef __linux
+    #ifdef LINUX
         p_info->instance.enabled_extension_name_array[1] = VK_KHR_XCB_SURFACE_EXTENSION_NAME;
-    #endif // __linux
-    #ifdef _WIN32
+    #endif // LINUX
+    #ifdef WINDOWS
         p_info->instance.enabled_extension_name_array[1] = VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
-    #endif // _WIN32
+    #endif // WINDOWS
      p_info->instance.enabled_extension_name_array = enabled_extension_name_array; */
 
     VkApplicationInfo application_info = {

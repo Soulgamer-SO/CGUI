@@ -21,14 +21,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define CG_WSI_INFO_H 1
 #include <stdint.h>
 #include <vulkan/vulkan.h>
-#ifdef __linux
+#ifdef LINUX
 #include <xcb/xcb_icccm.h>
 #include <xcb/xcb_util.h>
 #include <xcb/xproto.h>
-#endif // __linux
-#ifdef _WIN32
+#endif // LINUX
+#ifdef WINDOWS
 #include <windows.h>
-#endif // _WIN32
+#endif // WINDOWS
 
 typedef struct wsi_info {
     const char *window_name;
@@ -40,7 +40,7 @@ typedef struct wsi_info {
     bool is_window_resizeable;
     // 显示表面
     VkSurfaceKHR surface;
-#ifdef VK_USE_PLATFORM_XCB_KHR
+#ifdef LINUX
     // XCB API
     struct XCB_API_info {
         int screen_num;
@@ -52,9 +52,9 @@ typedef struct wsi_info {
     } XCB_API_info;
 
     VkXcbSurfaceCreateInfoKHR xcb_surface_create_info;
-#endif // VK_USE_PLATFORM_XCB_KHR
+#endif // LINUX
 
-#ifdef _WIN32
+#ifdef WINDOWS
     // Windows API 相关
     struct WinAPI_info {
         // WinMain()函数参数
@@ -68,7 +68,7 @@ typedef struct wsi_info {
     } WinAPI_info;
 
     VkWin32SurfaceCreateInfoKHR win32_surface_create_info;
-#endif // _WIN32
+#endif // WINDOWS
 
     // Vulkan显示模式的数量
     uint32_t present_mode_count;

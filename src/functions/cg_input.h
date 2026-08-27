@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef CG_INPUT_H
 #define CG_INPUT_H 1
 
-#ifdef _WIN32
+#ifdef WINDOWS
 #define KEY_0 0x30
 #define KEY_1 0x31
 #define KEY_2 0x32
@@ -57,6 +57,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define KEY_X 0x58
 #define KEY_Y 0x59
 #define KEY_Z 0x5A
-#endif // _WIN32
+#endif // WINDOWS
 
 #endif // CG_INPUT_H 1

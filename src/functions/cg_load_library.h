@@ -20,9 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef CG_LOAD_LIBRARY_H
 #define CG_LOAD_LIBRARY_H 1
 #include "cg_info.h"
-#ifdef __linux
+#ifdef LINUX
 #include <dlfcn.h>
-#endif // __linux
+#endif // LINUX
 
 // 加载函数库
 bool cg_load_library(cg_info_t *p_info);

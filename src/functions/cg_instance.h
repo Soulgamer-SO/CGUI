@@ -20,9 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef CG_INSTANCE_H
 #define CG_INSTANCE_H 1
 #include "cg_info.h"
-#ifdef __linux
+#ifdef LINUX
 #include <dlfcn.h>
-#endif // __linux
+#endif // LINUX
 
 // 创建Vulkan实例
 bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance);

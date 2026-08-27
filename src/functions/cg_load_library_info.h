@@ -25,14 +25,14 @@ typedef struct library_info {
     // Vulkan命令返回代码 Vulkan command return codes
     VkResult vk_result;
     // Linux下加载Vulkan函数库
-#ifdef __linux
+#ifdef LINUX
     void *vulkan_library;
-#endif // __linux
+#endif // LINUX
 
 // Windows下加载Vulkan函数库
-#ifdef _WIN32
+#ifdef WINDOWS
     HMODULE vulkan_library;
-#endif // _WIN32
+#endif // WINDOWS
 
     // 加载实例函数的函数 PFN_vkGetInstanceProcAddr
     PFN_vkGetInstanceProcAddr vk_get_instance_proc_addr;

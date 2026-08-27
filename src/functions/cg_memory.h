@@ -21,9 +21,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define CG_MEMORY_H 1
 #include "cg_log.h"
 #include <stdint.h>
-#ifdef __linux
+#ifdef LINUX
 #include <alloca.h>
-#endif // __linux
+#endif // LINUX
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>

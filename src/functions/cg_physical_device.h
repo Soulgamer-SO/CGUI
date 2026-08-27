@@ -20,9 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef CG_PHYSICAL_DEVICE_H
 #define CG_PHYSICAL_DEVICE_H 1
 #include "cg_info.h"
-#ifdef __linux
+#ifdef LINUX
 #include <dlfcn.h>
-#endif // __linux
+#endif // LINUX
 
 // 创建Vulkan物理设备列表
 bool cg_enumerate_physical_device(cg_info_t *p_info, uint32_t *p_physical_device_count, VkPhysicalDevice *available_physical_device_array);

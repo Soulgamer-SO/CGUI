@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_load_library.h"
 
 bool cg_load_library(cg_info_t *p_info) {
-#ifdef __linux
+#ifdef LINUX
     p_info->library.vulkan_library = nullptr;
     p_info->library.vulkan_library = dlopen("libvulkan.so.1", RTLD_NOW);
     if (p_info->library.vulkan_library == nullptr) {
@@ -45,9 +45,9 @@ bool cg_load_library(cg_info_t *p_info) {
         PRINT_ERROR("load vkGetDeviceProcAddr fail!\n");
         return false;
     }
-#endif // __linux
+#endif // LINUX
 
-#ifdef _WIN32
+#ifdef WINDOWS
     p_info->library.vulkan_library = nullptr;
     p_info->library.vulkan_library = LoadLibrary("vulkan-1.dll");
     if (p_info->library.vulkan_library == nullptr) {
@@ -72,7 +72,7 @@ bool cg_load_library(cg_info_t *p_info) {
         PRINT_ERROR("load vkGetDeviceProcAddr fail!\n");
         return false;
     }
-#endif // _WIN32
+#endif // WINDOWS
 
     return true;
 }

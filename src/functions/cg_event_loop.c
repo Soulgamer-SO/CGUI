@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "cg_event_loop.h"
-#ifdef __linux
+#ifdef LINUX
 #include <xcb/xcb_event.h>
 
 void cg_event_loop(cg_info_t *p_info) {
@@ -45,9 +45,9 @@ void cg_event_loop(cg_info_t *p_info) {
 
     return;
 }
-#endif // __linux
+#endif // LINUX
 
-#ifdef _WIN32
+#ifdef WINDOWS
 #include "cg_input.h"
 
 void cg_event_loop(cg_info_t *p_info) {
@@ -80,4 +80,4 @@ LRESULT CALLBACK window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
     return 0;
 }
-#endif // _WIN32
+#endif // WINDOWS

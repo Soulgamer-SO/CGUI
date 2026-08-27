@@ -20,9 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef CG_SWAPCHAIN_H
 #define CG_SWAPCHAIN_H 1
 #include "cg_info.h"
-#ifdef __linux
+#ifdef LINUX
 #include <dlfcn.h>
-#endif // __linux
+#endif // LINUX
 
 // 选择想要的交换链
 bool cg_select_swapchain(cg_info_t *p_info);

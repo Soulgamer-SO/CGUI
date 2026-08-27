@@ -34,7 +34,7 @@ bool cg_create_window(cg_info_t *p_info) {
     p_info->wsi.swapchain = VK_NULL_HANDLE;
     p_info->wsi.old_swapchain = VK_NULL_HANDLE;
 
-#ifdef VK_USE_PLATFORM_XCB_KHR
+#ifdef LINUX
     p_info->wsi.xcb_surface_create_info.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
     p_info->wsi.xcb_surface_create_info.pNext = nullptr;
     p_info->wsi.xcb_surface_create_info.flags = 0;
@@ -111,11 +111,11 @@ bool cg_create_window(cg_info_t *p_info) {
         PRINT_ERROR("xcb_flush fail!\n");
         return false;
     }
-#endif // VK_USE_PLATFORM_XCB_KHR
+#endif // LINUX
 
-#ifdef VK_USE_PLATFORM_WIN32_KHR
-    // 注册Windows class
-    p_info->wsi.WinAPI_info.w_class_name = (LPCSTR) "WindowClassSoul";
+#ifdef WINDOWS
+    // 注册Window class
+    p_info->wsi.WinAPI_info.w_class_name = (LPCSTR) "window_class_CGUI";
     p_info->wsi.WinAPI_info.wnd_class = (WNDCLASSEX){
         .cbSize = sizeof(p_info->wsi.WinAPI_info.wnd_class),
         .style = CS_HREDRAW | CS_VREDRAW,
@@ -178,7 +178,7 @@ bool cg_create_window(cg_info_t *p_info) {
     ShowWindow(p_info->wsi.win32_surface_create_info.hwnd, p_info->wsi.WinAPI_info.nCmdShow);
     UpdateWindow(p_info->wsi.win32_surface_create_info.hwnd);
 
-#endif // VK_USE_PLATFORM_WIN32_KHR
+#endif // WINDOWS
 
     if (cg_select_present_mode(p_info) == false) {
         return false;

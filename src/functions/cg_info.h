@@ -24,9 +24,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 #include <vulkan/vulkan.h>
-#ifdef __linux
+#ifdef LINUX
 #include <xcb/xcb_icccm.h>
-#endif // __linux
+#endif // LINUX
 
 #include "cg_load_library_info.h"
 

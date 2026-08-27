@@ -20,9 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef CG_LOGIC_DEVICE_H
 #define CG_LOGIC_DEVICE_H 1
 #include "cg_info.h"
-#ifdef __linux
+#ifdef LINUX
 #include <dlfcn.h>
-#endif // __linux
+#endif // LINUX
 
 // 创建Vulkan逻辑设备
 bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device);

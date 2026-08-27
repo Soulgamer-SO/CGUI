@@ -21,14 +21,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define CG_EVENT_LOOP_INFO_H 1
 #include <stdint.h>
 #include <vulkan/vulkan.h>
-#ifdef __linux
+#ifdef LINUX
 #include <xcb/xcb.h>
-#endif // __linux
+#endif // LINUX
 
 // event loop var
 typedef struct event_loop_info {
     bool is_running;
-#ifdef VK_USE_PLATFORM_XCB_KHR
+#ifdef LINUX
     xcb_generic_event_t *event;
     // file descriptor 文件描述符
     int fd;
@@ -38,11 +38,11 @@ typedef struct event_loop_info {
     int left_click_count;
     // 鼠标右键单击次数
     int right_click_count;
-#endif // VK_USE_PLATFORM_XCB_KHR
+#endif // LINUX
 
-#ifdef _WIN32
+#ifdef WINDOWS
     MSG msg;
-#endif // _WIN32
+#endif // WINDOWS
 } event_loop_info_t;
 
 #endif // CG_EVENT_LOOP_INFO_H 1

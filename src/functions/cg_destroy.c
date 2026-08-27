@@ -58,9 +58,9 @@ void cg_destroy_command_pool(cg_info_t *p_info, VkCommandPool command_pool) {
 }
 
 void cg_destroy(cg_info_t *p_info) {
-#ifdef VK_USE_PLATFORM_XCB_KHR
+#ifdef LINUX
     xcb_disconnect(p_info->wsi.xcb_surface_create_info.connection);
-#endif // VK_USE_PLATFORM_XCB_KHR
+#endif // LINUX
     PFN_vkDestroySurfaceKHR destroy_surface = nullptr;
     PFN_vkDestroyDevice destroy_device = nullptr;
     if (p_info->wsi.swapchain != VK_NULL_HANDLE) {
