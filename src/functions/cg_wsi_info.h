@@ -49,6 +49,7 @@ typedef struct wsi_info {
         xcb_size_hints_t window_size_hints;
         xcb_create_window_value_list_t value_list;
         xcb_void_cookie_t cookie;
+        xcb_atom_t wm_delete_window_atom;
     } XCB_API_info;
 
     VkXcbSurfaceCreateInfoKHR xcb_surface_create_info;
