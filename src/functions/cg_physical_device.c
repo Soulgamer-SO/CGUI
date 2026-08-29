@@ -81,6 +81,7 @@ bool cg_select_physical_device(cg_info_t *p_info, uint32_t *p_physical_device_co
 #endif // DEBUG
 
     // 检查物理设备功能和属性,选择想要的物理设备
+    p_info->physical_device.is_physical_device_supported = false;
     for (p_info->physical_device.physical_device_index = 0;
          p_info->physical_device.physical_device_index < *p_physical_device_count;
          p_info->physical_device.physical_device_index++) {
@@ -90,9 +91,11 @@ bool cg_select_physical_device(cg_info_t *p_info, uint32_t *p_physical_device_co
         PRINT_LOG("当前的 physical_device = physical_handle_device[%d], deviceName = %s;\n", p_info->physical_device.physical_device_index, p_info->physical_device.device_properties.deviceName);
         if (p_info->physical_device.device_properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
             if (((p_info->physical_device.device_feature_array.geometryShader && p_info->physical_device.device_feature_array.textureCompressionBC) && (p_info->physical_device.device_feature_array.shaderFloat64 && p_info->physical_device.device_feature_array.multiViewport)) == true) {
-                PRINT_LOG("device_properties.deviceType = VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;\ndevice_feature_array.geometryShader = 1;\n");
-                PRINT_LOG("device_feature_array.textureCompressionBC = %d;\ndevice_feature_array.shaderFloat64 = %d;\ndevice_feature_array.multiViewport = %d;\n", p_info->physical_device.device_feature_array.textureCompressionBC, p_info->physical_device.device_feature_array.shaderFloat64, p_info->physical_device.device_feature_array.multiViewport);
-                p_info->physical_device.is_physical_device_supported = true;
+                if (strstr(p_info->physical_device.device_properties.deviceName, "NVIDIA") != nullptr) {
+                    p_info->physical_device.is_physical_device_supported = true;
+                    PRINT_LOG("device_properties.deviceType = VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;\ndevice_feature_array.geometryShader = 1;\n");
+                    PRINT_LOG("device_feature_array.textureCompressionBC = %d;\ndevice_feature_array.shaderFloat64 = %d;\ndevice_feature_array.multiViewport = %d;\n", p_info->physical_device.device_feature_array.textureCompressionBC, p_info->physical_device.device_feature_array.shaderFloat64, p_info->physical_device.device_feature_array.multiViewport);
+                }
             }
         }
         if (p_info->physical_device.is_physical_device_supported == true) {

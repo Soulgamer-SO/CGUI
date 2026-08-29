@@ -96,9 +96,9 @@ bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
     VkApplicationInfo application_info = {
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pNext = nullptr,
-        .pApplicationName = "Soul",
+        .pApplicationName = "cgui-app",
         .applicationVersion = VK_MAKE_VERSION(1, 0, 0),
-        .pEngineName = "SoulEngine",
+        .pEngineName = "CGUI_engine",
         .engineVersion = VK_MAKE_VERSION(1, 0, 0),
         .apiVersion = VK_MAKE_VERSION(1, 3, 261)};
 
