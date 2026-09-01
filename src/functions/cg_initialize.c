@@ -19,7 +19,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "cg_initialize.h"
 #include "cg_command_pool.h"
-// #include "cg_destroy.h"
 #include "cg_instance.h"
 #include "cg_load_library.h"
 #include "cg_logic_device.h"
@@ -102,10 +101,6 @@ bool cg_initialize_var(cg_info_t *p_info) {
             return false;
         }
         cg_create_command_buffer_array(p_info, p_info->command_pool.command_pool, &p_info->command_pool.command_buffer_array[0], p_info->command_pool.command_buffer_count);
-        cg_begin_record_command_buffer(p_info, p_info->command_pool.command_buffer_array[0], VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
-        cg_end_record_command_buffer(p_info, p_info->command_pool.command_buffer_array[0]);
-        cg_reset_command_buffer(p_info, p_info->command_pool.command_buffer_array[0], VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
-        cg_reset_command_pool(p_info, p_info->command_pool.command_pool, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
     }
 
     if (cg_create_swapchain_resources(p_info) == false) {

@@ -27,13 +27,4 @@ bool cg_create_semaphore(cg_info_t *p_info, VkSemaphore *p_semaphore);
 // 创建围栏
 bool cg_create_fence(cg_info_t *p_info, VkFence *p_fence);
 
-// 等待围栏状态
-void cg_wait_for_fences(cg_info_t *p_info);
-
-// 重置围栏状态
-void cg_reset_for_fences(cg_info_t *p_info);
-
-// 将命令缓冲提交给队列
-void cg_submit_command_buff_to_queue(cg_info_t *p_info);
-
 #endif // CG_SYNC_H 1
