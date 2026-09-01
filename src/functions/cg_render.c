@@ -203,11 +203,13 @@ bool cg_draw_frame(cg_info_t *p_info) {
         PRINT_ERROR("reset command buffer fail!\n");
         return false;
     }
-    result = begin_command_buffer(command_buffer, &(VkCommandBufferBeginInfo){
-        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-        .pNext = nullptr,
-        .flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
-        .pInheritanceInfo = nullptr});
+    result = begin_command_buffer(
+        command_buffer,
+        &(VkCommandBufferBeginInfo){
+            .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+            .pNext = nullptr,
+            .flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
+            .pInheritanceInfo = nullptr});
     if (result != VK_SUCCESS) {
         PRINT_ERROR("begin command buffer fail!\n");
         return false;
