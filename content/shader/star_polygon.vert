@@ -16,9 +16,9 @@ void main() {
     vec2 next_position = vec2(cos(next_angle), sin(next_angle)) * next_radius;
     vec2 center = vec2(0.0, 0.0);
 
-    if (corner == 0u) {
+    if(corner == 0u) {
         gl_Position = vec4(center, 0.0, 1.0);
-    } else if (corner == 1u) {
+    } else if(corner == 1u) {
         gl_Position = vec4(point_position, 0.0, 1.0);
     } else {
         gl_Position = vec4(next_position, 0.0, 1.0);

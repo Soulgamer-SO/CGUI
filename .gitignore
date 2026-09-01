@@ -21,6 +21,9 @@ compile_commands.json
 # Vscode
 .VSCodeCounter/
 
+#glsld
+.glsld/
+
 # Compiled object files
 *.slo
 *.lo
