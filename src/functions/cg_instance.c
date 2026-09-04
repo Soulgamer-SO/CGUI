@@ -79,20 +79,6 @@ bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
     enabled_extension_name_array[1] = VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
 #endif // WINDOWS
 
-    /* p_info->instance.enabled_extension_name_array = (char***)malloc(p_info->instance.enabled_instance_extension_count * sizeof(char *));
-        if (p_info->instance.enabled_extension_name_array == nullptr)
-        {
-            return false;
-        }
-        p_info->instance.enabled_extension_name_array[0] = VK_KHR_SURFACE_EXTENSION_NAME;
-    #ifdef LINUX
-        p_info->instance.enabled_extension_name_array[1] = VK_KHR_XCB_SURFACE_EXTENSION_NAME;
-    #endif // LINUX
-    #ifdef WINDOWS
-        p_info->instance.enabled_extension_name_array[1] = VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
-    #endif // WINDOWS
-     p_info->instance.enabled_extension_name_array = enabled_extension_name_array; */
-
     VkApplicationInfo application_info = {
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pNext = nullptr,
