@@ -63,6 +63,9 @@ ifneq ($(shell test -e '$(target_bin_install_path)' && echo exists),exists)
 else ifeq ($(VK_USE_PLATFORM),VK_USE_PLATFORM_XCB_KHR)
 	mkdir -p bin/
 	@cp $(target_bin_install_path) bin/
+else ifeq ($(VK_USE_PLATFORM),VK_USE_PLATFORM_WIN32_KHR)
+	mkdir -p bin/
+	@cp $(target_bin_install_path) bin/
 endif
 
 clean:
