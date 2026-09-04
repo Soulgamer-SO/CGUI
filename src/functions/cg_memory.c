@@ -352,3 +352,17 @@ bool cg_rm_one_p_memory_node(cg_memory_pool_info_t *p_mp, uint32_t index) {
 
     return false;
 }
+
+bool cg_get_memory_node_info(cg_memory_pool_info_t *p_mp, void *memory_addr, cg_memory_node_t *p_memory_node) {
+    if (memory_addr < p_mp->memory_pool || memory_addr >= p_mp->memory_pool + p_mp->size) {
+        PRINT_ERROR("this memory is not in the memory pool!\n");
+        return false;
+    }
+    cg_memory_node_t *p_memory_node_in_pool = (cg_memory_node_t *)(memory_addr - sizeof(cg_memory_node_t));
+    p_memory_node->is_used = p_memory_node_in_pool->is_used;
+    p_memory_node->memory_addr = p_memory_node_in_pool->memory_addr;
+    p_memory_node->size = p_memory_node_in_pool->size;
+    p_memory_node->prev_memory_node_addr = p_memory_node_in_pool->prev_memory_node_addr;
+
+    return true;
+}

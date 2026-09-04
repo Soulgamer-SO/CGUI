@@ -84,4 +84,7 @@ bool cg_add_one_p_memory_node(cg_memory_pool_info_t *p_mp, cg_memory_node_t *mem
 // 删除空闲内存块信息节点地址的列表其中一个元素(末尾交换法)
 bool cg_rm_one_p_memory_node(cg_memory_pool_info_t *p_mp, uint32_t index);
 
+// 获取指定内存块的信息,如果成功返回true,失败返回false
+bool cg_get_memory_node_info(cg_memory_pool_info_t *p_mp, void *memory_addr, cg_memory_node_t *p_memory_node);
+
 #endif // CG_MEMORY_H 1
