@@ -151,9 +151,6 @@ bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
         return false;
     }
 
-    // destroy_swapchain(p_info, p_info->wsi.old_swapchain);
-    // p_info->wsi.old_swapchain = VK_NULL_HANDLE;
-
     // 获得交换链图像的列表
     PFN_vkGetSwapchainImagesKHR get_swapchain_image_array = nullptr;
     get_swapchain_image_array = (PFN_vkGetSwapchainImagesKHR)p_info->library.vk_get_device_proc_addr(p_info->logic_device.vk_logic_device, "vkGetSwapchainImagesKHR");
