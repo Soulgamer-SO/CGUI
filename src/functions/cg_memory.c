@@ -180,7 +180,6 @@ bool cg_free_memory(cg_memory_pool_info_t *p_mp, void *memory_addr) {
     }
 
     size_t free_size = p_memory_node->size;
-    int32_t memory_node_index = cg_get_memory_node_index(p_mp, memory_addr);
 
     // 如果该内存块是唯一的非空闲内存块，内存池全部清0，并且更新内存池的相关信息
     if (p_memory_node == p_mp->p_last_memory_node && p_mp->memory_count == 1) {
