@@ -80,7 +80,7 @@ bool cg_select_physical_device(cg_info_t *p_info, uint32_t *p_physical_device_co
     }
 #endif // DEBUG
 
-    // 检查物理设备功能和属性,选择想要的物理设备
+    // 检查物理设备功能和属性，选择想要的物理设备
     p_info->physical_device.is_physical_device_supported = false;
     for (p_info->physical_device.physical_device_index = 0;
          p_info->physical_device.physical_device_index < *p_physical_device_count;

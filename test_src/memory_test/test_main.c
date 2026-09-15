@@ -61,13 +61,13 @@ int main() {
         goto destroy_memory_pool;
     }
 
-    // 测试分配过大的内存块,检查是否正确返回nullptr
+    // 测试分配过大的内存块，检查是否正确返回nullptr
     void *test_too_large_memory = cg_alloc_memory(&test_memory_pool, TEST_CG_MEMORY_POOL_SIZE);
     if (test_too_large_memory == nullptr) {
         PRINT_ERROR("alloc test_too_large_memory fail!\n");
     }
 
-    // 释放内存块test_memory_1,测试第一个内存块的释放是否成功
+    // 释放内存块test_memory_1，测试第一个内存块的释放是否成功
     if (cg_free_memory(&test_memory_pool, test_memory_1) == false) {
         PRINT_ERROR("free test_memory_1 fail!\n");
         goto destroy_memory_pool;
@@ -75,7 +75,7 @@ int main() {
         test_memory_1 = nullptr;
     }
 
-    // 释放内存块test_memory_2,测试内存块合并功能,检查内存池的free_size是否正确更新
+    // 释放内存块test_memory_2，测试内存块合并功能，检查内存池的free_size是否正确更新
     if (cg_free_memory(&test_memory_pool, test_memory_2) == false) {
         PRINT_ERROR("free test_memory_2 fail!\n");
         goto destroy_memory_pool;
@@ -83,7 +83,7 @@ int main() {
         test_memory_2 = nullptr;
     }
 
-    // 再次分配内存块test_memory_4,大小为128字节,检查是分配到的地址是否和内存池开始地址一样
+    // 再次分配内存块test_memory_4，大小为128字节，检查是分配到的地址是否和内存池开始地址一样
     void *test_memory_4 = cg_alloc_memory(&test_memory_pool, 128);
     if (test_memory_4 == nullptr) {
         PRINT_ERROR("alloc test_memory_4 fail!\n");

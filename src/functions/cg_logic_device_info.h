@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <vulkan/vulkan.h>
 
 typedef struct vk_logic_device_info {
-    // 获取队列家族和它们的属性,选择想要的队列家族
+    // 获取队列家族和它们的属性，选择想要的队列家族
     uint32_t queue_family_count;
     VkQueueFamilyProperties *queue_family_array;
     VkQueueFamilyProperties *queue_family_property_array;

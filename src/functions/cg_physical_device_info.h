@@ -37,7 +37,7 @@ typedef struct vk_physical_device_info_t {
     VkPhysicalDevice other_physical_device;
     // 可用的物理设备扩展的数量
     uint32_t physical_device_extensions_count;
-    // 检查物理设备功能和属性,选择想要的物理设备
+    // 检查物理设备功能和属性，选择想要的物理设备
     bool is_physical_device_supported;
     VkPhysicalDeviceFeatures device_feature_array;
     VkPhysicalDeviceProperties device_properties;

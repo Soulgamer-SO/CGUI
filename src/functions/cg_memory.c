@@ -91,7 +91,7 @@ void *cg_alloc_memory(cg_memory_pool_info_t *p_mp, size_t size) {
             PRINT_LOG("===================================================================\n");
             return p_memory_node->memory_addr;
         } else {
-            /*如果last_memory_end_addr后面的内存空间不够,而且之前已经释放的内存块的大小足够容纳新内存块的大小,就优先利用之前已经被释放的内存块*/
+            /*如果last_memory_end_addr后面的内存空间不够，而且之前已经释放的内存块的大小足够容纳新内存块的大小，就优先利用之前已经被释放的内存块*/
             bool is_free_mem_size_equ = false;
             bool is_free_mem_size_bigger = false;
             uint32_t i = 0;
@@ -124,7 +124,7 @@ void *cg_alloc_memory(cg_memory_pool_info_t *p_mp, size_t size) {
                 PRINT_LOG("===================================================================\n");
                 return p_memory_node->memory_addr;
             } else if (is_free_mem_size_bigger == true) {
-                // 如果空闲内存块大小比即将申请的内存块只大一点点,且内存块被分割后剩余容量不够放内存信息节点和空闲内存块
+                // 如果空闲内存块大小比即将申请的内存块只大一点点，且内存块被分割后剩余容量不够放内存信息节点和空闲内存块
                 if (p_memory_node->size - size <= sizeof(cg_memory_node_t)) {
                     p_memory_node->is_used = true;
                     p_mp->free_size -= p_memory_node->size;
@@ -222,7 +222,7 @@ bool cg_free_memory(cg_memory_pool_info_t *p_mp, void *memory_addr) {
         }
     }
 
-    // 如果该内存块排在内存池最前面,且后一个内存块存在
+    // 如果该内存块排在内存池最前面，且后一个内存块存在
     if (p_prev_memory_node == nullptr && p_next_memory_node != nullptr) {
         // 而且该内存块的后一个内存块已被释放
         if (p_next_memory_node->is_used == false) {
@@ -253,7 +253,7 @@ bool cg_free_memory(cg_memory_pool_info_t *p_mp, void *memory_addr) {
         }
     }
 
-    // 如果该内存块不排在最后尾,也不是排在内存池最前面的内存块,且该内存块的前后内存块都没被释放
+    // 如果该内存块不排在最后尾，也不是排在内存池最前面的内存块，且该内存块的前后内存块都没被释放
     if (p_prev_memory_node != nullptr && p_next_memory_node->is_used == true && p_prev_memory_node->is_used == true) {
         p_memory_node->is_used = false;
         cg_add_one_p_memory_node(p_mp, p_memory_node);
@@ -262,7 +262,7 @@ bool cg_free_memory(cg_memory_pool_info_t *p_mp, void *memory_addr) {
         return true;
     }
 
-    // 如果该内存块不排在最后尾,也不是排在内存池最前面的内存块,且该内存块的前一个内存块是空闲块,后一个不是
+    // 如果该内存块不排在最后尾，也不是排在内存池最前面的内存块，且该内存块的前一个内存块是空闲块，后一个不是
     if (p_prev_memory_node != nullptr && p_prev_memory_node->is_used == false && p_next_memory_node->is_used == true) {
         free_size = sizeof(cg_memory_node_t) + p_memory_node->size;
         size_t prev_memory_new_size = p_prev_memory_node->size + sizeof(cg_memory_node_t) + p_memory_node->size;
@@ -273,7 +273,7 @@ bool cg_free_memory(cg_memory_pool_info_t *p_mp, void *memory_addr) {
         return true;
     }
 
-    // 如果该内存块不排在最后尾,也不是排在内存池最前面的内存块,且该内存块的后一个内存块是空闲块,前一个不是
+    // 如果该内存块不排在最后尾，也不是排在内存池最前面的内存块，且该内存块的后一个内存块是空闲块，前一个不是
     if (p_next_memory_node != nullptr && p_next_memory_node->is_used == false && p_prev_memory_node->is_used == true) {
         free_size = p_memory_node->size + sizeof(cg_memory_node_t);
         int32_t next_memory_node_index = cg_get_memory_node_index(p_mp, p_next_memory_node->memory_addr);

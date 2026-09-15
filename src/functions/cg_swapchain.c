@@ -95,7 +95,7 @@ bool cg_select_swapchain(cg_info_t *p_info) {
     // 选择交换链图像的格式 VK_FORMAT_B8G8R8A8_UNORM
     p_info->wsi.enabled_surface_format.format = VK_FORMAT_B8G8R8A8_UNORM;
 
-    // 判断是否支持自己想要的交换链图像的格式,VK_FORMAT_UNDEFINED 表示支持任意格式
+    // 判断是否支持自己想要的交换链图像的格式，VK_FORMAT_UNDEFINED 表示支持任意格式
     bool is_surface_format_supported = false;
     for (uint32_t i = 0; i < p_info->wsi.surface_format_count; i++) {
         if (p_info->wsi.surface_format_array[i].format == p_info->wsi.enabled_surface_format.format) {

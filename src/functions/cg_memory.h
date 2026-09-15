@@ -28,7 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <string.h>
 
-// 记录内存块的信息的节点,节点本身位置在内存块的前面
+// 记录内存块的信息的节点，节点本身位置在内存块的前面
 typedef struct cg_memory_node cg_memory_node_t;
 struct cg_memory_node {
     // 表示内存块是否被使用
@@ -41,9 +41,12 @@ struct cg_memory_node {
     struct cg_memory_node *prev_memory_node_addr;
 };
 
-// 用来记录内存池信息(侵入式内存池),可以根据情况再创建各自独立的多个内存池
+/*
+用来记录内存池信息(侵入式内存池)，
+可以根据情况再创建各自独立的多个内存池
+*/
 typedef struct cg_memory_pool_info {
-    // 内存池,内存池开始地址
+    // 内存池，内存池开始地址
     void *memory_pool;
     // 内存池总大小
     size_t size;
@@ -62,29 +65,30 @@ typedef struct cg_memory_pool_info {
 } cg_memory_pool_info_t;
 
 /*创建内存池(侵入式内存池)
-注意:确保memory_pool_var变量的生命周期和自己期望的一致,因为这个变量就代表了内存池*/
+调用者负责初始化参数，
+注意:确保memory_pool_var变量的生命周期和自己期望的一致，因为这个变量就代表了内存池*/
 bool cg_create_memory_pool(cg_memory_pool_info_t *p_mp);
 
-// 使用内存池，分配指定大小的内存块,alloc_size是该内存块大小,如果成功该函数会返回新地址，失败就返回nullptr
+// 使用内存池，分配指定大小的内存块，alloc_size是该内存块大小，如果成功该函数会返回新地址，失败就返回nullptr
 void *cg_alloc_memory(cg_memory_pool_info_t *p_mp, size_t size);
 
 // 释放指定内存块
-// 禁止释放没有被申请过的内存,否则将产生无法预测的错误
+// 禁止释放没有被申请过的内存，否则将产生无法预测的错误
 bool cg_free_memory(cg_memory_pool_info_t *p_mp, void *memory_addr);
 
-// 如果成功该函数返回内存块占用大小,失败就返回0
+// 如果成功该函数返回内存块占用大小，失败就返回0
 size_t cg_get_memory_size(cg_memory_pool_info_t *p_mp, void *memory_addr);
 
-// 如果成功,参数返回空闲内存块信息节点列表元素的索引,失败就返回-1
+// 如果成功，参数返回空闲内存块信息节点列表元素的索引，失败就返回-1
 int32_t cg_get_memory_node_index(cg_memory_pool_info_t *p_mp, void *memory_addr);
 
-// 在空闲内存块信息节点地址的列表末尾添加一个元素
+// 如果成功，参数返回空闲内存块信息节点列表元素的索引，失败就返回-1
 bool cg_add_one_p_memory_node(cg_memory_pool_info_t *p_mp, cg_memory_node_t *memory_node_addr);
 
 // 删除空闲内存块信息节点地址的列表其中一个元素(末尾交换法)
 bool cg_rm_one_p_memory_node(cg_memory_pool_info_t *p_mp, uint32_t index);
 
-// 获取指定内存块的信息,如果成功返回true,失败返回false
+// 获取指定内存块的信息，如果成功返回true，失败返回false
 bool cg_get_memory_node_info(cg_memory_pool_info_t *p_mp, void *memory_addr, cg_memory_node_t *p_memory_node);
 
 #endif // CG_MEMORY_H 1
