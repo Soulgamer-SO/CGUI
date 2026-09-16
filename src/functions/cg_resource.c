@@ -73,5 +73,6 @@ bool cg_get_resource_path(const char *resource_name, char *path, size_t path_siz
             return true;
         }
     }
+
     return false;
 }
