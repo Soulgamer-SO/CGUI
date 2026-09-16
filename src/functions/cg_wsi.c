@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_color.h"
 #include "cg_event_loop.h"
 #include "cg_log.h"
+#include "cg_resource.h"
 #include "cg_swapchain.h"
 
 bool cg_create_window(cg_info_t *p_info) {
@@ -150,6 +151,11 @@ bool cg_create_window(cg_info_t *p_info) {
 
 #ifdef WINDOWS
     // 注册Window class
+    char icon_path[CG_RESOURCE_PATH_MAX];
+    if (!cg_get_resource_path("Soul.ico", icon_path, sizeof(icon_path))) {
+        PRINT_ERROR("get icon path fail!\n");
+        return false;
+    }
     p_info->wsi.WinAPI_info.w_class_name = (LPCSTR) "window_class_CGUI";
     p_info->wsi.WinAPI_info.wnd_class = (WNDCLASSEX){
         .cbSize = sizeof(p_info->wsi.WinAPI_info.wnd_class),
@@ -158,14 +164,14 @@ bool cg_create_window(cg_info_t *p_info) {
         .cbClsExtra = 0,
         .cbWndExtra = 0,
         .hInstance = p_info->wsi.WinAPI_info.hInstance,
-        .hIcon = LoadIcon(p_info->wsi.WinAPI_info.hInstance, "content/Soul.ico"),
+        .hIcon = LoadIcon(p_info->wsi.WinAPI_info.hInstance, icon_path),
         .hCursor = LoadCursor(nullptr, IDC_ARROW),
         .hbrBackground = CreateSolidBrush(cg_change_RGB_color(255, 0, 0)),
         .lpszMenuName = "menu",
         .lpszClassName = p_info->wsi.WinAPI_info.w_class_name,
         .hIconSm = LoadImage(
             p_info->wsi.WinAPI_info.hInstance,
-            "content/Soul.ico", IMAGE_ICON,
+            icon_path, IMAGE_ICON,
             GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON),
             LR_DEFAULTSIZE | LR_LOADFROMFILE)};
     if (RegisterClassEx(&p_info->wsi.WinAPI_info.wnd_class) == false) {

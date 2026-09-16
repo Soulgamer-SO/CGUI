@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "cg_render.h"
 #include "cg_log.h"
+#include "cg_resource.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -113,7 +114,12 @@ bool cg_create_render_resources(cg_info_t *p_info) {
 
     VkShaderModule vertex_module = VK_NULL_HANDLE;
     VkShaderModule fragment_module = VK_NULL_HANDLE;
-    if (!cg_create_shader_module(p_info, "content/shader/star_polygon.vert.spv", &vertex_module) || !cg_create_shader_module(p_info, "content/shader/vertex_color.frag.spv", &fragment_module)) {
+    char vertex_shader_path[CG_RESOURCE_PATH_MAX];
+    char fragment_shader_path[CG_RESOURCE_PATH_MAX];
+    if (!cg_get_resource_path("shader/star_polygon.vert.spv", vertex_shader_path, sizeof(vertex_shader_path)) ||
+        !cg_get_resource_path("shader/vertex_color.frag.spv", fragment_shader_path, sizeof(fragment_shader_path)) ||
+        !cg_create_shader_module(p_info, vertex_shader_path, &vertex_module) ||
+        !cg_create_shader_module(p_info, fragment_shader_path, &fragment_module)) {
         return false;
     }
     VkPipelineShaderStageCreateInfo stages[2] = {{.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, .stage = VK_SHADER_STAGE_VERTEX_BIT, .module = vertex_module, .pName = "main"}, {.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, .stage = VK_SHADER_STAGE_FRAGMENT_BIT, .module = fragment_module, .pName = "main"}};
