@@ -30,9 +30,11 @@ target_bin := cgui-app.exe
 endif
 
 CFLAGS = $(PLATFORM_CFLAGS) $(VK_PLATFORM_CFLAGS) $(DEBUG_CFLAGS) $(POSIX_CFLAGS) -Wall -g -O0
+.DEFAULT_GOAL := all
 target_path_debug := build/debug/
 target_path_release := build/release/
-target_bin_install_path := $(target_path_release)$(target_bin)
+target_bin_debug := $(target_path_debug)$(target_bin)
+target_bin_release_path := $(target_path_release)$(target_bin)
 main_src_path := src/main/
 functions_src_path := src/functions/
 main_src := $(wildcard $(main_src_path)*.c)
@@ -41,33 +43,33 @@ functions_src := $(wildcard $(functions_src_path)*.c)
 functions_h := $(wildcard $(functions_src_path)*.h)
 functions_o := $(patsubst %.c,%.o,$(functions_src))
 target_o := $(main_o) $(functions_o)
-$(target_o): $(functions_h)
 target_src := $(main_src) $(functions_src) $(functions_h)
+$(target_o): $(functions_h)
 
 .PHONY:all debug release clean install
 
 # make
-all:$(target_src)
-	mkdir -p build/release/
-	$(CC) $(PLATFORM_CFLAGS) $(VK_PLATFORM_CFLAGS) $(POSIX_CFLAGS) $(main_src) $(functions_src) -O0 -o $(target_path_release)$(target_bin) $(LD_LIBRARY_FLAGS)
+all: release
 
-debug:$(target_o) $(target_src)
+debug: $(target_bin_debug)
+
+$(target_bin_debug): $(target_o)
 	mkdir -p build/debug/
-	$(CC) $(main_o) $(functions_o) -O0 -o $(target_path_debug)$(target_bin) $(LD_LIBRARY_FLAGS)
+	$(CC) $(target_o) -O0 -o $@ $(LD_LIBRARY_FLAGS)
 
 release:$(target_src)
 	mkdir -p build/release/
 	$(CC) $(PLATFORM_CFLAGS) $(VK_PLATFORM_CFLAGS) $(POSIX_CFLAGS) $(main_src) $(functions_src) -O0 -o $(target_path_release)$(target_bin) $(LD_LIBRARY_FLAGS)
 
 install:
-ifneq ($(shell test -e '$(target_bin_install_path)' && echo exists),exists)
+ifneq ($(shell test -e '$(target_bin_release_path)' && echo exists),exists)
 	@echo "the target bin does not exist!"
 else ifeq ($(PLATFORM),LINUX)
 	mkdir -p bin/
-	@cp $(target_bin_install_path) bin/
+	@cp $(target_bin_release_path) bin/
 else ifeq ($(PLATFORM),WINDOWS)
 	mkdir -p bin/
-	@cp $(target_bin_install_path) bin/
+	@cp $(target_bin_release_path) bin/
 endif
 
 clean:
