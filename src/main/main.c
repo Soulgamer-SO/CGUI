@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "../functions/cg_initialize.h"
 #include "../functions/cg_log.h"
 #include "../functions/cg_memory.h"
-#include "cg_platform.h"
+#include "../functions/cg_platform.h"
 #define CG_MEMORY_POOL_SIZE (4ULL * 1024 * 1024 * 1024)
 #define CG_MAX_FREE_MEM_NODE_COUNT (4U * 1024)
 
