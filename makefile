@@ -38,23 +38,18 @@ functions_src_path := src/functions/
 main_src := $(wildcard $(main_src_path)*.c)
 main_o := $(patsubst %.c,%.o,$(main_src))
 functions_src := $(wildcard $(functions_src_path)*.c)
-functions_h := $(patsubst %.c,%.h,$(functions_src))
+functions_h := $(wildcard $(functions_src_path)*.h)
 functions_o := $(patsubst %.c,%.o,$(functions_src))
 target_o := $(main_o) $(functions_o)
+$(target_o): $(functions_h)
 target_src := $(main_src) $(functions_src) $(functions_h)
 
-.PHONY:debug release clean install
+.PHONY:all debug release clean install
 
 # make
 all:$(target_src)
 	mkdir -p build/release/
 	$(CC) $(PLATFORM_CFLAGS) $(VK_PLATFORM_CFLAGS) $(POSIX_CFLAGS) $(main_src) $(functions_src) -O0 -o $(target_path_release)$(target_bin) $(LD_LIBRARY_FLAGS)
-
-main_build_obj: $(main_src)
-	$(CC) $(CFLAGS) $(main_src) -c -o $(main_o)
-
-functions_build_obj: $(functions_src) $(functions_h)
-	$(CC) $(CFLAGS) $(functions_src) -c -o $(functions_o)
 
 debug:$(target_o) $(target_src)
 	mkdir -p build/debug/
