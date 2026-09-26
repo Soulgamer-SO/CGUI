@@ -30,12 +30,11 @@ bool cg_create_memory_pool(cg_memory_pool_info_t *p_mp) {
     }
     p_mp->free_size = p_mp->size;
     p_mp->memory_count = 0;
-    PRINT_LOG("============================memory pool============================\n");
-    PRINT_LOG("create memory_pool success!\n");
-    PRINT_LOG("memory_pool = %p;\n", p_mp->memory_pool);
-    PRINT_LOG("memory_pool_size = %zu;\n", p_mp->size);
-    PRINT_LOG("free_size = %zu;\n", p_mp->free_size);
-    PRINT_LOG("===================================================================\n");
+    printf("--------------------------- memory pool ---------------------------\n");
+    printf("  memory pool address = %p;\n", p_mp->memory_pool);
+    printf("  memory pool size = %zu;\n", p_mp->size);
+    printf("  free size = %zu;\n", p_mp->free_size);
+    printf("-------------------------------------------------------------------\n");
     return true;
 }
 

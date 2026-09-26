@@ -2,12 +2,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "type": "shell",
+            "type": "process",
             "label": "make_debug",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "command": "make debug",
+            "command": "bear -- make debug",
             "group": "build",
             "detail": "make debug"
         },

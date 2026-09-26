@@ -2,84 +2,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "LinuxDebugMake",
-            "type": "cppdbg",
+            "type": "by-gdb",
             "request": "launch",
-            "preLaunchTask": "make_debug",
+            "name": "Launch(gdb)",
             "program": "${workspaceFolder}/build/debug/cgui-app",
-            "args": [],
-            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
-        },
-        {
-            "name": "LinuxReleaseMake",
-            "type": "cppdbg",
-            "request": "launch",
-            "preLaunchTask": "make_release",
-            "program": "${workspaceFolder}/build/release/cgui-app",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "text": "set debuginfod enabled off",
-                    "ignoreFailures": true
-                }
-            ]
-        },
-        {
-            "name": "WinDebugMake",
-            "type": "cppdbg",
-            "request": "launch",
-            "preLaunchTask": "make_debug",
-            "program": "${workspaceFolder}/build/debug/cgui-app.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
-        },
-        {
-            "name": "WinReleaseMake",
-            "type": "cppdbg",
-            "request": "launch",
-            "preLaunchTask": "make_release",
-            "program": "${workspaceFolder}/build/release/cgui-app.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ]
 }
