@@ -110,10 +110,13 @@ void *cg_alloc_memory(cg_memory_pool_info_t *p_mp, size_t size) {
             p_memory_node = p_mp->free_memory_node_addr_array[i];
             // 如果空闲内存块大小和即将申请的内存块大小一样
             if (is_free_mem_size_equ == true) {
+                if (cg_rm_one_p_memory_node(p_mp, i) == false) {
+                    PRINT_ERROR("cg_rm_one_p_memory_node fail!\n");
+                    return nullptr;
+                }
                 p_mp->free_memory_node_addr_array[i]->is_used = true;
                 p_mp->free_size -= p_memory_node->size;
                 p_mp->memory_count++;
-                cg_rm_one_p_memory_node(p_mp, i);
                 PRINT_LOG("============================memory pool============================\n");
                 PRINT_LOG("memory_pool = %p;\n", p_mp->memory_pool);
                 PRINT_LOG("memory_pool_size = %zu;\n", p_mp->size);
