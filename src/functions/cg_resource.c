@@ -59,7 +59,6 @@ bool cg_get_resource_path(const char *resource_name, char *path, size_t path_siz
     *last_separator = '\0';
     executable_path_length = (size_t)(last_separator - executable_path);
     const char *resource_roots[] = {
-        "%.*s/content/%s",
         "%.*s/../content/%s",
         "%.*s/../../content/%s"};
     for (size_t i = 0; i < sizeof(resource_roots) / sizeof(resource_roots[0]); i++) {
