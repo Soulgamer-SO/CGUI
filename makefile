@@ -73,8 +73,8 @@ else ifeq ($(PLATFORM),WINDOWS)
 endif
 
 clean:
-	-rm $(main_o)
-	-rm $(functions_o)
+	-rm $(main_src_path)*.o
+	-rm $(functions_src_path)*.o
 	-rm $(target_path_debug)$(target_bin)
 	-rm $(target_path_release)$(target_bin)
 	-rm compile_commands.json
