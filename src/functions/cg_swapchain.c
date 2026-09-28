@@ -229,25 +229,25 @@ bool cg_select_present_mode(cg_info_t *p_info) {
     for (uint32_t i = 0; i < p_info->wsi.present_mode_count; i++) {
         switch (p_info->wsi.present_mode_array[i]) {
         case VK_PRESENT_MODE_IMMEDIATE_KHR:
-            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_IMMEDIATE_KHR;\n", i);
+            printf("present_mode_array[%d] = VK_PRESENT_MODE_IMMEDIATE_KHR;\n", i);
             break;
         case VK_PRESENT_MODE_MAILBOX_KHR:
-            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_MAILBOX_KHR;\n", i);
+            printf("present_mode_array[%d] = VK_PRESENT_MODE_MAILBOX_KHR;\n", i);
             break;
         case VK_PRESENT_MODE_FIFO_KHR:
-            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_FIFO_KHR;\n", i);
+            printf("present_mode_array[%d] = VK_PRESENT_MODE_FIFO_KHR;\n", i);
             break;
         case VK_PRESENT_MODE_FIFO_RELAXED_KHR:
-            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_FIFO_RELAXED_KHR;\n", i);
+            printf("present_mode_array[%d] = VK_PRESENT_MODE_FIFO_RELAXED_KHR;\n", i);
             break;
         case VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR:
-            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR;\n", i);
+            printf("present_mode_array[%d] = VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR;\n", i);
             break;
         case VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR:
-            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR;\n", i);
+            printf("present_mode_array[%d] = VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR;\n", i);
             break;
         case VK_PRESENT_MODE_MAX_ENUM_KHR:
-            PRINT_LOG("present_mode_array[%d] = VK_PRESENT_MODE_MAX_ENUM_KHR;\n", i);
+            printf("present_mode_array[%d] = VK_PRESENT_MODE_MAX_ENUM_KHR;\n", i);
             break;
         }
     }
@@ -257,11 +257,11 @@ bool cg_select_present_mode(cg_info_t *p_info) {
     for (uint32_t i = 0; i < p_info->wsi.present_mode_count; i++) {
         if (p_info->wsi.present_mode_array[i] == VK_PRESENT_MODE_FIFO_KHR) {
             p_info->wsi.enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;
-            PRINT_LOG("enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;\n");
+            printf("enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;\n");
             break;
         } else {
             p_info->wsi.enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;
-            PRINT_LOG("enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;\n");
+            printf("enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;\n");
             break;
         }
     }
