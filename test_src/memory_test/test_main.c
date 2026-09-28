@@ -321,7 +321,6 @@ static void test_remove_invalid_free_node_index(void) {
 
 int main(void) {
     PRINT_LOG("内存池测试开始\n");
-
     test_tail_allocation_priority();
     test_reuse_free_node_after_swap_removal();
     test_merge_with_next_free_block();
