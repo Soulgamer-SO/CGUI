@@ -40,7 +40,7 @@ MAIN {
     memory_pool.memory_pool = calloc(1, memory_pool.size);
     memory_pool.free_memory_node_addr_array = calloc(CG_MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
     if (cg_create_memory_pool(&memory_pool) == false) {
-        goto exit;
+        goto exit_fail;
     } else {
         info.p_memory_pool = &memory_pool;
         PRINT_LOG("create memory_pool success!\n");
@@ -66,7 +66,13 @@ destroy_memory_pool:
     memory_pool.memory_pool = nullptr;
     free(memory_pool.free_memory_node_addr_array);
     memory_pool.free_memory_node_addr_array = nullptr;
-exit:
+    if (is_init == false) {
+        goto exit_fail;
+    }
+
     PRINT_LOG("Exit success!\n");
     return EXIT_SUCCESS;
+exit_fail:
+    PRINT_ERROR("Exit fail!\n");
+    return EXIT_FAILURE;
 }
