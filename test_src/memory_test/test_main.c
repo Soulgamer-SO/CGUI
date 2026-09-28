@@ -327,7 +327,6 @@ int main(void) {
     test_merge_tail_with_previous_free_block();
     test_merge_first_block_with_next_free_block();
     test_remove_invalid_free_node_index();
-
     if (g_test_fail_count == 0) {
         PRINT_LOG("所有断言通过，内存池测试结束\n");
         return EXIT_SUCCESS;
