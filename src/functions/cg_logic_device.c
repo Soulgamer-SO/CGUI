@@ -81,13 +81,13 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
     if (queue_info == nullptr) {
         return false;
     } else {
-        PRINT_LOG("alloc memory success!\n");
+        PRINT_LOG("alloc queue_info memory success!\n");
     }
 
     for (p_info->logic_device.queue_family_index = 0;
          p_info->logic_device.queue_family_index < p_info->logic_device.queue_family_count;
          p_info->logic_device.queue_family_index++) {
-        PRINT_LOG("============================== queue_familiy_array[%d] ==================================\n", p_info->logic_device.queue_family_index);
+        printf("-------------------- queue_familiy_array[%d] --------------------\n", p_info->logic_device.queue_family_index);
         if (p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].queueCount > 0) {
             if (p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
                 queue_info[0] = " VK_QUEUE_GRAPHICS_BIT ";
@@ -114,20 +114,20 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
             } else {
                 queue_info[4] = "";
             }
-            PRINT_LOG("queueFlags =%s%s%s%s%s;\n", queue_info[0], queue_info[1], queue_info[2], queue_info[3], queue_info[4]);
+            printf("queueFlags =%s%s%s%s%s;\n", queue_info[0], queue_info[1], queue_info[2], queue_info[3], queue_info[4]);
         } else {
-            PRINT_LOG("queueFlags = none;\n");
+            printf("queueFlags = none;\n");
         }
-        PRINT_LOG("queueCount = %d;\n", p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].queueCount);
-        PRINT_LOG("timestampValidBits = %d;\n", p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].timestampValidBits);
-        PRINT_LOG(
+        printf("queueCount = %d;\n", p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].queueCount);
+        printf("timestampValidBits = %d;\n", p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].timestampValidBits);
+        printf(
             "minImageTransferGranularity = { width:%d, height:%d, depth:%d };\n",
             p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].minImageTransferGranularity.width,
             p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].minImageTransferGranularity.height,
             p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].minImageTransferGranularity.depth);
-        PRINT_LOG("=======================================================================================\n");
+        printf("----------------------------------------------------------\n");
     }
-#endif
+#endif // DEBUG
 
     // 选择支持 VK_QUEUE_GRAPHICS_BIT 的队列
     // VK_QUEUE_GRAPHICS_BIT = 0x00000001 // 二进制=1

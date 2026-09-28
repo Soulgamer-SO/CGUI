@@ -123,7 +123,7 @@ bool cg_select_physical_device(cg_info_t *p_info, uint32_t *p_physical_device_co
         PRINT_ERROR("create available_physical_device_extension_array fail!\n");
         return false;
     } else if (p_info->physical_device.available_physical_device_extension_array != nullptr) {
-        PRINT_LOG("alloc memory success!\n");
+        PRINT_LOG("alloc available_physical_device_extension_array memory success!\n");
         p_info->library.vk_result = enumerate_device_extension_properties(
             p_info->physical_device.physical_device, nullptr,
             &p_info->physical_device.physical_device_extensions_count,

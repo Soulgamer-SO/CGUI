@@ -2,12 +2,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "by-gdb",
+            "type": "gdb",
             "request": "launch",
-            "name": "Launch(gdb)",
-            "program": "${workspaceFolder}/build/debug/cgui-app",
-            "cwd": "${workspaceFolder}",
-            "internalConsoleOptions": "openOnSessionStart"
+            "name": "Debug(gdb)",
+            "target": "${workspaceFolder}/build/debug/cgui-app",
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "parseText"
+        },
+        {
+            "type": "gdb",
+            "request": "launch",
+            "name": "Test(gdb)",
+            "target": "${workspaceFolder}/build/test/cgui-app-test",
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "parseText"
         }
     ]
 }

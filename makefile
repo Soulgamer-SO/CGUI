@@ -35,6 +35,7 @@ target_path_debug := build/debug/
 target_path_release := build/release/
 target_bin_debug := $(target_path_debug)$(target_bin)
 target_bin_release_path := $(target_path_release)$(target_bin)
+target_bin_test := build/test/cgui-app-test
 main_src_path := src/main/
 functions_src_path := src/functions/
 main_src := $(wildcard $(main_src_path)*.c)
@@ -46,13 +47,12 @@ target_o := $(main_o) $(functions_o)
 target_src := $(main_src) $(functions_src) $(functions_h)
 $(target_o): $(functions_h)
 
-.PHONY:all debug release clean install
+.PHONY:all debug release test clean install
 
 # make
 all: release
 
 debug: $(target_bin_debug)
-
 $(target_bin_debug): $(target_o)
 	mkdir -p build/debug/
 	$(CC) $(target_o) -O0 -o $@ $(LD_LIBRARY_FLAGS)
@@ -60,6 +60,12 @@ $(target_bin_debug): $(target_o)
 release:$(target_src)
 	mkdir -p build/release/
 	$(CC) $(PLATFORM_CFLAGS) $(VK_PLATFORM_CFLAGS) $(POSIX_CFLAGS) $(main_src) $(functions_src) -O0 -o $(target_path_release)$(target_bin) $(LD_LIBRARY_FLAGS)
+
+test: $(target_bin_test)
+
+$(target_bin_test): $(functions_src) $(functions_h)
+	mkdir -p build/test/
+	$(CC) $(CFLAGS) -I src/functions test_src/memory_test/test_main.c $(functions_src_path)cg_memory.c -o $@
 
 install:
 ifneq ($(shell test -e '$(target_bin_release_path)' && echo exists),exists)
@@ -77,4 +83,5 @@ clean:
 	-rm $(functions_src_path)*.o
 	-rm $(target_path_debug)$(target_bin)
 	-rm $(target_path_release)$(target_bin)
+	-rm $(target_bin_test)
 	-rm compile_commands.json
