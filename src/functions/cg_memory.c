@@ -30,11 +30,11 @@ bool cg_create_memory_pool(cg_memory_pool_info_t *p_mp) {
     }
     p_mp->free_size = p_mp->size;
     p_mp->memory_count = 0;
-    printf("--------------------------- memory pool ---------------------------\n");
+    printf("-------------------- memory pool info --------------------\n");
     printf("  memory pool address = %p;\n", p_mp->memory_pool);
     printf("  memory pool size = %zu;\n", p_mp->size);
     printf("  free size = %zu;\n", p_mp->free_size);
-    printf("-------------------------------------------------------------------\n");
+    printf("----------------------------------------------------------\n");
     return true;
 }
 
@@ -60,13 +60,13 @@ void *cg_alloc_memory(cg_memory_pool_info_t *p_mp, size_t size) {
         p_mp->free_size -= node_and_mem_size;
         p_mp->memory_count = 1;
         p_mp->p_last_memory_node = p_memory_node;
-        PRINT_LOG("============================memory pool============================\n");
-        PRINT_LOG("memory_pool = %p;\n", p_mp->memory_pool);
-        PRINT_LOG("memory_pool_size = %zu;\n", p_mp->size);
-        PRINT_LOG("memory block addr = %p;\n", p_memory_node->memory_addr);
-        PRINT_LOG("memory block size = %zu;\n", size);
-        PRINT_LOG("free_size = %zu;\n", p_mp->free_size);
-        PRINT_LOG("===================================================================\n");
+        printf("-------------------- memory pool info --------------------\n");
+        printf("  memory_pool = %p;\n", p_mp->memory_pool);
+        printf("  memory_pool_size = %zu;\n", p_mp->size);
+        printf("  memory block addr = %p;\n", p_memory_node->memory_addr);
+        printf("  memory block size = %zu;\n", size);
+        printf("  free_size = %zu;\n", p_mp->free_size);
+        printf("-----------------------------------------------------------\n");
         return p_memory_node->memory_addr;
     }
     if (p_mp->memory_count >= 1) {
@@ -81,13 +81,13 @@ void *cg_alloc_memory(cg_memory_pool_info_t *p_mp, size_t size) {
             p_mp->free_size -= node_and_mem_size;
             p_mp->memory_count++;
             p_mp->p_last_memory_node = p_memory_node;
-            PRINT_LOG("============================memory pool============================\n");
-            PRINT_LOG("memory_pool = %p;\n", p_mp->memory_pool);
-            PRINT_LOG("memory_pool_size = %zu;\n", p_mp->size);
-            PRINT_LOG("memory block size = %zu;\n", size);
-            PRINT_LOG("memory block addr = %p;\n", p_memory_node->memory_addr);
-            PRINT_LOG("free_size = %zu;\n", p_mp->free_size);
-            PRINT_LOG("===================================================================\n");
+            printf("-------------------- memory pool info --------------------\n");
+            printf("  memory_pool = %p;\n", p_mp->memory_pool);
+            printf("  memory_pool_size = %zu;\n", p_mp->size);
+            printf("  memory block size = %zu;\n", size);
+            printf("  memory block addr = %p;\n", p_memory_node->memory_addr);
+            printf("  free_size = %zu;\n", p_mp->free_size);
+            printf("-----------------------------------------------------------\n");
             return p_memory_node->memory_addr;
         } else {
             /*如果last_memory_end_addr后面的内存空间不够，而且之前已经释放的内存块的大小足够容纳新内存块的大小，就优先利用之前已经被释放的内存块*/
@@ -117,13 +117,13 @@ void *cg_alloc_memory(cg_memory_pool_info_t *p_mp, size_t size) {
                 p_mp->free_memory_node_addr_array[i]->is_used = true;
                 p_mp->free_size -= p_memory_node->size;
                 p_mp->memory_count++;
-                PRINT_LOG("============================memory pool============================\n");
-                PRINT_LOG("memory_pool = %p;\n", p_mp->memory_pool);
-                PRINT_LOG("memory_pool_size = %zu;\n", p_mp->size);
-                PRINT_LOG("memory block size = %zu;\n", size);
-                PRINT_LOG("memory block addr = %p;\n", p_memory_node->memory_addr);
-                PRINT_LOG("free_size = %zu;\n", p_mp->free_size);
-                PRINT_LOG("===================================================================\n");
+                printf("-------------------- memory pool info --------------------\n");
+                printf("  memory_pool = %p;\n", p_mp->memory_pool);
+                printf("  memory_pool_size = %zu;\n", p_mp->size);
+                printf("  memory block size = %zu;\n", size);
+                printf("  memory block addr = %p;\n", p_memory_node->memory_addr);
+                printf("  free_size = %zu;\n", p_mp->free_size);
+                printf("-----------------------------------------------------------\n");
                 return p_memory_node->memory_addr;
             } else if (is_free_mem_size_bigger == true) {
                 // 如果空闲内存块大小比即将申请的内存块只大一点点，且内存块被分割后剩余容量不够放内存信息节点和空闲内存块
@@ -135,13 +135,13 @@ void *cg_alloc_memory(cg_memory_pool_info_t *p_mp, size_t size) {
                         PRINT_ERROR("cg_rm_one_p_memory_node fail!\n");
                         return nullptr;
                     }
-                    PRINT_LOG("============================memory pool============================\n");
-                    PRINT_LOG("memory_pool = %p;\n", p_mp->memory_pool);
-                    PRINT_LOG("memory_pool_size = %zu;\n", p_mp->size);
-                    PRINT_LOG("memory block size = %zu;\n", size);
-                    PRINT_LOG("memory block addr = %p;\n", p_memory_node->memory_addr);
-                    PRINT_LOG("free_size = %zu;\n", p_mp->free_size);
-                    PRINT_LOG("===================================================================\n");
+                    printf("-------------------- memory pool info --------------------\n");
+                    printf("  memory_pool = %p;\n", p_mp->memory_pool);
+                    printf("  memory_pool_size = %zu;\n", p_mp->size);
+                    printf("  memory block size = %zu;\n", size);
+                    printf("  memory block addr = %p;\n", p_memory_node->memory_addr);
+                    printf("  free_size = %zu;\n", p_mp->free_size);
+                    printf("-----------------------------------------------------------\n");
                     return p_memory_node->memory_addr;
                 }
                 // 如果空闲内存块大小比即将申请的内存块大很多
@@ -164,13 +164,13 @@ void *cg_alloc_memory(cg_memory_pool_info_t *p_mp, size_t size) {
                 p_memory_node->size = size;
                 p_memory_node->is_used = true;
                 p_mp->free_size -= node_and_mem_size;
-                PRINT_LOG("============================memory pool============================\n");
-                PRINT_LOG("memory_pool = %p;\n", p_mp->memory_pool);
-                PRINT_LOG("memory_pool_size = %zu;\n", p_mp->size);
-                PRINT_LOG("memory block size = %zu;\n", size);
-                PRINT_LOG("memory block addr = %p;\n", p_memory_node->memory_addr);
-                PRINT_LOG("free_size = %zu;\n", p_mp->free_size);
-                PRINT_LOG("===================================================================\n");
+                printf("-------------------- memory pool info --------------------\n");
+                printf("  memory_pool = %p;\n", p_mp->memory_pool);
+                printf("  memory_pool_size = %zu;\n", p_mp->size);
+                printf("  memory block size = %zu;\n", size);
+                printf("  memory block addr = %p;\n", p_memory_node->memory_addr);
+                printf("  free_size = %zu;\n", p_mp->free_size);
+                printf("-----------------------------------------------------------\n");
                 return p_memory_node->memory_addr;
             }
         }

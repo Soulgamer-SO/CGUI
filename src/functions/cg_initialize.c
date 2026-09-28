@@ -132,6 +132,10 @@ bool cg_initialize_var(cg_info_t *p_info) {
         cg_create_fence(p_info, &p_info->sync.fence_array[0]) == false) {
         PRINT_ERROR("create synchronization objects fail!\n");
         return false;
+    } else {
+        PRINT_LOG("semaphore_array[0] address = %p;\n", &p_info->sync.semaphore_array[0]);
+        PRINT_LOG("semaphore_array[1] address = %p;\n", &p_info->sync.semaphore_array[1]);
+        PRINT_LOG("fence_array[0] address = %p;\n", &p_info->sync.fence_array[0]);
     }
 
     PRINT_LOG("initialize success!\n");

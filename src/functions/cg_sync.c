@@ -38,8 +38,6 @@ bool cg_create_semaphore(cg_info_t *p_info, VkSemaphore *p_semaphore) {
     if (p_info->library.vk_result != VK_SUCCESS) {
         PRINT_ERROR("vkCreateSemaphore fail!\n");
         return false;
-    } else {
-        PRINT_LOG("semaphore address = %p;\n", &p_info->sync.semaphore_array[0]);
     }
 
     return true;
@@ -66,8 +64,6 @@ bool cg_create_fence(cg_info_t *p_info, VkFence *p_fence) {
     if (p_info->library.vk_result != VK_SUCCESS) {
         PRINT_ERROR("vkCreateFence fail!\n");
         return false;
-    } else {
-        PRINT_LOG("fence address = %p;\n", &p_info->sync.fence_array[0]);
     }
 
     return true;
