@@ -87,7 +87,7 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
     for (p_info->logic_device.queue_family_index = 0;
          p_info->logic_device.queue_family_index < p_info->logic_device.queue_family_count;
          p_info->logic_device.queue_family_index++) {
-        printf("-------------------- queue_familiy_array[%d] --------------------\n", p_info->logic_device.queue_family_index);
+        printf("----------------- queue_familiy_array[%d] ----------------\n", p_info->logic_device.queue_family_index);
         if (p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].queueCount > 0) {
             if (p_info->logic_device.queue_family_array[p_info->logic_device.queue_family_index].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
                 queue_info[0] = " VK_QUEUE_GRAPHICS_BIT ";
