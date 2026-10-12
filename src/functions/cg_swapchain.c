@@ -63,23 +63,25 @@ bool cg_select_swapchain(cg_info_t *p_info) {
         PRINT_ERROR("load vkGetPhysicalDeviceSurfaceFormatsKHR fail!\n");
         return false;
     }
+
+    VkResult result = VK_SUCCESS;
     p_info->wsi.surface_format_count = 0;
-    p_info->library.vk_result = get_physical_device_surface_formats(
+    result = get_physical_device_surface_formats(
         p_info->physical_device.physical_device,
         p_info->wsi.surface,
         &p_info->wsi.surface_format_count,
         nullptr);
-    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.surface_format_count == 0) {
+    if (result != VK_SUCCESS || p_info->wsi.surface_format_count == 0) {
         PRINT_ERROR("surface_format_count fail!\n");
         return false;
     }
     p_info->wsi.surface_format_array = (VkSurfaceFormatKHR *)cg_alloc_memory(
         p_info->p_memory_pool,
         p_info->wsi.surface_format_count * sizeof(VkSurfaceFormatKHR));
-    p_info->library.vk_result = get_physical_device_surface_formats(
+    result = get_physical_device_surface_formats(
         p_info->physical_device.physical_device, p_info->wsi.surface,
         &p_info->wsi.surface_format_count, p_info->wsi.surface_format_array);
-    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.surface_format_array == nullptr) {
+    if (result != VK_SUCCESS || p_info->wsi.surface_format_array == nullptr) {
         PRINT_ERROR("surface_format_array fail!\n");
         return false;
     } else {
@@ -124,7 +126,8 @@ bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
     }
 
     *p_swapchain = VK_NULL_HANDLE;
-    p_info->library.vk_result = create_swapchain(
+    VkResult result = VK_SUCCESS;
+    result = create_swapchain(
         p_info->logic_device.vk_logic_device,
         &(VkSwapchainCreateInfoKHR){
             .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
@@ -146,7 +149,7 @@ bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
             .clipped = VK_TRUE,
             .oldSwapchain = p_info->wsi.old_swapchain},
         nullptr, p_swapchain);
-    if (p_info->library.vk_result != VK_SUCCESS || p_swapchain == VK_NULL_HANDLE) {
+    if (result != VK_SUCCESS || p_swapchain == VK_NULL_HANDLE) {
         PRINT_ERROR("create swapchain fail!\n");
         return false;
     }
@@ -159,20 +162,20 @@ bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
         return false;
     }
     p_info->wsi.swapchain_image_count = 0;
-    p_info->library.vk_result = get_swapchain_image_array(
+    result = get_swapchain_image_array(
         p_info->logic_device.vk_logic_device,
         p_info->wsi.swapchain,
         &p_info->wsi.swapchain_image_count, nullptr);
-    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.swapchain_image_count == 0) {
+    if (result != VK_SUCCESS || p_info->wsi.swapchain_image_count == 0) {
         PRINT_ERROR("swapchain_image_count fail!\n");
         return false;
     }
     p_info->wsi.swapchain_image_array = (VkImage *)cg_alloc_memory(p_info->p_memory_pool, p_info->wsi.swapchain_image_count * sizeof(VkImage));
     if (p_info->wsi.swapchain_image_array != nullptr) {
-        p_info->library.vk_result = get_swapchain_image_array(
+        result = get_swapchain_image_array(
             p_info->logic_device.vk_logic_device, p_info->wsi.swapchain,
             &p_info->wsi.swapchain_image_count, p_info->wsi.swapchain_image_array);
-        if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.swapchain_image_array == nullptr) {
+        if (result != VK_SUCCESS || p_info->wsi.swapchain_image_array == nullptr) {
             PRINT_ERROR("swapchain_image_array fail!\n");
             return false;
         } else {
@@ -198,10 +201,11 @@ bool cg_select_present_mode(cg_info_t *p_info) {
         PRINT_ERROR("load vkGetPhysicalDeviceSurfacePresentModesKHR fail!\n");
         return false;
     }
-    p_info->library.vk_result = get_physical_device_surface_present_modes(
+    VkResult result = VK_SUCCESS;
+    result = get_physical_device_surface_present_modes(
         p_info->physical_device.physical_device, p_info->wsi.surface,
         &p_info->wsi.present_mode_count, nullptr);
-    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.present_mode_count == 0) {
+    if (result != VK_SUCCESS || p_info->wsi.present_mode_count == 0) {
         PRINT_ERROR("present_mode_count fail!\n");
         return false;
     }
@@ -216,10 +220,10 @@ bool cg_select_present_mode(cg_info_t *p_info) {
         PRINT_LOG("alloc memory success!\n");
     }
 
-    p_info->library.vk_result = get_physical_device_surface_present_modes(
+    result = get_physical_device_surface_present_modes(
         p_info->physical_device.physical_device, p_info->wsi.surface,
         &p_info->wsi.present_mode_count, p_info->wsi.present_mode_array);
-    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.present_mode_array == nullptr) {
+    if (result != VK_SUCCESS || p_info->wsi.present_mode_array == nullptr) {
         PRINT_ERROR("present_mode_array fail!\n");
         return false;
     }
@@ -273,14 +277,32 @@ bool cg_select_present_mode(cg_info_t *p_info) {
         PRINT_ERROR("load vkGetPhysicalDeviceSurfaceCapabilitiesKHR fail!\n");
         return false;
     }
-    p_info->library.vk_result = get_physical_device_surface_capabilities(
+    result = get_physical_device_surface_capabilities(
         p_info->physical_device.physical_device,
         p_info->wsi.surface,
         &p_info->wsi.surface_capabilities);
-    if (p_info->library.vk_result != VK_SUCCESS) {
+    if (result != VK_SUCCESS) {
         PRINT_ERROR("surface_capabilities fail!\n");
         return false;
     }
 
     return true;
+}
+
+bool cg_create_swapchain_resources(cg_info_t *p_info) {
+    if (p_info->wsi.surface == VK_NULL_HANDLE || p_info->logic_device.vk_logic_device == VK_NULL_HANDLE) {
+        PRINT_ERROR("surface or logical device is not ready!\n");
+        return false;
+    }
+
+    if (cg_select_present_mode(p_info) == false) {
+        return false;
+    }
+    if (cg_select_swapchain(p_info) == false) {
+        return false;
+    }
+
+    p_info->wsi.swapchain = VK_NULL_HANDLE;
+    p_info->wsi.old_swapchain = VK_NULL_HANDLE;
+    return cg_create_swapchain(p_info, &p_info->wsi.swapchain);
 }

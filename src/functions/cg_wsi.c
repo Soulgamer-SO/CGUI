@@ -206,10 +206,11 @@ bool cg_create_window(cg_info_t *p_info) {
         PRINT_ERROR("load vkCreateWin32SurfaceKHR fail!\n");
         return false;
     }
-    p_info->library.vk_result = create_win32_surface(
+    VkResult result = VK_SUCCESS;
+    result = create_win32_surface(
         p_info->instance.vk_instance, &p_info->wsi.win32_surface_create_info,
         nullptr, &p_info->wsi.surface);
-    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.surface == VK_NULL_HANDLE) {
+    if (result != VK_SUCCESS || p_info->wsi.surface == VK_NULL_HANDLE) {
         PRINT_ERROR("create win32 surface fail!\n");
         return false;
     }
@@ -224,21 +225,4 @@ bool cg_create_window(cg_info_t *p_info) {
     return true;
 }
 
-bool cg_create_swapchain_resources(cg_info_t *p_info) {
-    if (p_info->wsi.surface == VK_NULL_HANDLE ||
-        p_info->logic_device.vk_logic_device == VK_NULL_HANDLE) {
-        PRINT_ERROR("surface or logical device is not ready!\n");
-        return false;
-    }
 
-    if (cg_select_present_mode(p_info) == false) {
-        return false;
-    }
-    if (cg_select_swapchain(p_info) == false) {
-        return false;
-    }
-
-    p_info->wsi.swapchain = VK_NULL_HANDLE;
-    p_info->wsi.old_swapchain = VK_NULL_HANDLE;
-    return cg_create_swapchain(p_info, &p_info->wsi.swapchain);
-}

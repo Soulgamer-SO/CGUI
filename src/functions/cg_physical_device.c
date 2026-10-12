@@ -27,8 +27,10 @@ bool cg_enumerate_physical_device(cg_info_t *p_info, uint32_t *p_physical_device
         PRINT_ERROR("load vkEnumeratePhysicalDevices fail!\n");
         return false;
     }
-    p_info->library.vk_result = enumerate_physical_devices(p_info->instance.vk_instance, p_physical_device_count, available_physical_device_array);
-    if (p_info->library.vk_result != VK_SUCCESS || *p_physical_device_count == 0) {
+
+    VkResult result = VK_SUCCESS;
+    result = enumerate_physical_devices(p_info->instance.vk_instance, p_physical_device_count, available_physical_device_array);
+    if (result != VK_SUCCESS || *p_physical_device_count == 0) {
         PRINT_ERROR("get available_handle_device_array fail!\n");
         return false;
     }
@@ -52,8 +54,9 @@ bool cg_select_physical_device(cg_info_t *p_info, uint32_t *p_physical_device_co
         return false;
     }
 
-    p_info->library.vk_result = enumerate_device_extension_properties(p_info->physical_device.physical_device, nullptr, &p_info->physical_device.physical_device_extensions_count, nullptr);
-    if (p_info->library.vk_result != VK_SUCCESS || p_info->physical_device.physical_device_extensions_count == 0) {
+    VkResult result = VK_SUCCESS;
+    result = enumerate_device_extension_properties(p_info->physical_device.physical_device, nullptr, &p_info->physical_device.physical_device_extensions_count, nullptr);
+    if (result != VK_SUCCESS || p_info->physical_device.physical_device_extensions_count == 0) {
         PRINT_ERROR("get extensions_device_count fail!\n");
         return false;
     }
@@ -109,10 +112,10 @@ bool cg_select_physical_device(cg_info_t *p_info, uint32_t *p_physical_device_co
         p_info->physical_device.device_properties.deviceName);
 
     // 获取可用的物理设备扩展列表
-    p_info->library.vk_result = enumerate_device_extension_properties(
+    result = enumerate_device_extension_properties(
         p_info->physical_device.physical_device, nullptr,
         &p_info->physical_device.physical_device_extensions_count, nullptr);
-    if (p_info->library.vk_result != VK_SUCCESS || p_info->physical_device.physical_device_extensions_count == 0) {
+    if (result != VK_SUCCESS || p_info->physical_device.physical_device_extensions_count == 0) {
         PRINT_ERROR("get extensions_device_count fail!\n");
         return false;
     }
@@ -124,7 +127,7 @@ bool cg_select_physical_device(cg_info_t *p_info, uint32_t *p_physical_device_co
         return false;
     } else if (p_info->physical_device.available_physical_device_extension_array != nullptr) {
         PRINT_LOG("alloc available_physical_device_extension_array memory success!\n");
-        p_info->library.vk_result = enumerate_device_extension_properties(
+        result = enumerate_device_extension_properties(
             p_info->physical_device.physical_device, nullptr,
             &p_info->physical_device.physical_device_extensions_count,
             &p_info->physical_device.available_physical_device_extension_array[0]);
@@ -141,15 +144,13 @@ bool cg_select_physical_device(cg_info_t *p_info, uint32_t *p_physical_device_co
             }
     #endif */
 
-    // 添加要启用的物理设备扩展列表
-
     // 获取物理设备内存属性
     PFN_vkGetPhysicalDeviceMemoryProperties get_physical_device_memory_properties = nullptr;
     get_physical_device_memory_properties = (PFN_vkGetPhysicalDeviceMemoryProperties)p_info->library.vk_get_instance_proc_addr(p_info->instance.vk_instance, "vkGetPhysicalDeviceMemoryProperties");
     if (get_physical_device_memory_properties != nullptr) {
         get_physical_device_memory_properties(
             p_info->physical_device.physical_device, &p_info->physical_device.physical_device_memory_properties);
-        if (p_info->library.vk_result != VK_SUCCESS) {
+        if (result != VK_SUCCESS) {
             PRINT_ERROR("get physical_device_memory_properties fail!\n");
             return false;
         }

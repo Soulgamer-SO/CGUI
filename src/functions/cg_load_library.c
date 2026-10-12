@@ -76,3 +76,38 @@ bool cg_load_library(cg_info_t *p_info) {
 
     return true;
 }
+
+bool cg_load_vk_functions(cg_info_t *p_info) {
+    if (p_info->logic_device.vk_logic_device == VK_NULL_HANDLE || p_info->library.vk_get_device_proc_addr == nullptr) {
+        return false;
+    }
+
+    VkDevice device = p_info->logic_device.vk_logic_device;
+    p_info->library.vk_wait_for_fences = (PFN_vkWaitForFences)p_info->library.vk_get_device_proc_addr(device, "vkWaitForFences");
+    p_info->library.vk_reset_fences = (PFN_vkResetFences)p_info->library.vk_get_device_proc_addr(device, "vkResetFences");
+    p_info->library.vk_acquire_next_image = (PFN_vkAcquireNextImageKHR)p_info->library.vk_get_device_proc_addr(device, "vkAcquireNextImageKHR");
+    p_info->library.vk_reset_command_buffer = (PFN_vkResetCommandBuffer)p_info->library.vk_get_device_proc_addr(device, "vkResetCommandBuffer");
+    p_info->library.vk_begin_command_buffer = (PFN_vkBeginCommandBuffer)p_info->library.vk_get_device_proc_addr(device, "vkBeginCommandBuffer");
+    p_info->library.vk_end_command_buffer = (PFN_vkEndCommandBuffer)p_info->library.vk_get_device_proc_addr(device, "vkEndCommandBuffer");
+    p_info->library.vk_cmd_begin_render_pass = (PFN_vkCmdBeginRenderPass)p_info->library.vk_get_device_proc_addr(device, "vkCmdBeginRenderPass");
+    p_info->library.vk_cmd_end_render_pass = (PFN_vkCmdEndRenderPass)p_info->library.vk_get_device_proc_addr(device, "vkCmdEndRenderPass");
+    p_info->library.vk_cmd_bind_pipeline = (PFN_vkCmdBindPipeline)p_info->library.vk_get_device_proc_addr(device, "vkCmdBindPipeline");
+    p_info->library.vk_cmd_set_viewport = (PFN_vkCmdSetViewport)p_info->library.vk_get_device_proc_addr(device, "vkCmdSetViewport");
+    p_info->library.vk_cmd_set_scissor = (PFN_vkCmdSetScissor)p_info->library.vk_get_device_proc_addr(device, "vkCmdSetScissor");
+    p_info->library.vk_cmd_draw = (PFN_vkCmdDraw)p_info->library.vk_get_device_proc_addr(device, "vkCmdDraw");
+    p_info->library.vk_queue_submit = (PFN_vkQueueSubmit)p_info->library.vk_get_device_proc_addr(device, "vkQueueSubmit");
+    p_info->library.vk_queue_present = (PFN_vkQueuePresentKHR)p_info->library.vk_get_device_proc_addr(device, "vkQueuePresentKHR");
+
+    if (p_info->library.vk_wait_for_fences == nullptr || p_info->library.vk_reset_fences == nullptr ||
+        p_info->library.vk_acquire_next_image == nullptr || p_info->library.vk_reset_command_buffer == nullptr ||
+        p_info->library.vk_begin_command_buffer == nullptr || p_info->library.vk_end_command_buffer == nullptr ||
+        p_info->library.vk_cmd_begin_render_pass == nullptr || p_info->library.vk_cmd_end_render_pass == nullptr ||
+        p_info->library.vk_cmd_bind_pipeline == nullptr || p_info->library.vk_cmd_set_viewport == nullptr ||
+        p_info->library.vk_cmd_set_scissor == nullptr || p_info->library.vk_cmd_draw == nullptr ||
+        p_info->library.vk_queue_submit == nullptr || p_info->library.vk_queue_present == nullptr) {
+        PRINT_ERROR("load Vulkan functions fail!\n");
+        return false;
+    }
+
+    return true;
+}

@@ -22,8 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <vulkan/vulkan.h>
 
 typedef struct library_info {
-    // Vulkan命令返回代码 Vulkan command return codes
-    VkResult vk_result;
     // Linux下加载Vulkan函数库
 #ifdef LINUX
     void *vulkan_library;
@@ -38,6 +36,21 @@ typedef struct library_info {
     PFN_vkGetInstanceProcAddr vk_get_instance_proc_addr;
     // 加载逻辑设备函数的函数 PFN_vkGetDeviceProcAddr
     PFN_vkGetDeviceProcAddr vk_get_device_proc_addr;
+
+    PFN_vkWaitForFences vk_wait_for_fences;
+    PFN_vkResetFences vk_reset_fences;
+    PFN_vkAcquireNextImageKHR vk_acquire_next_image;
+    PFN_vkResetCommandBuffer vk_reset_command_buffer;
+    PFN_vkBeginCommandBuffer vk_begin_command_buffer;
+    PFN_vkEndCommandBuffer vk_end_command_buffer;
+    PFN_vkCmdBeginRenderPass vk_cmd_begin_render_pass;
+    PFN_vkCmdEndRenderPass vk_cmd_end_render_pass;
+    PFN_vkCmdBindPipeline vk_cmd_bind_pipeline;
+    PFN_vkCmdSetViewport vk_cmd_set_viewport;
+    PFN_vkCmdSetScissor vk_cmd_set_scissor;
+    PFN_vkCmdDraw vk_cmd_draw;
+    PFN_vkQueueSubmit vk_queue_submit;
+    PFN_vkQueuePresentKHR vk_queue_present;
 } library_info_t;
 
 #endif // CG_LOAD_LIBRARY_INFO_H 1

@@ -33,4 +33,6 @@ bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain);
 // 选择想要的显示模式
 bool cg_select_present_mode(cg_info_t *p_info);
 
+bool cg_create_swapchain_resources(cg_info_t *p_info);
+
 #endif // CG_SWAPCHAIN_H

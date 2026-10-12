@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_instance.h"
 
 bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
-    p_info->library.vk_result = VK_SUCCESS;
+    VkResult result = VK_SUCCESS;
 
     // 加载Vulkan全局函数 Vulkan只有三个全局函数 PFN_vkEnumerateInstanceExtensionProperties,PFN_vkEnumerateInstanceLayerProperties,PFN_vkCreateInstance
     PFN_vkEnumerateInstanceExtensionProperties enumerate_instance_extension_properties = nullptr;
@@ -45,8 +45,8 @@ bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
     }
 
     p_info->instance.instance_extension_count = 0;
-    p_info->library.vk_result = enumerate_instance_extension_properties(nullptr, &p_info->instance.instance_extension_count, nullptr);
-    if (p_info->library.vk_result != VK_SUCCESS || p_info->instance.instance_extension_count == 0) {
+    result = enumerate_instance_extension_properties(nullptr, &p_info->instance.instance_extension_count, nullptr);
+    if (result != VK_SUCCESS || p_info->instance.instance_extension_count == 0) {
         PRINT_ERROR("get instance_extensions_count fail!\n");
         return false;
     }
@@ -54,8 +54,8 @@ bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
     p_info->instance.instance_extension_array = (VkExtensionProperties *)cg_alloc_memory(p_info->p_memory_pool, p_info->instance.instance_extension_count * sizeof(VkExtensionProperties));
     if (p_info->instance.instance_extension_array != nullptr) {
         PRINT_LOG("alloc memory success!\n");
-        p_info->library.vk_result = enumerate_instance_extension_properties(nullptr, &p_info->instance.instance_extension_count, &p_info->instance.instance_extension_array[0]);
-        if (p_info->library.vk_result != VK_SUCCESS || p_info->instance.instance_extension_count == 0) {
+        result = enumerate_instance_extension_properties(nullptr, &p_info->instance.instance_extension_count, &p_info->instance.instance_extension_array[0]);
+        if (result != VK_SUCCESS || p_info->instance.instance_extension_count == 0) {
             PRINT_ERROR("get available_extension_array fail!\n");
             return false;
         }
@@ -98,8 +98,8 @@ bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
         .enabledExtensionCount = p_info->instance.enabled_instance_extension_count,
         .ppEnabledExtensionNames = (const char *const *)enabled_extension_name_array};
 
-    p_info->library.vk_result = create_instance(&instance_create_info, nullptr, p_vk_instance);
-    if (p_info->library.vk_result != VK_SUCCESS || p_vk_instance == VK_NULL_HANDLE) {
+    result = create_instance(&instance_create_info, nullptr, p_vk_instance);
+    if (result != VK_SUCCESS || p_vk_instance == VK_NULL_HANDLE) {
         PRINT_ERROR("create instance fail!\n");
         return false;
     } else {

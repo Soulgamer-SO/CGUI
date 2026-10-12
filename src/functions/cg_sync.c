@@ -34,8 +34,10 @@ bool cg_create_semaphore(cg_info_t *p_info, VkSemaphore *p_semaphore) {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
         .pNext = nullptr,
         .flags = 0};
-    p_info->library.vk_result = create_semaphore(p_info->logic_device.vk_logic_device, &semaphore_create_info, nullptr, p_semaphore);
-    if (p_info->library.vk_result != VK_SUCCESS) {
+
+    VkResult result = VK_SUCCESS;
+    result = create_semaphore(p_info->logic_device.vk_logic_device, &semaphore_create_info, nullptr, p_semaphore);
+    if (result != VK_SUCCESS) {
         PRINT_ERROR("vkCreateSemaphore fail!\n");
         return false;
     }
@@ -58,10 +60,12 @@ bool cg_create_fence(cg_info_t *p_info, VkFence *p_fence) {
         .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
         .pNext = nullptr,
         .flags = VK_FENCE_CREATE_SIGNALED_BIT}; // flags的值为 VK_FENCE_CREATE_SIGNALED_BIT 1或者0
-    p_info->library.vk_result = vkCreateFence(
+
+    VkResult result = VK_SUCCESS;
+    result = vkCreateFence(
         p_info->logic_device.vk_logic_device, &fence_create_info,
         nullptr, p_fence);
-    if (p_info->library.vk_result != VK_SUCCESS) {
+    if (result != VK_SUCCESS) {
         PRINT_ERROR("vkCreateFence fail!\n");
         return false;
     }

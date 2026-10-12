@@ -28,7 +28,7 @@ typedef struct vk_logic_device_info {
     VkQueueFamilyProperties *queue_family_array;
     VkQueueFamilyProperties *queue_family_property_array;
 
-    // 选择想要的队列家族并返回其索引
+    // 选择想要的队列家族的索引
     uint32_t queue_family_index;
     // 支持有关图形操作的队列家族的索引
     uint32_t graphic_queue_family_index;

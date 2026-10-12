@@ -24,6 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_logic_device.h"
 #include "cg_physical_device.h"
 #include "cg_render.h"
+#include "cg_swapchain.h"
 #include "cg_sync.h"
 #include "cg_wsi.h"
 
@@ -31,7 +32,7 @@ bool cg_initialize_var(cg_info_t *p_info) {
     if (p_info->p_memory_pool == nullptr) {
         return false;
     }
-    p_info->library.vk_result = VK_SUCCESS;
+
     p_info->instance.vk_instance = VK_NULL_HANDLE;
     p_info->physical_device.physical_device = VK_NULL_HANDLE;
     p_info->physical_device.enabled_physical_device_extensions_count = 2;
@@ -84,6 +85,11 @@ bool cg_initialize_var(cg_info_t *p_info) {
 
     if (cg_create_logic_device(p_info, &p_info->logic_device.vk_logic_device) == false) {
         PRINT_ERROR("create logic device fail!\n");
+        return false;
+    }
+
+    if (cg_load_vk_functions(p_info) == false) {
+        PRINT_ERROR("load Vulkan functions fail!\n");
         return false;
     }
 

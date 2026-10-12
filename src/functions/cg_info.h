@@ -42,6 +42,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "cg_wsi_info.h"
 
+#include "cg_render_info.h"
+
 #include "cg_event_loop_info.h"
 
 // cgui-app info
@@ -54,6 +56,7 @@ typedef struct cg_info {
     vk_command_pool_info_t command_pool;
     sync_info_t sync;
     wsi_info_t wsi;
+    render_info_t render;
     event_loop_info_t event_loop;
 } cg_info_t;
 

@@ -27,4 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // 加载函数库
 bool cg_load_library(cg_info_t *p_info);
 
+// 加载Vulkan函数
+bool cg_load_vk_functions(cg_info_t *p_info);
+
 #endif // CG_LOAD_LIBRARY_H 1

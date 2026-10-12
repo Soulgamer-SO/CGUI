@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_logic_device.h"
 
 bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
+    VkResult result = VK_SUCCESS;
     p_info->logic_device.queue_family_count = 0;
     PFN_vkGetPhysicalDeviceQueueFamilyProperties get_physical_device_queue_family_properties = nullptr;
     get_physical_device_queue_family_properties = (PFN_vkGetPhysicalDeviceQueueFamilyProperties)p_info->library.vk_get_instance_proc_addr(
@@ -141,12 +142,13 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
          p_info->logic_device.queue_family_index < p_info->logic_device.queue_family_count;
          p_info->logic_device.queue_family_index++) {
         VkBool32 supports_present = VK_FALSE;
-        p_info->library.vk_result = get_surface_support(
+
+        result = get_surface_support(
             p_info->physical_device.physical_device,
             p_info->logic_device.queue_family_index,
             p_info->wsi.surface,
             &supports_present);
-        if (p_info->library.vk_result != VK_SUCCESS) {
+        if (result != VK_SUCCESS) {
             PRINT_ERROR("get queue present support fail!\n");
             return false;
         }
@@ -194,10 +196,10 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
         return false;
     }
 
-    p_info->library.vk_result = create_device(
+    result = create_device(
         p_info->physical_device.physical_device, &device_create_info,
         nullptr, p_vk_logic_device);
-    if (p_info->library.vk_result != VK_SUCCESS || p_vk_logic_device == VK_NULL_HANDLE) {
+    if (result != VK_SUCCESS || p_vk_logic_device == VK_NULL_HANDLE) {
         PRINT_ERROR("create vulkan logic device fail!\n");
         return false;
     }

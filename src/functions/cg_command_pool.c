@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_command_pool.h"
 
 bool cg_create_command_pool(cg_info_t *p_info, VkCommandPool *p_command_pool) {
+    VkResult result = VK_SUCCESS;
     VkCommandPoolCreateInfo command_pool_create_info = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .pNext = nullptr,
@@ -34,10 +35,10 @@ bool cg_create_command_pool(cg_info_t *p_info, VkCommandPool *p_command_pool) {
     }
 
     *p_command_pool = VK_NULL_HANDLE;
-    p_info->library.vk_result = create_command_pool(
+    result = create_command_pool(
         p_info->logic_device.vk_logic_device, &command_pool_create_info,
         nullptr, p_command_pool);
-    if (p_info->library.vk_result != VK_SUCCESS) {
+    if (result != VK_SUCCESS) {
         PRINT_ERROR("create command_pool fail!\n");
         return false;
     }
@@ -46,6 +47,7 @@ bool cg_create_command_pool(cg_info_t *p_info, VkCommandPool *p_command_pool) {
 }
 
 bool cg_create_command_buffer_array(cg_info_t *p_info, VkCommandPool command_pool, VkCommandBuffer *command_buffer_array, uint32_t command_buffer_count) {
+    VkResult result = VK_SUCCESS;
     if (command_buffer_array == nullptr) {
         PRINT_ERROR("create_command_buffer fail!\n");
         return false;
@@ -64,8 +66,8 @@ bool cg_create_command_buffer_array(cg_info_t *p_info, VkCommandPool command_poo
         return false;
     }
 
-    p_info->library.vk_result = allocate_command_buffers(p_info->logic_device.vk_logic_device, &command_buffer_allocate_info, command_buffer_array);
-    if (p_info->library.vk_result != VK_SUCCESS) {
+    result = allocate_command_buffers(p_info->logic_device.vk_logic_device, &command_buffer_allocate_info, command_buffer_array);
+    if (result != VK_SUCCESS) {
         PRINT_ERROR("vkAllocateCommandBuffers fail!\n");
         return false;
     }
