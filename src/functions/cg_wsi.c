@@ -74,11 +74,12 @@ bool cg_create_window(cg_info_t *p_info) {
         PRINT_ERROR("load vkCreateXcbSurfaceKHR fail!\n");
         return false;
     }
-    p_info->library.vk_result = create_xcb_surface(
+    VkResult result = VK_SUCCESS;
+    result = create_xcb_surface(
         p_info->instance.vk_instance,
         &p_info->wsi.xcb_surface_create_info,
         nullptr, &p_info->wsi.surface);
-    if (p_info->library.vk_result != VK_SUCCESS || p_info->wsi.surface == VK_NULL_HANDLE) {
+    if (result != VK_SUCCESS || p_info->wsi.surface == VK_NULL_HANDLE) {
         PRINT_ERROR("create xcb surface fail!\n");
         return false;
     }
@@ -224,5 +225,3 @@ bool cg_create_window(cg_info_t *p_info) {
 
     return true;
 }
-
-
