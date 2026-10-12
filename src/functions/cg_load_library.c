@@ -105,7 +105,6 @@ bool cg_load_vk_functions(cg_info_t *p_info) {
         p_info->library.vk_cmd_bind_pipeline == nullptr || p_info->library.vk_cmd_set_viewport == nullptr ||
         p_info->library.vk_cmd_set_scissor == nullptr || p_info->library.vk_cmd_draw == nullptr ||
         p_info->library.vk_queue_submit == nullptr || p_info->library.vk_queue_present == nullptr) {
-        PRINT_ERROR("load Vulkan functions fail!\n");
         return false;
     }
 
