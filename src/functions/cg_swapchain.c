@@ -20,41 +20,41 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_swapchain.h"
 
 bool cg_select_swapchain(cg_info_t *p_info) {
-    p_info->wsi.old_swapchain = VK_NULL_HANDLE;
+    p_info->window_surface.old_swapchain = VK_NULL_HANDLE;
 
     // 设置交换链图像的数量
-    p_info->wsi.enabled_image_count = p_info->wsi.surface_capabilities.maxImageCount + 1;
-    if (p_info->wsi.enabled_image_count > p_info->wsi.surface_capabilities.maxImageCount &&
-        p_info->wsi.surface_capabilities.maxImageCount > 0) {
-        p_info->wsi.enabled_image_count = p_info->wsi.surface_capabilities.maxImageCount;
+    p_info->window_surface.enabled_image_count = p_info->window_surface.surface_capabilities.maxImageCount + 1;
+    if (p_info->window_surface.enabled_image_count > p_info->window_surface.surface_capabilities.maxImageCount &&
+        p_info->window_surface.surface_capabilities.maxImageCount > 0) {
+        p_info->window_surface.enabled_image_count = p_info->window_surface.surface_capabilities.maxImageCount;
     }
 
     // 设置交换链图像的尺寸
-    if (p_info->wsi.surface_capabilities.currentExtent.width == 0xFFFFFFFF) {
-        p_info->wsi.enabled_image_extent_size.width = 1280;
-        p_info->wsi.enabled_image_extent_size.height = 720;
+    if (p_info->window_surface.surface_capabilities.currentExtent.width == 0xFFFFFFFF) {
+        p_info->window_surface.enabled_image_extent_size.width = 1280;
+        p_info->window_surface.enabled_image_extent_size.height = 720;
     }
-    if (p_info->wsi.enabled_image_extent_size.width > p_info->wsi.surface_capabilities.maxImageExtent.width) {
-        p_info->wsi.enabled_image_extent_size.width = p_info->wsi.surface_capabilities.maxImageExtent.width;
-    } else if (p_info->wsi.enabled_image_extent_size.width < p_info->wsi.surface_capabilities.minImageExtent.width) {
-        p_info->wsi.enabled_image_extent_size.width = p_info->wsi.surface_capabilities.minImageExtent.width;
+    if (p_info->window_surface.enabled_image_extent_size.width > p_info->window_surface.surface_capabilities.maxImageExtent.width) {
+        p_info->window_surface.enabled_image_extent_size.width = p_info->window_surface.surface_capabilities.maxImageExtent.width;
+    } else if (p_info->window_surface.enabled_image_extent_size.width < p_info->window_surface.surface_capabilities.minImageExtent.width) {
+        p_info->window_surface.enabled_image_extent_size.width = p_info->window_surface.surface_capabilities.minImageExtent.width;
     }
 
-    if (p_info->wsi.enabled_image_extent_size.height > p_info->wsi.surface_capabilities.maxImageExtent.height) {
-        p_info->wsi.enabled_image_extent_size.height = p_info->wsi.surface_capabilities.maxImageExtent.height;
-    } else if (p_info->wsi.enabled_image_extent_size.height < p_info->wsi.surface_capabilities.minImageExtent.height) {
-        p_info->wsi.enabled_image_extent_size.height = p_info->wsi.surface_capabilities.minImageExtent.height;
+    if (p_info->window_surface.enabled_image_extent_size.height > p_info->window_surface.surface_capabilities.maxImageExtent.height) {
+        p_info->window_surface.enabled_image_extent_size.height = p_info->window_surface.surface_capabilities.maxImageExtent.height;
+    } else if (p_info->window_surface.enabled_image_extent_size.height < p_info->window_surface.surface_capabilities.minImageExtent.height) {
+        p_info->window_surface.enabled_image_extent_size.height = p_info->window_surface.surface_capabilities.minImageExtent.height;
     } else {
-        p_info->wsi.enabled_image_extent_size = p_info->wsi.surface_capabilities.currentExtent;
+        p_info->window_surface.enabled_image_extent_size = p_info->window_surface.surface_capabilities.currentExtent;
     }
 
     // 设置交换链图像的功能
-    if (p_info->wsi.surface_capabilities.supportedUsageFlags & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) {
-        p_info->wsi.enabled_image_usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    if (p_info->window_surface.surface_capabilities.supportedUsageFlags & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) {
+        p_info->window_surface.enabled_image_usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
         PRINT_LOG("enabled_image_usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;\n");
     }
     // 设置交换链图像的变换
-    p_info->wsi.enabled_surface_transform = p_info->wsi.surface_capabilities.currentTransform;
+    p_info->window_surface.enabled_surface_transform = p_info->window_surface.surface_capabilities.currentTransform;
 
     // 获得支持的交换链图像的格式的列表
     PFN_vkGetPhysicalDeviceSurfaceFormatsKHR get_physical_device_surface_formats = nullptr;
@@ -65,23 +65,23 @@ bool cg_select_swapchain(cg_info_t *p_info) {
     }
 
     VkResult result = VK_SUCCESS;
-    p_info->wsi.surface_format_count = 0;
+    p_info->window_surface.surface_format_count = 0;
     result = get_physical_device_surface_formats(
         p_info->physical_device.physical_device,
-        p_info->wsi.surface,
-        &p_info->wsi.surface_format_count,
+        p_info->window_surface.surface,
+        &p_info->window_surface.surface_format_count,
         nullptr);
-    if (result != VK_SUCCESS || p_info->wsi.surface_format_count == 0) {
+    if (result != VK_SUCCESS || p_info->window_surface.surface_format_count == 0) {
         PRINT_ERROR("surface_format_count fail!\n");
         return false;
     }
-    p_info->wsi.surface_format_array = (VkSurfaceFormatKHR *)cg_alloc_memory(
+    p_info->window_surface.surface_format_array = (VkSurfaceFormatKHR *)cg_alloc_memory(
         p_info->p_memory_pool,
-        p_info->wsi.surface_format_count * sizeof(VkSurfaceFormatKHR));
+        p_info->window_surface.surface_format_count * sizeof(VkSurfaceFormatKHR));
     result = get_physical_device_surface_formats(
-        p_info->physical_device.physical_device, p_info->wsi.surface,
-        &p_info->wsi.surface_format_count, p_info->wsi.surface_format_array);
-    if (result != VK_SUCCESS || p_info->wsi.surface_format_array == nullptr) {
+        p_info->physical_device.physical_device, p_info->window_surface.surface,
+        &p_info->window_surface.surface_format_count, p_info->window_surface.surface_format_array);
+    if (result != VK_SUCCESS || p_info->window_surface.surface_format_array == nullptr) {
         PRINT_ERROR("surface_format_array fail!\n");
         return false;
     } else {
@@ -89,19 +89,19 @@ bool cg_select_swapchain(cg_info_t *p_info) {
     }
 
 #ifdef DEBUG
-    for (uint32_t i = 0; i < p_info->wsi.surface_format_count; i++) {
-        PRINT_LOG("format_array[%d] = %d;\n", i, p_info->wsi.surface_format_array[i].format);
+    for (uint32_t i = 0; i < p_info->window_surface.surface_format_count; i++) {
+        PRINT_LOG("format_array[%d] = %d;\n", i, p_info->window_surface.surface_format_array[i].format);
     }
 #endif
 
     // 选择交换链图像的格式 VK_FORMAT_B8G8R8A8_UNORM
-    p_info->wsi.enabled_surface_format.format = VK_FORMAT_B8G8R8A8_UNORM;
+    p_info->window_surface.enabled_surface_format.format = VK_FORMAT_B8G8R8A8_UNORM;
 
     // 判断是否支持自己想要的交换链图像的格式，VK_FORMAT_UNDEFINED 表示支持任意格式
     bool is_surface_format_supported = false;
-    for (uint32_t i = 0; i < p_info->wsi.surface_format_count; i++) {
-        if (p_info->wsi.surface_format_array[i].format == p_info->wsi.enabled_surface_format.format) {
-            p_info->wsi.enabled_surface_format.colorSpace = p_info->wsi.surface_format_array[i].colorSpace;
+    for (uint32_t i = 0; i < p_info->window_surface.surface_format_count; i++) {
+        if (p_info->window_surface.surface_format_array[i].format == p_info->window_surface.enabled_surface_format.format) {
+            p_info->window_surface.enabled_surface_format.colorSpace = p_info->window_surface.surface_format_array[i].colorSpace;
             is_surface_format_supported = true;
             break;
         }
@@ -133,21 +133,21 @@ bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
             .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
             .pNext = nullptr,
             .flags = 0,
-            .surface = p_info->wsi.surface,
-            .minImageCount = p_info->wsi.enabled_image_count,
-            .imageFormat = p_info->wsi.enabled_surface_format.format,
-            .imageColorSpace = p_info->wsi.enabled_surface_format.colorSpace,
-            .imageExtent = p_info->wsi.enabled_image_extent_size,
+            .surface = p_info->window_surface.surface,
+            .minImageCount = p_info->window_surface.enabled_image_count,
+            .imageFormat = p_info->window_surface.enabled_surface_format.format,
+            .imageColorSpace = p_info->window_surface.enabled_surface_format.colorSpace,
+            .imageExtent = p_info->window_surface.enabled_image_extent_size,
             .imageArrayLayers = 1,
-            .imageUsage = p_info->wsi.enabled_image_usage,
+            .imageUsage = p_info->window_surface.enabled_image_usage,
             .imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
             .queueFamilyIndexCount = 0,
             .pQueueFamilyIndices = nullptr,
-            .preTransform = p_info->wsi.enabled_surface_transform,
+            .preTransform = p_info->window_surface.enabled_surface_transform,
             .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-            .presentMode = p_info->wsi.enabled_present_mode,
+            .presentMode = p_info->window_surface.enabled_present_mode,
             .clipped = VK_TRUE,
-            .oldSwapchain = p_info->wsi.old_swapchain},
+            .oldSwapchain = p_info->window_surface.old_swapchain},
         nullptr, p_swapchain);
     if (result != VK_SUCCESS || p_swapchain == VK_NULL_HANDLE) {
         PRINT_ERROR("create swapchain fail!\n");
@@ -161,21 +161,21 @@ bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
         PRINT_ERROR("load vkGetSwapchainImagesKHR fail!\n");
         return false;
     }
-    p_info->wsi.swapchain_image_count = 0;
+    p_info->window_surface.swapchain_image_count = 0;
     result = get_swapchain_image_array(
         p_info->logic_device.vk_logic_device,
-        p_info->wsi.swapchain,
-        &p_info->wsi.swapchain_image_count, nullptr);
-    if (result != VK_SUCCESS || p_info->wsi.swapchain_image_count == 0) {
+        p_info->window_surface.swapchain,
+        &p_info->window_surface.swapchain_image_count, nullptr);
+    if (result != VK_SUCCESS || p_info->window_surface.swapchain_image_count == 0) {
         PRINT_ERROR("swapchain_image_count fail!\n");
         return false;
     }
-    p_info->wsi.swapchain_image_array = (VkImage *)cg_alloc_memory(p_info->p_memory_pool, p_info->wsi.swapchain_image_count * sizeof(VkImage));
-    if (p_info->wsi.swapchain_image_array != nullptr) {
+    p_info->window_surface.swapchain_image_array = (VkImage *)cg_alloc_memory(p_info->p_memory_pool, p_info->window_surface.swapchain_image_count * sizeof(VkImage));
+    if (p_info->window_surface.swapchain_image_array != nullptr) {
         result = get_swapchain_image_array(
-            p_info->logic_device.vk_logic_device, p_info->wsi.swapchain,
-            &p_info->wsi.swapchain_image_count, p_info->wsi.swapchain_image_array);
-        if (result != VK_SUCCESS || p_info->wsi.swapchain_image_array == nullptr) {
+            p_info->logic_device.vk_logic_device, p_info->window_surface.swapchain,
+            &p_info->window_surface.swapchain_image_count, p_info->window_surface.swapchain_image_array);
+        if (result != VK_SUCCESS || p_info->window_surface.swapchain_image_array == nullptr) {
             PRINT_ERROR("swapchain_image_array fail!\n");
             return false;
         } else {
@@ -183,8 +183,8 @@ bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
         }
 
 #ifdef DEBUG
-        for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
-            PRINT_LOG("swapchain_image_array[%d] address = %p;\n", i, p_info->wsi.swapchain_image_array[i]);
+        for (uint32_t i = 0; i < p_info->window_surface.swapchain_image_count; i++) {
+            PRINT_LOG("swapchain_image_array[%d] address = %p;\n", i, p_info->window_surface.swapchain_image_array[i]);
         }
 #endif // DEBUG
     }
@@ -193,7 +193,7 @@ bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
 }
 
 bool cg_select_present_mode(cg_info_t *p_info) {
-    p_info->wsi.present_mode_count = 0;
+    p_info->window_surface.present_mode_count = 0;
     PFN_vkGetPhysicalDeviceSurfacePresentModesKHR get_physical_device_surface_present_modes = nullptr;
     get_physical_device_surface_present_modes = (PFN_vkGetPhysicalDeviceSurfacePresentModesKHR)p_info->library.vk_get_instance_proc_addr(
         p_info->instance.vk_instance, "vkGetPhysicalDeviceSurfacePresentModesKHR");
@@ -203,35 +203,35 @@ bool cg_select_present_mode(cg_info_t *p_info) {
     }
     VkResult result = VK_SUCCESS;
     result = get_physical_device_surface_present_modes(
-        p_info->physical_device.physical_device, p_info->wsi.surface,
-        &p_info->wsi.present_mode_count, nullptr);
-    if (result != VK_SUCCESS || p_info->wsi.present_mode_count == 0) {
+        p_info->physical_device.physical_device, p_info->window_surface.surface,
+        &p_info->window_surface.present_mode_count, nullptr);
+    if (result != VK_SUCCESS || p_info->window_surface.present_mode_count == 0) {
         PRINT_ERROR("present_mode_count fail!\n");
         return false;
     }
 
     // 获得Vulkan显示模式的列表
-    p_info->wsi.present_mode_array = (VkPresentModeKHR *)cg_alloc_memory(
+    p_info->window_surface.present_mode_array = (VkPresentModeKHR *)cg_alloc_memory(
         p_info->p_memory_pool,
-        p_info->wsi.present_mode_count * sizeof(VkPresentModeKHR));
-    if (p_info->wsi.present_mode_array == nullptr) {
+        p_info->window_surface.present_mode_count * sizeof(VkPresentModeKHR));
+    if (p_info->window_surface.present_mode_array == nullptr) {
         return false;
     } else {
         PRINT_LOG("alloc memory success!\n");
     }
 
     result = get_physical_device_surface_present_modes(
-        p_info->physical_device.physical_device, p_info->wsi.surface,
-        &p_info->wsi.present_mode_count, p_info->wsi.present_mode_array);
-    if (result != VK_SUCCESS || p_info->wsi.present_mode_array == nullptr) {
+        p_info->physical_device.physical_device, p_info->window_surface.surface,
+        &p_info->window_surface.present_mode_count, p_info->window_surface.present_mode_array);
+    if (result != VK_SUCCESS || p_info->window_surface.present_mode_array == nullptr) {
         PRINT_ERROR("present_mode_array fail!\n");
         return false;
     }
 
     // 遍历打印Vulkan显示模式的列表
 #ifdef DEBUG
-    for (uint32_t i = 0; i < p_info->wsi.present_mode_count; i++) {
-        switch (p_info->wsi.present_mode_array[i]) {
+    for (uint32_t i = 0; i < p_info->window_surface.present_mode_count; i++) {
+        switch (p_info->window_surface.present_mode_array[i]) {
         case VK_PRESENT_MODE_IMMEDIATE_KHR:
             printf("present_mode_array[%d] = VK_PRESENT_MODE_IMMEDIATE_KHR;\n", i);
             break;
@@ -258,13 +258,13 @@ bool cg_select_present_mode(cg_info_t *p_info) {
 #endif // DEBUG
 
     // 选择想要的显示模式
-    for (uint32_t i = 0; i < p_info->wsi.present_mode_count; i++) {
-        if (p_info->wsi.present_mode_array[i] == VK_PRESENT_MODE_FIFO_KHR) {
-            p_info->wsi.enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;
+    for (uint32_t i = 0; i < p_info->window_surface.present_mode_count; i++) {
+        if (p_info->window_surface.present_mode_array[i] == VK_PRESENT_MODE_FIFO_KHR) {
+            p_info->window_surface.enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;
             printf("enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;\n");
             break;
         } else {
-            p_info->wsi.enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;
+            p_info->window_surface.enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;
             printf("enabled_present_mode = VK_PRESENT_MODE_FIFO_KHR;\n");
             break;
         }
@@ -279,8 +279,8 @@ bool cg_select_present_mode(cg_info_t *p_info) {
     }
     result = get_physical_device_surface_capabilities(
         p_info->physical_device.physical_device,
-        p_info->wsi.surface,
-        &p_info->wsi.surface_capabilities);
+        p_info->window_surface.surface,
+        &p_info->window_surface.surface_capabilities);
     if (result != VK_SUCCESS) {
         PRINT_ERROR("surface_capabilities fail!\n");
         return false;
@@ -290,7 +290,7 @@ bool cg_select_present_mode(cg_info_t *p_info) {
 }
 
 bool cg_create_swapchain_resources(cg_info_t *p_info) {
-    if (p_info->wsi.surface == VK_NULL_HANDLE || p_info->logic_device.vk_logic_device == VK_NULL_HANDLE) {
+    if (p_info->window_surface.surface == VK_NULL_HANDLE || p_info->logic_device.vk_logic_device == VK_NULL_HANDLE) {
         PRINT_ERROR("surface or logical device is not ready!\n");
         return false;
     }
@@ -302,7 +302,7 @@ bool cg_create_swapchain_resources(cg_info_t *p_info) {
         return false;
     }
 
-    p_info->wsi.swapchain = VK_NULL_HANDLE;
-    p_info->wsi.old_swapchain = VK_NULL_HANDLE;
-    return cg_create_swapchain(p_info, &p_info->wsi.swapchain);
+    p_info->window_surface.swapchain = VK_NULL_HANDLE;
+    p_info->window_surface.old_swapchain = VK_NULL_HANDLE;
+    return cg_create_swapchain(p_info, &p_info->window_surface.swapchain);
 }

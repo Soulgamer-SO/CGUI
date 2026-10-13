@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef CG_WSI_H
-#define CG_WSI_H 1
+#ifndef CG_WINDOW_SURFACE_H
+#define CG_WINDOW_SURFACE_H 1
 #include "cg_info.h"
 #ifdef LINUX
 #include <xcb/xcb_icccm.h>
@@ -32,4 +32,4 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // 创建窗口
 bool cg_create_window(cg_info_t *p_info);
 
-#endif // CG_WSI_H 1
+#endif // CG_WINDOW_SURFACE_H 1

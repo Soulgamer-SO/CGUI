@@ -146,7 +146,7 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
         result = get_surface_support(
             p_info->physical_device.physical_device,
             p_info->logic_device.queue_family_index,
-            p_info->wsi.surface,
+            p_info->window_surface.surface,
             &supports_present);
         if (result != VK_SUCCESS) {
             PRINT_ERROR("get queue present support fail!\n");

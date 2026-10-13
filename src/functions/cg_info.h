@@ -40,7 +40,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "cg_sync_info.h"
 
-#include "cg_wsi_info.h"
+#include "cg_window_surface_info.h"
 
 #include "cg_render_info.h"
 
@@ -55,7 +55,7 @@ typedef struct cg_info {
     vk_logic_device_info_t logic_device;
     vk_command_pool_info_t command_pool;
     sync_info_t sync;
-    wsi_info_t wsi;
+    window_surface_info_t window_surface;
     render_info_t render;
     event_loop_info_t event_loop;
 } cg_info_t;

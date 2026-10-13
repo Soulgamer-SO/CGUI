@@ -91,19 +91,19 @@ bool cg_create_render_resources(cg_info_t *p_info) {
         return false;
     }
 
-    p_info->render.image_view_array = cg_alloc_memory(p_info->p_memory_pool, p_info->wsi.swapchain_image_count * sizeof(VkImageView));
-    p_info->render.framebuffer_array = cg_alloc_memory(p_info->p_memory_pool, p_info->wsi.swapchain_image_count * sizeof(VkFramebuffer));
+    p_info->render.image_view_array = cg_alloc_memory(p_info->p_memory_pool, p_info->window_surface.swapchain_image_count * sizeof(VkImageView));
+    p_info->render.framebuffer_array = cg_alloc_memory(p_info->p_memory_pool, p_info->window_surface.swapchain_image_count * sizeof(VkFramebuffer));
     if (p_info->render.image_view_array == nullptr || p_info->render.framebuffer_array == nullptr) {
         return false;
     }
 
-    for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
+    for (uint32_t i = 0; i < p_info->window_surface.swapchain_image_count; i++) {
         p_info->render.image_view_array[i] = VK_NULL_HANDLE;
         VkImageViewCreateInfo view_info = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-            .image = p_info->wsi.swapchain_image_array[i],
+            .image = p_info->window_surface.swapchain_image_array[i],
             .viewType = VK_IMAGE_VIEW_TYPE_2D,
-            .format = p_info->wsi.enabled_surface_format.format,
+            .format = p_info->window_surface.enabled_surface_format.format,
             .components = {VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY},
             .subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1}};
         if (create_image_view(device, &view_info, nullptr, &p_info->render.image_view_array[i]) != VK_SUCCESS) {
@@ -111,7 +111,7 @@ bool cg_create_render_resources(cg_info_t *p_info) {
         }
     }
 
-    VkAttachmentDescription attachment = {.format = p_info->wsi.enabled_surface_format.format, .samples = VK_SAMPLE_COUNT_1_BIT, .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR, .storeOp = VK_ATTACHMENT_STORE_OP_STORE, .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED, .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR};
+    VkAttachmentDescription attachment = {.format = p_info->window_surface.enabled_surface_format.format, .samples = VK_SAMPLE_COUNT_1_BIT, .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR, .storeOp = VK_ATTACHMENT_STORE_OP_STORE, .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED, .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR};
     VkAttachmentReference color_reference = {.attachment = 0, .layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL};
     VkSubpassDescription subpass = {.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS, .colorAttachmentCount = 1, .pColorAttachments = &color_reference};
     VkRenderPassCreateInfo render_pass_info = {.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO, .attachmentCount = 1, .pAttachments = &attachment, .subpassCount = 1, .pSubpasses = &subpass};
@@ -163,9 +163,16 @@ bool cg_create_render_resources(cg_info_t *p_info) {
         return false;
     }
 
-    for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
+    for (uint32_t i = 0; i < p_info->window_surface.swapchain_image_count; i++) {
         VkImageView attachment_view = p_info->render.image_view_array[i];
-        VkFramebufferCreateInfo framebuffer_info = {.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO, .renderPass = p_info->render.render_pass, .attachmentCount = 1, .pAttachments = &attachment_view, .width = p_info->wsi.enabled_image_extent_size.width, .height = p_info->wsi.enabled_image_extent_size.height, .layers = 1};
+        VkFramebufferCreateInfo framebuffer_info = {
+            .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
+            .renderPass = p_info->render.render_pass,
+            .attachmentCount = 1,
+            .pAttachments = &attachment_view,
+            .width = p_info->window_surface.enabled_image_extent_size.width,
+            .height = p_info->window_surface.enabled_image_extent_size.height,
+            .layers = 1};
         if (create_framebuffer(device, &framebuffer_info, nullptr, &p_info->render.framebuffer_array[i]) != VK_SUCCESS) {
             return false;
         }
@@ -176,7 +183,7 @@ bool cg_create_render_resources(cg_info_t *p_info) {
 bool cg_draw_frame(cg_info_t *p_info) {
     VkDevice device = p_info->logic_device.vk_logic_device;
     VkQueue queue = p_info->logic_device.queue_family_handle;
-    VkSwapchainKHR swapchain = p_info->wsi.swapchain;
+    VkSwapchainKHR swapchain = p_info->window_surface.swapchain;
     VkCommandBuffer command_buffer = p_info->command_pool.command_buffer_array[0];
     VkSemaphore image_available = p_info->sync.semaphore_array[0];
     VkSemaphore render_finished = p_info->sync.semaphore_array[1];
@@ -220,7 +227,7 @@ bool cg_draw_frame(cg_info_t *p_info) {
         .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
         .renderPass = p_info->render.render_pass,
         .framebuffer = p_info->render.framebuffer_array[image_index],
-        .renderArea = {.offset = {0, 0}, .extent = p_info->wsi.enabled_image_extent_size},
+        .renderArea = {.offset = {0, 0}, .extent = p_info->window_surface.enabled_image_extent_size},
         .clearValueCount = 1,
         .pClearValues = &clear_value};
     p_info->library.vk_cmd_begin_render_pass(command_buffer, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
@@ -228,11 +235,13 @@ bool cg_draw_frame(cg_info_t *p_info) {
     VkViewport viewport = {
         .x = 0.0f,
         .y = 0.0f,
-        .width = (float)p_info->wsi.enabled_image_extent_size.width,
-        .height = (float)p_info->wsi.enabled_image_extent_size.height,
+        .width = (float)p_info->window_surface.enabled_image_extent_size.width,
+        .height = (float)p_info->window_surface.enabled_image_extent_size.height,
         .minDepth = 0.0f,
         .maxDepth = 1.0f};
-    VkRect2D scissor = {.offset = {0, 0}, .extent = p_info->wsi.enabled_image_extent_size};
+    VkRect2D scissor = {
+        .offset = {0, 0},
+        .extent = p_info->window_surface.enabled_image_extent_size};
     p_info->library.vk_cmd_set_viewport(command_buffer, 0, 1, &viewport);
     p_info->library.vk_cmd_set_scissor(command_buffer, 0, 1, &scissor);
     p_info->library.vk_cmd_bind_pipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, p_info->render.graphics_pipeline);
@@ -303,7 +312,7 @@ void cg_destroy_render_resources(cg_info_t *p_info) {
     PFN_vkDestroyImageView destroy_image_view = (PFN_vkDestroyImageView)p_info->library.vk_get_device_proc_addr(device, "vkDestroyImageView");
 
     if (destroy_framebuffer != nullptr && p_info->render.framebuffer_array != nullptr) {
-        for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
+        for (uint32_t i = 0; i < p_info->window_surface.swapchain_image_count; i++) {
             if (p_info->render.framebuffer_array[i] != VK_NULL_HANDLE) {
                 destroy_framebuffer(device, p_info->render.framebuffer_array[i], nullptr);
             }
@@ -319,7 +328,7 @@ void cg_destroy_render_resources(cg_info_t *p_info) {
         destroy_render_pass(device, p_info->render.render_pass, nullptr);
     }
     if (destroy_image_view != nullptr && p_info->render.image_view_array != nullptr) {
-        for (uint32_t i = 0; i < p_info->wsi.swapchain_image_count; i++) {
+        for (uint32_t i = 0; i < p_info->window_surface.swapchain_image_count; i++) {
             if (p_info->render.image_view_array[i] != VK_NULL_HANDLE) {
                 destroy_image_view(device, p_info->render.image_view_array[i], nullptr);
             }

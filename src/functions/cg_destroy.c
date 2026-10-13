@@ -72,14 +72,14 @@ void cg_destroy(cg_info_t *p_info) {
     }
 
     cg_destroy_render_resources(p_info);
-    if (p_info->wsi.swapchain != VK_NULL_HANDLE) {
-        cg_destroy_swapchain(p_info, p_info->wsi.swapchain);
-        p_info->wsi.swapchain = VK_NULL_HANDLE;
+    if (p_info->window_surface.swapchain != VK_NULL_HANDLE) {
+        cg_destroy_swapchain(p_info, p_info->window_surface.swapchain);
+        p_info->window_surface.swapchain = VK_NULL_HANDLE;
     }
     if (p_info->command_pool.command_pool != VK_NULL_HANDLE) {
         goto destroy_command_pool;
     }
-    if (p_info->wsi.surface != VK_NULL_HANDLE) {
+    if (p_info->window_surface.surface != VK_NULL_HANDLE) {
         goto destroy_surface;
     }
     if (p_info->physical_device.physical_device != VK_NULL_HANDLE || p_info->logic_device.vk_logic_device != VK_NULL_HANDLE) {
@@ -101,8 +101,8 @@ destroy_command_pool:
 destroy_surface:
     destroy_surface = (PFN_vkDestroySurfaceKHR)p_info->library.vk_get_instance_proc_addr(p_info->instance.vk_instance, "vkDestroySurfaceKHR");
     if (destroy_surface != nullptr) {
-        destroy_surface(p_info->instance.vk_instance, p_info->wsi.surface, nullptr);
-        p_info->wsi.surface = VK_NULL_HANDLE;
+        destroy_surface(p_info->instance.vk_instance, p_info->window_surface.surface, nullptr);
+        p_info->window_surface.surface = VK_NULL_HANDLE;
     }
 
 destroy_device:
@@ -121,9 +121,9 @@ destroy_instance:
 
 destroy_vulkan_library:
 #ifdef LINUX
-    if (p_info->wsi.xcb_surface_create_info.connection != nullptr) {
-        xcb_disconnect(p_info->wsi.xcb_surface_create_info.connection);
-        p_info->wsi.xcb_surface_create_info.connection = nullptr;
+    if (p_info->window_surface.xcb_surface_create_info.connection != nullptr) {
+        xcb_disconnect(p_info->window_surface.xcb_surface_create_info.connection);
+        p_info->window_surface.xcb_surface_create_info.connection = nullptr;
     }
 #endif // LINUX
 #ifdef LINUX

@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_render.h"
 #include "cg_swapchain.h"
 #include "cg_sync.h"
-#include "cg_wsi.h"
+#include "cg_window_surface.h"
 
 bool cg_initialize_var(cg_info_t *p_info) {
     if (p_info->p_memory_pool == nullptr) {

@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef CG_WSI_INFO_H
-#define CG_WSI_INFO_H 1
+#ifndef CG_WINDOW_SURFACE_INFO_H
+#define CG_WINDOW_SURFACE_INFO_H 1
 #include <stdint.h>
 #include <vulkan/vulkan.h>
 #ifdef LINUX
@@ -30,7 +30,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <windows.h>
 #endif // WINDOWS
 
-typedef struct wsi_info {
+typedef struct window_surface_info {
     const char *window_name;
     int16_t window_x;
     int16_t window_y;
@@ -100,6 +100,6 @@ typedef struct wsi_info {
     // 交换链图像的句柄列表
     VkImage *swapchain_image_array;
     uint32_t image_index;
-} wsi_info_t;
+} window_surface_info_t;
 
-#endif // CG_WSI_INFO_H 1
+#endif // CG_WINDOW_SURFACE_INFO_H 1

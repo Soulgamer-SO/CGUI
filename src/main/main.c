@@ -47,10 +47,10 @@ MAIN {
     }
 
 #ifdef WINDOWS
-    info.wsi.WinAPI_info.hInstance = hInstance,
-    info.wsi.WinAPI_info.hPrevInstance = hPrevInstance;
-    info.wsi.WinAPI_info.pCmdLine = pCmdLine;
-    info.wsi.WinAPI_info.nCmdShow = nCmdShow;
+    info.window_surface.WinAPI_info.hInstance = hInstance,
+    info.window_surface.WinAPI_info.hPrevInstance = hPrevInstance;
+    info.window_surface.WinAPI_info.pCmdLine = pCmdLine;
+    info.window_surface.WinAPI_info.nCmdShow = nCmdShow;
 #endif // WINDOWS
     bool is_init = false;
     is_init = cg_initialize_var(&info);
