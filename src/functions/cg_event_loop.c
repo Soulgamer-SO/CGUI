@@ -24,8 +24,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <xcb/xcb_event.h>
 
 void cg_event_loop(cg_info_t *p_info) {
-    xcb_connection_t *connection = p_info->wsi.xcb_surface_create_info.connection;
-    xcb_window_t window = p_info->wsi.xcb_surface_create_info.window;
+    xcb_connection_t *connection = p_info->window_surface.xcb_surface_create_info.connection;
+    xcb_window_t window = p_info->window_surface.xcb_surface_create_info.window;
 
     p_info->event_loop.is_running = true;
     p_info->event_loop.fd = xcb_get_file_descriptor(connection);
@@ -47,7 +47,7 @@ void cg_event_loop(cg_info_t *p_info) {
             }
             case XCB_CLIENT_MESSAGE:
                 if (((xcb_client_message_event_t *)p_info->event_loop.event)->window == window &&
-                    ((xcb_client_message_event_t *)p_info->event_loop.event)->data.data32[0] == p_info->wsi.XCB_API_info.wm_delete_window_atom) {
+                    ((xcb_client_message_event_t *)p_info->event_loop.event)->data.data32[0] == p_info->window_surface.XCB_API_info.wm_delete_window_atom) {
                     p_info->event_loop.is_running = false;
                 }
                 break;
