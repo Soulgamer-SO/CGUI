@@ -27,7 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define CG_MAX_FREE_MEM_NODE_COUNT (4U * 1024)
 
 MAIN {
-    cg_info_t info;
+    cg_info_t info = {};
     cg_memory_pool_info_t memory_pool = {
         .memory_pool = nullptr,
         .size = CG_MEMORY_POOL_SIZE,
@@ -47,7 +47,7 @@ MAIN {
     }
 
 #ifdef WINDOWS
-    info.window_surface.WinAPI_info.hInstance = hInstance,
+    info.window_surface.WinAPI_info.hInstance = hInstance;
     info.window_surface.WinAPI_info.hPrevInstance = hPrevInstance;
     info.window_surface.WinAPI_info.pCmdLine = pCmdLine;
     info.window_surface.WinAPI_info.nCmdShow = nCmdShow;
