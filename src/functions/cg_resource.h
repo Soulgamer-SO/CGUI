@@ -22,6 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stddef.h>
 #define CG_RESOURCE_PATH_MAX 4096
 
-bool cg_get_resource_path(const char *resource_name, char *path, size_t path_size);
+bool cg_get_resource_path(const char *resource_name, char *exe_path, size_t path_size);
 
 #endif // CG_RESOURCE_H 1

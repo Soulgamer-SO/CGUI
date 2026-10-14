@@ -27,7 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <unistd.h>
 #endif // LINUX
 
-bool cg_get_resource_path(const char *resource_name, char *path, size_t path_size) {
+bool cg_get_resource_path(const char *resource_name, char *exe_path, size_t path_size) {
     char executable_path[CG_RESOURCE_PATH_MAX];
     size_t executable_path_length = 0;
 
@@ -62,11 +62,11 @@ bool cg_get_resource_path(const char *resource_name, char *path, size_t path_siz
         "%.*s/../content/%s",
         "%.*s/../../content/%s"};
     for (size_t i = 0; i < sizeof(resource_roots) / sizeof(resource_roots[0]); i++) {
-        int written = snprintf(path, path_size, resource_roots[i], (int)executable_path_length, executable_path, resource_name);
+        int written = snprintf(exe_path, path_size, resource_roots[i], (int)executable_path_length, executable_path, resource_name);
         if (written <= 0 || (size_t)written >= path_size) {
             continue;
         }
-        FILE *resource_file = fopen(path, "rb");
+        FILE *resource_file = fopen(exe_path, "rb");
         if (resource_file != nullptr) {
             fclose(resource_file);
             return true;
