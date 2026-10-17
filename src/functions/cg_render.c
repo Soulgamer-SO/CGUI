@@ -91,8 +91,8 @@ bool cg_create_render_resources(cg_info_t *p_info) {
         return false;
     }
 
-    p_info->render.image_view_array = cg_alloc_memory(p_info->p_memory_pool, p_info->window_surface.swapchain_image_count * sizeof(VkImageView));
-    p_info->render.framebuffer_array = cg_alloc_memory(p_info->p_memory_pool, p_info->window_surface.swapchain_image_count * sizeof(VkFramebuffer));
+    p_info->render.image_view_array = cg_alloc_memory(p_info->p_memory_pool_info, p_info->window_surface.swapchain_image_count * sizeof(VkImageView));
+    p_info->render.framebuffer_array = cg_alloc_memory(p_info->p_memory_pool_info, p_info->window_surface.swapchain_image_count * sizeof(VkFramebuffer));
     if (p_info->render.image_view_array == nullptr || p_info->render.framebuffer_array == nullptr) {
         return false;
     }

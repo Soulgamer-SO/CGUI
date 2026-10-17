@@ -76,7 +76,7 @@ bool cg_select_swapchain(cg_info_t *p_info) {
         return false;
     }
     p_info->window_surface.surface_format_array = (VkSurfaceFormatKHR *)cg_alloc_memory(
-        p_info->p_memory_pool,
+        p_info->p_memory_pool_info,
         p_info->window_surface.surface_format_count * sizeof(VkSurfaceFormatKHR));
     result = get_physical_device_surface_formats(
         p_info->physical_device.physical_device, p_info->window_surface.surface,
@@ -170,7 +170,7 @@ bool cg_create_swapchain(cg_info_t *p_info, VkSwapchainKHR *p_swapchain) {
         PRINT_ERROR("swapchain_image_count fail!\n");
         return false;
     }
-    p_info->window_surface.swapchain_image_array = (VkImage *)cg_alloc_memory(p_info->p_memory_pool, p_info->window_surface.swapchain_image_count * sizeof(VkImage));
+    p_info->window_surface.swapchain_image_array = (VkImage *)cg_alloc_memory(p_info->p_memory_pool_info, p_info->window_surface.swapchain_image_count * sizeof(VkImage));
     if (p_info->window_surface.swapchain_image_array != nullptr) {
         result = get_swapchain_image_array(
             p_info->logic_device.vk_logic_device, p_info->window_surface.swapchain,
@@ -212,7 +212,7 @@ bool cg_select_present_mode(cg_info_t *p_info) {
 
     // 获得Vulkan显示模式的列表
     p_info->window_surface.present_mode_array = (VkPresentModeKHR *)cg_alloc_memory(
-        p_info->p_memory_pool,
+        p_info->p_memory_pool_info,
         p_info->window_surface.present_mode_count * sizeof(VkPresentModeKHR));
     if (p_info->window_surface.present_mode_array == nullptr) {
         return false;

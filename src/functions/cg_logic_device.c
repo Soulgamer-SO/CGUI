@@ -46,7 +46,7 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
     }
 
     p_info->logic_device.queue_family_array = (VkQueueFamilyProperties *)cg_alloc_memory(
-        p_info->p_memory_pool,
+        p_info->p_memory_pool_info,
         p_info->logic_device.queue_family_count * sizeof(VkQueueFamilyProperties));
     if (p_info->logic_device.queue_family_array == nullptr) {
         PRINT_ERROR("get queue_familiy_array fail!\n");
@@ -66,7 +66,7 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
     p_info->logic_device.queue_priority_array_count = 16;
     p_info->logic_device.queue_priority_array_index = 0;
     p_info->logic_device.queue_priority_array = (float *)cg_alloc_memory(
-        p_info->p_memory_pool,
+        p_info->p_memory_pool_info,
         p_info->logic_device.queue_priority_array_count * sizeof(float));
     if (p_info->logic_device.queue_priority_array != nullptr) {
         PRINT_LOG("alloc memory success!\n");
@@ -78,7 +78,7 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
 
 #ifdef DEBUG
     // 打印所有队列信息
-    char **queue_info = cg_alloc_memory(p_info->p_memory_pool, 5 * sizeof(char *));
+    char **queue_info = cg_alloc_memory(p_info->p_memory_pool_info, 5 * sizeof(char *));
     if (queue_info == nullptr) {
         return false;
     } else {

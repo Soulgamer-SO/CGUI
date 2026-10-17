@@ -29,14 +29,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "cg_window_surface.h"
 
 bool cg_initialize_var(cg_info_t *p_info) {
-    if (p_info->p_memory_pool == nullptr) {
+    if (p_info->p_memory_pool_info == nullptr) {
         return false;
     }
 
     p_info->instance.vk_instance = VK_NULL_HANDLE;
     p_info->physical_device.physical_device = VK_NULL_HANDLE;
     p_info->physical_device.enabled_physical_device_extensions_count = 2;
-    p_info->physical_device.enabled_physical_device_extension_array = (char **)cg_alloc_memory(p_info->p_memory_pool, p_info->physical_device.enabled_physical_device_extensions_count * sizeof(char *));
+    p_info->physical_device.enabled_physical_device_extension_array = (char **)cg_alloc_memory(p_info->p_memory_pool_info, p_info->physical_device.enabled_physical_device_extensions_count * sizeof(char *));
     if (p_info->physical_device.enabled_physical_device_extension_array == nullptr) {
         PRINT_ERROR("alloc memory fail!\n");
         return false;
@@ -67,7 +67,7 @@ bool cg_initialize_var(cg_info_t *p_info) {
         return false;
     }
 
-    p_info->physical_device.available_physical_device_array = (VkPhysicalDevice *)cg_alloc_memory(p_info->p_memory_pool, p_info->physical_device.physical_device_count * sizeof(VkPhysicalDevice));
+    p_info->physical_device.available_physical_device_array = (VkPhysicalDevice *)cg_alloc_memory(p_info->p_memory_pool_info, p_info->physical_device.physical_device_count * sizeof(VkPhysicalDevice));
     if (p_info->physical_device.available_physical_device_array == nullptr) {
         PRINT_ERROR("create available_handle_device_array fail!\n");
         return false;
@@ -99,7 +99,7 @@ bool cg_initialize_var(cg_info_t *p_info) {
     // 创建命令缓存
     p_info->command_pool.command_pool = VK_NULL_HANDLE;
     p_info->command_pool.command_buffer_count = 8;
-    p_info->command_pool.command_buffer_array = (VkCommandBuffer *)cg_alloc_memory(p_info->p_memory_pool, p_info->command_pool.command_buffer_count * sizeof(VkCommandBuffer));
+    p_info->command_pool.command_buffer_array = (VkCommandBuffer *)cg_alloc_memory(p_info->p_memory_pool_info, p_info->command_pool.command_buffer_count * sizeof(VkCommandBuffer));
     if (nullptr != p_info->command_pool.command_buffer_array) {
         PRINT_LOG("alloc memory success!\n");
         cg_create_command_pool(p_info, &p_info->command_pool.command_pool);
@@ -121,10 +121,10 @@ bool cg_initialize_var(cg_info_t *p_info) {
 
     p_info->sync.semaphore_count = 2;
     p_info->sync.semaphore_array = (VkSemaphore *)cg_alloc_memory(
-        p_info->p_memory_pool, p_info->sync.semaphore_count * sizeof(VkSemaphore));
+        p_info->p_memory_pool_info, p_info->sync.semaphore_count * sizeof(VkSemaphore));
     p_info->sync.fence_count = 1;
     p_info->sync.fence_array = (VkFence *)cg_alloc_memory(
-        p_info->p_memory_pool, sizeof(VkFence));
+        p_info->p_memory_pool_info, sizeof(VkFence));
     if (p_info->sync.semaphore_array == nullptr ||
         p_info->sync.fence_array == nullptr) {
         PRINT_ERROR("alloc synchronization objects fail!\n");

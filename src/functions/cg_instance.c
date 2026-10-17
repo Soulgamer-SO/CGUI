@@ -51,7 +51,7 @@ bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
         return false;
     }
 
-    p_info->instance.instance_extension_array = (VkExtensionProperties *)cg_alloc_memory(p_info->p_memory_pool, p_info->instance.instance_extension_count * sizeof(VkExtensionProperties));
+    p_info->instance.instance_extension_array = (VkExtensionProperties *)cg_alloc_memory(p_info->p_memory_pool_info, p_info->instance.instance_extension_count * sizeof(VkExtensionProperties));
     if (p_info->instance.instance_extension_array != nullptr) {
         PRINT_LOG("alloc memory success!\n");
         result = enumerate_instance_extension_properties(nullptr, &p_info->instance.instance_extension_count, &p_info->instance.instance_extension_array[0]);

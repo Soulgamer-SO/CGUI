@@ -48,7 +48,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // cgui-app info
 typedef struct cg_info {
-    cg_memory_pool_info_t *p_memory_pool;
+    cg_memory_pool_info_t *p_memory_pool_info;
     library_info_t library;
     vk_instance_info_t instance;
     vk_physical_device_info_t physical_device;

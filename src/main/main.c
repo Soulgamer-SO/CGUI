@@ -28,7 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 MAIN {
     cg_info_t info = {};
-    cg_memory_pool_info_t memory_pool = {
+    cg_memory_pool_info_t memory_pool_info = {
         .memory_pool = nullptr,
         .size = CG_MEMORY_POOL_SIZE,
         .free_size = 0,
@@ -37,12 +37,12 @@ MAIN {
         .free_memory_node_count = 0,
         .free_memory_node_addr_array = nullptr,
         .free_memory_node_addr_max_count = CG_MAX_FREE_MEM_NODE_COUNT};
-    memory_pool.memory_pool = calloc(1, memory_pool.size);
-    memory_pool.free_memory_node_addr_array = calloc(CG_MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
-    if (cg_create_memory_pool(&memory_pool) == false) {
+    memory_pool_info.memory_pool = calloc(1, memory_pool_info.size);
+    memory_pool_info.free_memory_node_addr_array = calloc(CG_MAX_FREE_MEM_NODE_COUNT, sizeof(cg_memory_node_t *));
+    if (cg_create_memory_pool(&memory_pool_info) == false) {
         goto exit_fail;
     } else {
-        info.p_memory_pool = &memory_pool;
+        info.p_memory_pool_info = &memory_pool_info;
         PRINT_LOG("create memory_pool success!\n");
     }
 
@@ -62,10 +62,10 @@ MAIN {
     cg_event_loop(&info);
     cg_destroy(&info);
 destroy_memory_pool:
-    free(memory_pool.memory_pool);
-    memory_pool.memory_pool = nullptr;
-    free(memory_pool.free_memory_node_addr_array);
-    memory_pool.free_memory_node_addr_array = nullptr;
+    free(memory_pool_info.memory_pool);
+    memory_pool_info.memory_pool = nullptr;
+    free(memory_pool_info.free_memory_node_addr_array);
+    memory_pool_info.free_memory_node_addr_array = nullptr;
     if (is_init == false) {
         goto exit_fail;
     }

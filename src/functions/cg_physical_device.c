@@ -120,7 +120,7 @@ bool cg_select_physical_device(cg_info_t *p_info, uint32_t *p_physical_device_co
         return false;
     }
     p_info->physical_device.available_physical_device_extension_array = (VkExtensionProperties *)cg_alloc_memory(
-        p_info->p_memory_pool,
+        p_info->p_memory_pool_info,
         p_info->physical_device.physical_device_extensions_count * sizeof(VkExtensionProperties));
     if (p_info->physical_device.available_physical_device_extension_array == nullptr) {
         PRINT_ERROR("create available_physical_device_extension_array fail!\n");
