@@ -84,6 +84,7 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
     // 打印所有队列信息
     char **queue_info = cg_alloc_memory(p_info->p_memory_pool_info, 5 * sizeof(char *));
     if (queue_info == nullptr) {
+        PRINT_ERROR("alloc queue_info memory fail!\n");
         return false;
     } else {
         PRINT_LOG("alloc queue_info memory success!\n");
