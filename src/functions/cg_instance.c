@@ -52,8 +52,12 @@ bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
     }
 
     p_info->instance.instance_extension_array = (VkExtensionProperties *)cg_alloc_memory(p_info->p_memory_pool_info, p_info->instance.instance_extension_count * sizeof(VkExtensionProperties));
+    if (p_info->instance.instance_extension_array == nullptr) {
+        PRINT_ERROR("alloc instance_extension_array memory fail!\n");
+        return false;
+    }
     if (p_info->instance.instance_extension_array != nullptr) {
-        PRINT_LOG("alloc memory success!\n");
+        PRINT_LOG("alloc instance_extension_array memory success!\n");
         result = enumerate_instance_extension_properties(nullptr, &p_info->instance.instance_extension_count, &p_info->instance.instance_extension_array[0]);
         if (result != VK_SUCCESS || p_info->instance.instance_extension_count == 0) {
             PRINT_ERROR("get available_extension_array fail!\n");
@@ -62,10 +66,8 @@ bool cg_create_instance(cg_info_t *p_info, VkInstance *p_vk_instance) {
     }
 
 #ifdef DEBUG
-    else {
-        for (uint32_t i = 0; i < p_info->instance.instance_extension_count; i++) {
-            PRINT_LOG("available_extension_array[%d] %s 版本%d;\n", i, p_info->instance.instance_extension_array[i].extensionName, p_info->instance.instance_extension_array[i].specVersion);
-        }
+    for (uint32_t i = 0; i < p_info->instance.instance_extension_count; i++) {
+        PRINT_LOG("available_instance_extension_array[%d] %s 版本%d;\n", i, p_info->instance.instance_extension_array[i].extensionName, p_info->instance.instance_extension_array[i].specVersion);
     }
 #endif // DEBUG
 

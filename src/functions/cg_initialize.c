@@ -38,8 +38,10 @@ bool cg_initialize_var(cg_info_t *p_info) {
     p_info->physical_device.enabled_physical_device_extensions_count = 2;
     p_info->physical_device.enabled_physical_device_extension_array = (char **)cg_alloc_memory(p_info->p_memory_pool_info, p_info->physical_device.enabled_physical_device_extensions_count * sizeof(char *));
     if (p_info->physical_device.enabled_physical_device_extension_array == nullptr) {
-        PRINT_ERROR("alloc memory fail!\n");
+        PRINT_ERROR("alloc enabled_physical_device_extension_array memory fail!\n");
         return false;
+    } else {
+        PRINT_LOG("alloc enabled_physical_device_extension_array memory success!\n");
     }
 
     p_info->physical_device.enabled_physical_device_extension_array[1] = VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME;
@@ -71,6 +73,8 @@ bool cg_initialize_var(cg_info_t *p_info) {
     if (p_info->physical_device.available_physical_device_array == nullptr) {
         PRINT_ERROR("create available_handle_device_array fail!\n");
         return false;
+    } else {
+        PRINT_LOG("alloc available_physical_device_array memory success!\n");
     }
 
     if (cg_enumerate_physical_device(p_info, &p_info->physical_device.physical_device_count, &p_info->physical_device.available_physical_device_array[0]) == false) {
@@ -100,13 +104,24 @@ bool cg_initialize_var(cg_info_t *p_info) {
     p_info->command_pool.command_pool = VK_NULL_HANDLE;
     p_info->command_pool.command_buffer_count = 8;
     p_info->command_pool.command_buffer_array = (VkCommandBuffer *)cg_alloc_memory(p_info->p_memory_pool_info, p_info->command_pool.command_buffer_count * sizeof(VkCommandBuffer));
-    if (nullptr != p_info->command_pool.command_buffer_array) {
-        PRINT_LOG("alloc memory success!\n");
+    if (p_info->command_pool.command_buffer_array == nullptr) {
+        PRINT_ERROR("alloc command_buffer_array memory fail!\n");
+        return false;
+    } else if (nullptr != p_info->command_pool.command_buffer_array) {
+        PRINT_LOG("alloc command_buffer_array memory success!\n");
         cg_create_command_pool(p_info, &p_info->command_pool.command_pool);
         if (p_info->command_pool.command_pool == VK_NULL_HANDLE) {
+            PRINT_ERROR("create command pool fail!\n");
             return false;
         }
-        cg_create_command_buffer_array(p_info, p_info->command_pool.command_pool, &p_info->command_pool.command_buffer_array[0], p_info->command_pool.command_buffer_count);
+        if (cg_create_command_buffer_array(
+                p_info,
+                p_info->command_pool.command_pool,
+                &p_info->command_pool.command_buffer_array[0],
+                p_info->command_pool.command_buffer_count) == false) {
+            PRINT_ERROR("create command buffer array fail!\n");
+            return false;
+        }
     }
 
     if (cg_create_swapchain_resources(p_info) == false) {
@@ -122,13 +137,19 @@ bool cg_initialize_var(cg_info_t *p_info) {
     p_info->sync.semaphore_count = 2;
     p_info->sync.semaphore_array = (VkSemaphore *)cg_alloc_memory(
         p_info->p_memory_pool_info, p_info->sync.semaphore_count * sizeof(VkSemaphore));
+    if (p_info->sync.semaphore_array == nullptr) {
+        PRINT_ERROR("alloc semaphore_array memory fail!\n");
+    } else {
+        PRINT_LOG("alloc semaphore_array memory success!\n");
+    }
     p_info->sync.fence_count = 1;
     p_info->sync.fence_array = (VkFence *)cg_alloc_memory(
         p_info->p_memory_pool_info, sizeof(VkFence));
-    if (p_info->sync.semaphore_array == nullptr ||
-        p_info->sync.fence_array == nullptr) {
-        PRINT_ERROR("alloc synchronization objects fail!\n");
+    if (p_info->sync.fence_array == nullptr) {
+        PRINT_ERROR("alloc fence_array memory fail!\n");
         return false;
+    } else {
+        PRINT_LOG("alloc fence_array memory success!\n");
     }
     p_info->sync.semaphore_array[0] = VK_NULL_HANDLE;
     p_info->sync.semaphore_array[1] = VK_NULL_HANDLE;

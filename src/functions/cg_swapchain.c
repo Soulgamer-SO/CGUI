@@ -75,17 +75,23 @@ bool cg_select_swapchain(cg_info_t *p_info) {
         PRINT_ERROR("surface_format_count fail!\n");
         return false;
     }
+
     p_info->window_surface.surface_format_array = (VkSurfaceFormatKHR *)cg_alloc_memory(
         p_info->p_memory_pool_info,
         p_info->window_surface.surface_format_count * sizeof(VkSurfaceFormatKHR));
+    if (p_info->window_surface.surface_format_array == nullptr) {
+        PRINT_ERROR("alloc surface_format_array memory fail!\n");
+        return false;
+    } else {
+        PRINT_LOG("alloc surface_format_array memory success!\n");
+    }
+
     result = get_physical_device_surface_formats(
         p_info->physical_device.physical_device, p_info->window_surface.surface,
         &p_info->window_surface.surface_format_count, p_info->window_surface.surface_format_array);
-    if (result != VK_SUCCESS || p_info->window_surface.surface_format_array == nullptr) {
-        PRINT_ERROR("surface_format_array fail!\n");
+    if (result != VK_SUCCESS) {
+        PRINT_ERROR("get_physical_device_surface_formats fail!\n");
         return false;
-    } else {
-        PRINT_LOG("alloc memory success!\n");
     }
 
 #ifdef DEBUG
@@ -215,9 +221,10 @@ bool cg_select_present_mode(cg_info_t *p_info) {
         p_info->p_memory_pool_info,
         p_info->window_surface.present_mode_count * sizeof(VkPresentModeKHR));
     if (p_info->window_surface.present_mode_array == nullptr) {
+        PRINT_ERROR("alloc present_mode_array memory fail!\n");
         return false;
     } else {
-        PRINT_LOG("alloc memory success!\n");
+        PRINT_LOG("alloc present_mode_array memory success!\n");
     }
 
     result = get_physical_device_surface_present_modes(

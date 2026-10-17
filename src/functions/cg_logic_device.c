@@ -52,7 +52,7 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
         PRINT_ERROR("get queue_familiy_array fail!\n");
         return false;
     } else {
-        PRINT_LOG("alloc memory success!\n");
+        PRINT_LOG("alloc queue_family_array memory success!\n");
     }
 
     get_physical_device_queue_family_properties(
@@ -69,11 +69,15 @@ bool cg_create_logic_device(cg_info_t *p_info, VkDevice *p_vk_logic_device) {
         p_info->p_memory_pool_info,
         p_info->logic_device.queue_priority_array_count * sizeof(float));
     if (p_info->logic_device.queue_priority_array != nullptr) {
-        PRINT_LOG("alloc memory success!\n");
+        PRINT_LOG("alloc queue_priority_array memory success!\n");
         for (uint32_t i = 0; i < p_info->logic_device.queue_priority_array_count; i++) {
             p_info->logic_device.queue_priority_array[i] = 0.001f * (i + 1);
             PRINT_LOG("queue_priority_array[%d] = %f;\n", i, p_info->logic_device.queue_priority_array[i]);
         }
+    }
+    if (p_info->logic_device.queue_priority_array == nullptr) {
+        PRINT_ERROR("alloc queue_priority_array memory fail!\n");
+        return false;
     }
 
 #ifdef DEBUG

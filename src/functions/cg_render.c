@@ -92,9 +92,19 @@ bool cg_create_render_resources(cg_info_t *p_info) {
     }
 
     p_info->render.image_view_array = cg_alloc_memory(p_info->p_memory_pool_info, p_info->window_surface.swapchain_image_count * sizeof(VkImageView));
-    p_info->render.framebuffer_array = cg_alloc_memory(p_info->p_memory_pool_info, p_info->window_surface.swapchain_image_count * sizeof(VkFramebuffer));
-    if (p_info->render.image_view_array == nullptr || p_info->render.framebuffer_array == nullptr) {
+    if (p_info->render.image_view_array == nullptr) {
+        PRINT_ERROR("alloc image_view_array memory fail!\n");
         return false;
+    } else {
+        PRINT_LOG("alloc image_view_array memory success!\n");
+    }
+
+    p_info->render.framebuffer_array = cg_alloc_memory(p_info->p_memory_pool_info, p_info->window_surface.swapchain_image_count * sizeof(VkFramebuffer));
+    if (p_info->render.framebuffer_array == nullptr) {
+        PRINT_ERROR("alloc framebuffer_array memory fail!\n");
+        return false;
+    } else {
+        PRINT_LOG("alloc framebuffer_array memory success!\n");
     }
 
     for (uint32_t i = 0; i < p_info->window_surface.swapchain_image_count; i++) {
